@@ -36,7 +36,6 @@
       display: flex; align-items: center; justify-content: space-between; height: 60px;
       gap: 0;
     }
-    /* 検索バー独立行 */
     .search-bar-row {
       background: var(--white);
       border-bottom: 1px solid var(--border);
@@ -214,6 +213,7 @@
     .b-slide { background: #fef3c7; color: #d97706; }
     .b-video { background: #ede9fe; color: #7c3aed; }
     .b-new { background: var(--red); color: white; font-size: 9px; }
+    .b-game { background: #fef3c7; color: #d97706; }
     .card-arrow { font-size: 17px; color: var(--red); opacity: 0; transition: all 0.2s; }
     .card:hover .card-arrow { opacity: 1; transform: translateX(4px); }
 
@@ -299,7 +299,7 @@
     }
 
     /* ===== EXAM LINKS ===== */
-    .exam-cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .exam-cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
     .exam-cat-card {
       background: white; border-radius: 12px; padding: 18px 20px;
       box-shadow: var(--shadow); border: 1.5px solid var(--border);
@@ -310,6 +310,15 @@
     .exam-cat-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
     .exam-cat-card p { font-size: 12px; color: var(--gray); }
     .exam-cat-count { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; color: var(--red); margin-top: 8px; }
+
+    /* ===== APP CARDS ===== */
+    .app-launch-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--red); color: white; font-size: 13px; font-weight: 700;
+      padding: 10px 20px; border-radius: 10px; text-decoration: none;
+      transition: all 0.2s; margin-top: 4px;
+    }
+    .app-launch-btn:hover { background: #c1121f; transform: scale(1.03); }
 
     /* ===== CONTACT FORM ===== */
     .contact-wrap { max-width: 620px; margin: 0 auto; }
@@ -372,7 +381,6 @@
       .hero-stats { gap: 18px; }
       .card-grid, .video-grid { grid-template-columns: 1fr; }
       .featured-banner { justify-content: center; text-align: center; }
-      /* スマホ：ロゴを横1行で収める */
       .header-inner { height: 52px; }
       .logo-sub { display: none; }
       .logo-text { font-size: 15px; white-space: nowrap; }
@@ -392,7 +400,7 @@
     .mobile-nav-inner { display: flex; justify-content: space-around; }
     .mobile-nav-btn {
       display: flex; flex-direction: column; align-items: center; gap: 2px;
-      font-size: 10px; color: var(--gray); padding: 4px 12px; cursor: pointer;
+      font-size: 10px; color: var(--gray); padding: 4px 8px; cursor: pointer;
       border: none; background: none; transition: color 0.2s;
     }
     .mobile-nav-btn.active { color: var(--red); }
@@ -434,7 +442,6 @@
       padding: 7px 18px; border-radius: 20px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
-    /* Coming soon row (list style) */
     .content-row.coming-soon {
       pointer-events: none; cursor: default;
     }
@@ -445,7 +452,6 @@
       text-transform: uppercase; background: var(--dark); color: white;
       padding: 3px 9px; border-radius: 10px; white-space: nowrap;
     }
-    /* Coming soon video card */
     .video-card.coming-soon { pointer-events: none; cursor: default; }
     .video-card.coming-soon .video-thumb { cursor: default; }
     .video-card.coming-soon .video-play-btn { background: #6b7280 !important; }
@@ -486,6 +492,7 @@
       <button class="nav-btn active" onclick="showPage('home')" id="tab-home">ホーム</button>
       <button class="nav-btn" onclick="showPage('units')" id="tab-units">授業資料</button>
       <button class="nav-btn" onclick="showPage('handouts')" id="tab-handouts">配布物</button>
+      <button class="nav-btn" onclick="showPage('apps')" id="tab-apps">🎮 アプリ</button>
       <button class="nav-btn" onclick="showPage('videos')" id="tab-videos">動画</button>
       <button class="nav-btn" onclick="showPage('exam')" id="tab-exam">入試対策</button>
       <button class="nav-btn" onclick="showPage('contact')" id="tab-contact">お問い合わせ</button>
@@ -517,6 +524,7 @@
       <div class="stat"><div class="stat-num">1</div><div class="stat-label">Unit 数</div></div>
       <div class="stat"><div class="stat-num">1</div><div class="stat-label">公開資料</div></div>
       <div class="stat"><div class="stat-num">1</div><div class="stat-label">動画</div></div>
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">アプリ</div></div>
     </div>
   </div>
 
@@ -529,7 +537,6 @@
       </div>
       <button class="btn-red" onclick="showPage('units')">資料を見る →</button>
     </div>
-
 
     <!-- WELCOME SECTION -->
     <div style="background:white;border-radius:16px;box-shadow:var(--shadow);padding:28px 30px;margin-bottom:32px;">
@@ -566,6 +573,12 @@
         <p>授業プリントPDF</p>
         <div class="exam-cat-count">—</div>
       </div>
+      <div class="exam-cat-card" onclick="showPage('apps')">
+        <div class="exam-cat-icon">🎮</div>
+        <h3>学習アプリ</h3>
+        <p>クイズ・単語練習</p>
+        <div class="exam-cat-count">3</div>
+      </div>
       <div class="exam-cat-card" onclick="showPage('videos')">
         <div class="exam-cat-icon">🎬</div>
         <h3>解説動画</h3>
@@ -585,6 +598,7 @@
       <div class="info-box">
         <h3>🕐 更新情報</h3>
         <ul class="update-list">
+          <li><span class="update-date">5/4</span><span>🎮 宝箱クイズ・単語練習アプリを追加しました</span></li>
           <li><span class="update-date">4/20</span><span>Unit 1「3-D Art」解説動画を公開しました</span></li>
           <li><span class="update-date">4/20</span><span>Unit 1「3-D Art」スライドを公開しました</span></li>
         </ul>
@@ -662,6 +676,86 @@
 </div>
 
 <!-- ================================================ -->
+<!-- PAGE: APPS (学習アプリ) ★ NEW ★ -->
+<!-- ================================================ -->
+<div class="page" id="page-apps">
+  <div class="page-hero">
+    <h2>🎮 学習アプリ</h2>
+    <p>英語の練習ができるインタラクティブアプリ。タップして遊びながら覚えよう！</p>
+  </div>
+
+  <div class="main">
+
+    <div class="section-label">QUIZ & GAMES</div>
+    <div class="card-grid">
+
+      <!-- 宝箱クイズ -->
+      <a href="宝箱クイズ.html" target="_blank" class="card">
+        <div class="card-top c-orange"></div>
+        <div class="card-body">
+          <span class="card-tag t-orange">クイズゲーム</span>
+          <h3>💎 宝箱クイズ</h3>
+          <p>Kahoot!風の4択クイズゲーム。タイムアタックモードや5連続正解でボーナスステージ登場！歴代スコアに挑戦しよう。</p>
+          <div class="card-footer">
+            <div class="badges">
+              <span class="badge b-game">🏆 ランキング</span>
+              <span class="badge b-new">NEW</span>
+            </div>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 単語練習① -->
+      <a href="blusky3_unit1_vocab_1.html" target="_blank" class="card">
+        <div class="card-top c-blue"></div>
+        <div class="card-body">
+          <span class="card-tag t-blue">Unit 1 単語</span>
+          <h3>📖 単語練習①</h3>
+          <p>Blue Sky 3 Unit 1の単語練習アプリ（前半）。英語→日本語、日本語→英語の両方向で練習できる。繰り返してマスターしよう！</p>
+          <div class="card-footer">
+            <div class="badges">
+              <span class="badge b-slide">📝 Unit 1</span>
+              <span class="badge b-new">NEW</span>
+            </div>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 単語練習② -->
+      <a href="blusky3_unit1_vocab_2.html" target="_blank" class="card">
+        <div class="card-top c-blue"></div>
+        <div class="card-body">
+          <span class="card-tag t-blue">Unit 1 単語</span>
+          <h3>📖 単語練習②</h3>
+          <p>Blue Sky 3 Unit 1の単語練習アプリ（後半）。①と合わせて全単語を完全マスターしよう！</p>
+          <div class="card-footer">
+            <div class="badges">
+              <span class="badge b-slide">📝 Unit 1</span>
+              <span class="badge b-new">NEW</span>
+            </div>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- 使い方ガイド -->
+    <div class="info-box">
+      <h3>💡 アプリの使い方</h3>
+      <ul class="update-list">
+        <li><span class="update-date">クイズ</span><span>4択から正解を選ぼう。5問連続正解でボーナスステージが出現！タイムアタックモードもあるよ</span></li>
+        <li><span class="update-date">単語①②</span><span>英語→日本語・日本語→英語の両方向で練習できる。何度もやって覚えよう</span></li>
+        <li><span class="update-date">注意</span><span>スコアはそのブラウザに保存されます。別の端末では引き継がれません</span></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================================================ -->
 <!-- PAGE: VIDEOS (解説動画) -->
 <!-- ================================================ -->
 <div class="page" id="page-videos">
@@ -690,7 +784,7 @@
       </div>
 
       <div class="video-card coming-soon">
-        <div class="video-thumb" >
+        <div class="video-thumb">
           <div class="video-thumb-bg"></div>
           <div class="video-play-btn">▶</div>
           <div class="video-thumb-label">NotebookLM 解説</div>
@@ -704,7 +798,7 @@
       </div>
 
       <div class="video-card coming-soon">
-        <div class="video-thumb" >
+        <div class="video-thumb">
           <div class="video-thumb-bg"></div>
           <div class="video-play-btn">▶</div>
           <div class="video-thumb-label">NotebookLM 解説</div>
@@ -718,7 +812,7 @@
       </div>
 
       <div class="video-card coming-soon">
-        <div class="video-thumb" >
+        <div class="video-thumb">
           <div class="video-thumb-bg"></div>
           <div class="video-play-btn">▶</div>
           <div class="video-thumb-label">NotebookLM 解説</div>
@@ -732,7 +826,7 @@
       </div>
 
       <div class="video-card coming-soon">
-        <div class="video-thumb" >
+        <div class="video-thumb">
           <div class="video-thumb-bg"></div>
           <div class="video-play-btn">▶</div>
           <div class="video-thumb-label">NotebookLM 解説</div>
@@ -746,7 +840,7 @@
       </div>
 
       <div class="video-card coming-soon">
-        <div class="video-thumb" >
+        <div class="video-thumb">
           <div class="video-thumb-bg"></div>
           <div class="video-play-btn">▶</div>
           <div class="video-thumb-label">NotebookLM 解説</div>
@@ -776,7 +870,6 @@
 <!-- ================================================ -->
 <!-- PAGE: EXAM (入試対策) -->
 <!-- ================================================ -->
-
 <div class="page" id="page-exam">
   <div class="page-hero">
     <h2>🏫 入試対策</h2>
@@ -787,7 +880,6 @@
 
     <div class="section-label">CATEGORY</div>
     <div class="exam-cat-grid">
-      <!-- カードをクリック → 該当セクションへスクロール -->
       <div class="exam-cat-card" onclick="scrollToSection('section-past')">
         <div class="exam-cat-icon">📝</div>
         <h3>過去問リンク集</h3>
@@ -814,11 +906,9 @@
       </div>
     </div>
 
-    <!-- 過去問リンク集 -->
     <div id="section-past" style="scroll-margin-top:130px;">
       <div class="section-label" style="margin-top:8px;">過去問リンク集</div>
 
-      <!-- 2026年度 -->
       <div class="accordion open">
         <div class="accordion-header" onclick="toggleAcc(this)">
           <div class="acc-left">
@@ -839,7 +929,6 @@
         </div>
       </div>
 
-      <!-- 2025年度 -->
       <div class="accordion open">
         <div class="accordion-header" onclick="toggleAcc(this)">
           <div class="acc-left">
@@ -883,7 +972,6 @@
         </div>
       </div>
 
-      <!-- 出典 -->
       <div style="background:#f8f9fa;border-radius:10px;padding:14px 18px;margin-top:8px;font-size:12px;color:var(--gray);line-height:1.9;">
         📎 <strong>出典：</strong>千葉日報オンライン「【過去問】千葉県 公立高校入試（問題・解答・解説）【2025年度まで】」<br>
         <a href="https://www.chibanippo.co.jp/articles/1030714" target="_blank" style="color:var(--red);text-decoration:none;">https://www.chibanippo.co.jp/articles/1030714</a><br>
@@ -905,6 +993,9 @@
     </button>
     <button class="mobile-nav-btn" id="mn-handouts" onclick="showPage('handouts')">
       <span class="mn-icon">📄</span>配布物
+    </button>
+    <button class="mobile-nav-btn" id="mn-apps" onclick="showPage('apps')">
+      <span class="mn-icon">🎮</span>アプリ
     </button>
     <button class="mobile-nav-btn" id="mn-videos" onclick="showPage('videos')">
       <span class="mn-icon">🎬</span>動画
@@ -997,7 +1088,7 @@
 
 <script>
   // ===== PAGE SWITCHING =====
-  const pages = ['home','units','handouts','videos','exam','contact'];
+  const pages = ['home','units','handouts','apps','videos','exam','contact'];
   function showPage(name) {
     pages.forEach(p => {
       document.getElementById('page-' + p).classList.remove('active');
@@ -1085,6 +1176,9 @@
     { title:'3年間の重要単語・熟語リスト', tag:'入試対策', page:'exam' },
     { title:'千葉県公立高校入試 英語 過去問', tag:'入試対策', page:'exam' },
     { title:'英作文で使える表現集', tag:'入試対策', page:'exam' },
+    { title:'宝箱クイズ', tag:'アプリ', page:'apps' },
+    { title:'単語練習①', tag:'アプリ', page:'apps' },
+    { title:'単語練習②', tag:'アプリ', page:'apps' },
   ];
 
   const input = document.getElementById('searchInput');
@@ -1138,7 +1232,8 @@
       }
     }, 80);
   }
-  let videoCounter = 0;
+
+  // ===== VIDEO TOGGLE =====
   function toggleVideo(thumb, src) {
     const card = thumb.closest('.video-card');
     const embedArea = card.querySelector('.video-embed-area');
