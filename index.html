@@ -616,6 +616,44 @@
     .video-card.coming-soon .video-thumb { cursor: default; }
     .video-card.coming-soon .video-play-btn { background: #6b7280 !important; }
 
+    /* ===== PDF MODAL ===== */
+    .pdf-modal {
+      display: none; position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.93); flex-direction: column;
+    }
+    .pdf-modal.open { display: flex; }
+    .pdf-modal-hdr {
+      background: var(--dark); color: white;
+      padding: 11px 16px;
+      display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      flex-shrink: 0;
+    }
+    .pdf-modal-title {
+      flex: 1; font-size: 0.88rem; font-weight: 700;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .pdf-dl-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(255,255,255,0.15); color: white;
+      padding: 6px 13px; border-radius: 8px; text-decoration: none;
+      font-size: 0.78rem; font-weight: 700; transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .pdf-dl-btn:hover { background: rgba(255,255,255,0.25); }
+    .pdf-close-btn {
+      background: rgba(230,57,70,0.8); color: white; border: none;
+      padding: 6px 13px; border-radius: 8px; cursor: pointer;
+      font-size: 0.78rem; font-weight: 700; transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .pdf-close-btn:hover { background: var(--red); }
+    .pdf-modal iframe {
+      flex: 1; border: none; width: 100%; background: #525659;
+    }
+    /* PDF カード（直接埋め込み用） */
+    .card.pdf-card { cursor: pointer; }
+
     /* ===== ACCORDION ===== */
     .accordion { border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 10px; background: white; }
     .accordion-header {
@@ -660,6 +698,16 @@
     </nav>
   </div>
 </header>
+
+<!-- PDF MODAL -->
+<div class="pdf-modal" id="pdfModal">
+  <div class="pdf-modal-hdr">
+    <span class="pdf-modal-title" id="pdfModalTitle"></span>
+    <a class="pdf-dl-btn" id="pdfDlBtn" href="#" download>⬇ ダウンロード</a>
+    <button class="pdf-close-btn" onclick="closePdfModal()">✕ 閉じる</button>
+  </div>
+  <iframe id="pdfFrame" src="" title="PDFビューアー"></iframe>
+</div>
 
 <!-- SEARCH BAR ROW -->
 <div class="search-bar-row">
@@ -1668,6 +1716,28 @@
   const pGasUrl = localStorage.getItem('portalGasUrl');
   if (pGasUrl) pFetchLesson().catch(()=>{});
   else document.getElementById('pGasHint').style.display = 'block';
+
+  // ===== PDF MODAL =====
+  function openPdf(e, src, title) {
+    // スマホ・タブレットはブラウザの標準動作（新タブ）に任せる
+    if (window.innerWidth < 768) return true;
+    e.preventDefault();
+    document.getElementById('pdfModalTitle').textContent = title;
+    document.getElementById('pdfFrame').src = src;
+    document.getElementById('pdfDlBtn').href = src;
+    document.getElementById('pdfDlBtn').download = title;
+    document.getElementById('pdfModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    return false;
+  }
+  function closePdfModal() {
+    document.getElementById('pdfModal').classList.remove('open');
+    document.getElementById('pdfFrame').src = '';
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closePdfModal();
+  });
 
   // ===== VIDEO TOGGLE =====
   function toggleVideo(thumb, src) {
