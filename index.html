@@ -687,13 +687,10 @@
     </div>
 
     <nav class="main-nav">
-      <button class="nav-btn active" onclick="showPage('portal')" id="tab-portal">🏫 授業</button>
+      <button class="nav-btn active" onclick="showPage('portal')" id="tab-portal">✍ 授業</button>
       <button class="nav-btn" onclick="showPage('home')" id="tab-home">ホーム</button>
       <button class="nav-btn" onclick="showPage('units')" id="tab-units">授業資料</button>
-      <button class="nav-btn" onclick="showPage('handouts')" id="tab-handouts">配布物</button>
       <button class="nav-btn" onclick="showPage('apps')" id="tab-apps">🎮 アプリ</button>
-      <button class="nav-btn" onclick="showPage('videos')" id="tab-videos">動画</button>
-      <button class="nav-btn" onclick="showPage('exam')" id="tab-exam">入試対策</button>
       <button class="nav-btn" onclick="showPage('contact')" id="tab-contact">お問い合わせ</button>
     </nav>
   </div>
@@ -902,29 +899,22 @@
         <p>PDF・スライド一覧</p>
         <div class="exam-cat-count">1</div>
       </div>
-      <div class="exam-cat-card" onclick="showPage('handouts')">
-        <div class="exam-cat-icon">📄</div>
-        <h3>配布物保管庫</h3>
-        <p>授業プリントPDF</p>
-        <div class="exam-cat-count">—</div>
-      </div>
       <div class="exam-cat-card" onclick="showPage('apps')">
         <div class="exam-cat-icon">🎮</div>
         <h3>学習アプリ</h3>
         <p>クイズ・単語練習</p>
         <div class="exam-cat-count">2</div>
       </div>
-      <div class="exam-cat-card" onclick="showPage('videos')">
-        <div class="exam-cat-icon">🎬</div>
-        <h3>解説動画</h3>
-        <p>NotebookLM授業動画</p>
-        <div class="exam-cat-count">1</div>
-      </div>
-      <div class="exam-cat-card" onclick="showPage('exam')">
-        <div class="exam-cat-icon">🏫</div>
+      <div class="exam-cat-card" onclick="showPage('units'); setTimeout(()=>document.getElementById('section-past').scrollIntoView({behavior:'smooth'}),300)">
+        <div class="exam-cat-icon">📝</div>
         <h3>入試対策</h3>
-        <p>過去問・文法まとめ</p>
-        <div class="exam-cat-count">—</div>
+        <p>過去問リンク集</p>
+        <div class="exam-cat-count">6</div>
+      </div>
+      <div class="exam-cat-card" onclick="showPage('contact')">
+        <div class="exam-cat-icon">✉️</div>
+        <h3>お問い合わせ</h3>
+        <p>質問・リンク切れ報告</p>
       </div>
     </div>
 
@@ -972,12 +962,27 @@
         <div class="filter-tab" data-filter="unit5">Unit 5</div>
         <div class="filter-tab" data-filter="grammar">文法まとめ</div>
         <div class="filter-tab" data-filter="test">テスト対策</div>
+        <div class="filter-tab" data-filter="exam">入試対策</div>
       </div>
     </div>
   </div>
 
   <div class="main">
     <div class="card-grid" id="unitCardGrid">
+
+      <!-- 入試対策：過去問リンク集カード -->
+      <div class="card" data-category="exam" onclick="document.getElementById('section-past').scrollIntoView({behavior:'smooth'})">
+        <div class="card-top c-purple"></div>
+        <div class="card-body">
+          <span class="card-tag t-purple">入試対策</span>
+          <h3>📝 過去問リンク集</h3>
+          <p>千葉県公立高校入試 英語（2025・2026年度）の問題・解答・解説へのリンク集です。</p>
+          <div class="card-footer">
+            <div class="badges"><span class="badge b-pdf">🔗 外部リンク</span></div>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </div>
 
       <a href="https://drive.google.com/file/d/1-vzySoZIkd2eMmLlLI5ucjQtChxP9r8e/view" target="_blank" class="card" data-category="unit1">
         <div class="card-top c-red"></div>
@@ -993,239 +998,10 @@
       </a>
 
     </div>
-  </div>
-</div>
 
-<!-- ================================================ -->
-<!-- PAGE: HANDOUTS (配布物) -->
-<!-- ================================================ -->
-<div class="page" id="page-handouts">
-  <div class="page-hero">
-    <h2>📄 配布物保管庫</h2>
-    <p>授業で配ったプリントのPDFをここで確認・ダウンロードできます</p>
-  </div>
-
-  <div class="main">
-    <p style="color:var(--gray);font-size:14px;padding:60px 0;text-align:center;">Coming Soon!</p>
-  </div>
-</div>
-
-<!-- ================================================ -->
-<!-- PAGE: APPS (学習アプリ) ★ NEW ★ -->
-<!-- ================================================ -->
-<div class="page" id="page-apps">
-  <div class="page-hero">
-    <h2>🎮 学習アプリ</h2>
-    <p>英語の練習ができるインタラクティブアプリ。タップして遊びながら覚えよう！</p>
-  </div>
-
-  <div class="main">
-
-    <div class="section-label">QUIZ & GAMES</div>
-    <div class="card-grid">
-
-      <!-- 宝箱クイズ -->
-      <a href="宝箱クイズ.html" target="_blank" class="card">
-        <div class="card-top c-orange"></div>
-        <div class="card-body">
-          <span class="card-tag t-orange">クイズゲーム</span>
-          <h3>💎 宝箱クイズ</h3>
-          <p>Kahoot!風の4択クイズゲーム。タイムアタックモードや5連続正解でボーナスステージ登場！歴代スコアに挑戦しよう。</p>
-          <div class="card-footer">
-            <div class="badges">
-              <span class="badge b-game">🏆 ランキング</span>
-              <span class="badge b-new">NEW</span>
-            </div>
-            <span class="card-arrow">→</span>
-          </div>
-        </div>
-      </a>
-
-      <!-- 単語練習② -->
-      <a href="blusky3_unit1_vocab_2.html" target="_blank" class="card">
-        <div class="card-top c-blue"></div>
-        <div class="card-body">
-          <span class="card-tag t-blue">Unit 1 単語</span>
-          <h3>📖 単語練習②</h3>
-          <p>Blue Sky 3 Unit 1の単語練習アプリ（後半）。①と合わせて全単語を完全マスターしよう！</p>
-          <div class="card-footer">
-            <div class="badges">
-              <span class="badge b-slide">📝 Unit 1</span>
-              <span class="badge b-new">NEW</span>
-            </div>
-            <span class="card-arrow">→</span>
-          </div>
-        </div>
-      </a>
-
-    </div>
-
-    <!-- 使い方ガイド -->
-    <div class="info-box">
-      <h3>💡 アプリの使い方</h3>
-      <ul class="update-list">
-        <li><span class="update-date">クイズ</span><span>4択から正解を選ぼう。5問連続正解でボーナスステージが出現！タイムアタックモードもあるよ</span></li>
-        <li><span class="update-date">単語②</span><span>英語→日本語・日本語→英語の両方向で練習できる。何度もやって覚えよう</span></li>
-        <li><span class="update-date">注意</span><span>スコアはそのブラウザに保存されます。別の端末では引き継がれません</span></li>
-      </ul>
-    </div>
-
-  </div>
-</div>
-
-<!-- ================================================ -->
-<!-- PAGE: VIDEOS (解説動画) -->
-<!-- ================================================ -->
-<div class="page" id="page-videos">
-  <div class="page-hero">
-    <h2>🎬 解説動画</h2>
-    <p>NotebookLMで作成した授業解説動画です。カードをタップして再生しよう</p>
-  </div>
-
-  <div class="main">
-
-    <div class="section-label">UNIT VIDEOS</div>
-    <div class="video-grid">
-
-      <div class="video-card">
-        <div class="video-thumb" onclick="toggleVideo(this, 'https://drive.google.com/file/d/1bohmm_AvahGdzfXem-hKKhcnPhi5HnfG/preview')">
-          <div class="video-thumb-bg"></div>
-          <div class="video-play-btn">▶</div>
-          <div class="video-thumb-label">NotebookLM 解説</div>
-        </div>
-        <div class="video-embed-area" id="ve-1"></div>
-        <div class="video-info">
-          <span class="card-tag t-red">Unit 1</span>
-          <h3>3-D Art 解説動画</h3>
-          <p>Unit 1「3-D Art」の授業解説動画です。タップして再生しよう。</p>
-        </div>
-      </div>
-
-      <div class="video-card coming-soon">
-        <div class="video-thumb">
-          <div class="video-thumb-bg"></div>
-          <div class="video-play-btn">▶</div>
-          <div class="video-thumb-label">NotebookLM 解説</div>
-        </div>
-        <div class="video-embed-area" id="ve-2"></div>
-        <div class="video-info">
-          <span class="card-tag t-blue">Unit 2</span>
-          <h3>解説動画 2</h3>
-          <p>Coming Soon!</p>
-        </div>
-      </div>
-
-      <div class="video-card coming-soon">
-        <div class="video-thumb">
-          <div class="video-thumb-bg"></div>
-          <div class="video-play-btn">▶</div>
-          <div class="video-thumb-label">NotebookLM 解説</div>
-        </div>
-        <div class="video-embed-area" id="ve-3"></div>
-        <div class="video-info">
-          <span class="card-tag t-green">Unit 3</span>
-          <h3>解説動画 3</h3>
-          <p>Coming Soon!</p>
-        </div>
-      </div>
-
-      <div class="video-card coming-soon">
-        <div class="video-thumb">
-          <div class="video-thumb-bg"></div>
-          <div class="video-play-btn">▶</div>
-          <div class="video-thumb-label">NotebookLM 解説</div>
-        </div>
-        <div class="video-embed-area" id="ve-4"></div>
-        <div class="video-info">
-          <span class="card-tag t-orange">Unit 4</span>
-          <h3>解説動画 4</h3>
-          <p>Coming Soon!</p>
-        </div>
-      </div>
-
-      <div class="video-card coming-soon">
-        <div class="video-thumb">
-          <div class="video-thumb-bg"></div>
-          <div class="video-play-btn">▶</div>
-          <div class="video-thumb-label">NotebookLM 解説</div>
-        </div>
-        <div class="video-embed-area" id="ve-5"></div>
-        <div class="video-info">
-          <span class="card-tag t-gray">文法まとめ</span>
-          <h3>解説動画 5</h3>
-          <p>Coming Soon!</p>
-        </div>
-      </div>
-
-      <div class="video-card coming-soon">
-        <div class="video-thumb">
-          <div class="video-thumb-bg"></div>
-          <div class="video-play-btn">▶</div>
-          <div class="video-thumb-label">NotebookLM 解説</div>
-        </div>
-        <div class="video-embed-area" id="ve-6"></div>
-        <div class="video-info">
-          <span class="card-tag t-purple">テスト対策</span>
-          <h3>解説動画 6</h3>
-          <p>Coming Soon!</p>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="info-box" style="margin-top:8px;">
-      <h3>💡 動画が見られないときは</h3>
-      <ul class="update-list">
-        <li><span class="update-date">①</span><span>学校のGoogleアカウントでログインしているか確認しよう</span></li>
-        <li><span class="update-date">②</span><span>Wi-Fiにつないでから再生すると快適です</span></li>
-        <li><span class="update-date">③</span><span>それでも見られない場合は先生に声をかけてね</span></li>
-      </ul>
-    </div>
-
-  </div>
-</div>
-
-<!-- ================================================ -->
-<!-- PAGE: EXAM (入試対策) -->
-<!-- ================================================ -->
-<div class="page" id="page-exam">
-  <div class="page-hero">
-    <h2>🏫 入試対策</h2>
-    <p>過去問・文法まとめ・単語リストのリンク集です</p>
-  </div>
-
-  <div class="main">
-
-    <div class="section-label">CATEGORY</div>
-    <div class="exam-cat-grid">
-      <div class="exam-cat-card" onclick="scrollToSection('section-past')">
-        <div class="exam-cat-icon">📝</div>
-        <h3>過去問リンク集</h3>
-        <p>千葉県公立高校入試 英語（2025・2026年度）</p>
-        <div class="exam-cat-count">6</div>
-      </div>
-      <div class="exam-cat-card coming-soon" style="opacity:0.5;pointer-events:none;">
-        <div class="exam-cat-icon">📖</div>
-        <h3>文法まとめ資料</h3>
-        <p>入試頻出文法ポイント一覧</p>
-        <div class="exam-cat-count" style="font-size:13px;color:var(--gray);font-family:'Noto Sans JP',sans-serif;font-weight:500;">Coming Soon</div>
-      </div>
-      <div class="exam-cat-card coming-soon" style="opacity:0.5;pointer-events:none;">
-        <div class="exam-cat-icon">🔤</div>
-        <h3>重要単語リスト</h3>
-        <p>3年間の必須単語・熟語</p>
-        <div class="exam-cat-count" style="font-size:13px;color:var(--gray);font-family:'Noto Sans JP',sans-serif;font-weight:500;">Coming Soon</div>
-      </div>
-      <div class="exam-cat-card coming-soon" style="opacity:0.5;pointer-events:none;">
-        <div class="exam-cat-icon">✍️</div>
-        <h3>英作文・スピーキング</h3>
-        <p>英作文の型・よく出るテーマ</p>
-        <div class="exam-cat-count" style="font-size:13px;color:var(--gray);font-family:'Noto Sans JP',sans-serif;font-weight:500;">Coming Soon</div>
-      </div>
-    </div>
-
-    <div id="section-past" style="scroll-margin-top:130px;">
-      <div class="section-label" style="margin-top:8px;">過去問リンク集</div>
+    <!-- 入試対策：過去問リンク集 -->
+    <div id="section-past" style="scroll-margin-top:130px;margin-top:16px;">
+      <div class="section-label">📝 入試対策 — 過去問リンク集</div>
 
       <div class="accordion open">
         <div class="accordion-header" onclick="toggleAcc(this)">
@@ -1300,11 +1076,75 @@
   </div>
 </div>
 
+
+<!-- ================================================ -->
+<!-- PAGE: APPS (学習アプリ) ★ NEW ★ -->
+<!-- ================================================ -->
+<div class="page" id="page-apps">
+  <div class="page-hero">
+    <h2>🎮 学習アプリ</h2>
+    <p>英語の練習ができるインタラクティブアプリ。タップして遊びながら覚えよう！</p>
+  </div>
+
+  <div class="main">
+
+    <div class="section-label">QUIZ & GAMES</div>
+    <div class="card-grid">
+
+      <!-- 宝箱クイズ -->
+      <a href="宝箱クイズ.html" target="_blank" class="card">
+        <div class="card-top c-orange"></div>
+        <div class="card-body">
+          <span class="card-tag t-orange">クイズゲーム</span>
+          <h3>💎 宝箱クイズ</h3>
+          <p>Kahoot!風の4択クイズゲーム。タイムアタックモードや5連続正解でボーナスステージ登場！歴代スコアに挑戦しよう。</p>
+          <div class="card-footer">
+            <div class="badges">
+              <span class="badge b-game">🏆 ランキング</span>
+              <span class="badge b-new">NEW</span>
+            </div>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- 単語練習② -->
+      <a href="blusky3_unit1_vocab_2.html" target="_blank" class="card">
+        <div class="card-top c-blue"></div>
+        <div class="card-body">
+          <span class="card-tag t-blue">Unit 1 単語</span>
+          <h3>📖 単語練習②</h3>
+          <p>Blue Sky 3 Unit 1の単語練習アプリ（後半）。①と合わせて全単語を完全マスターしよう！</p>
+          <div class="card-footer">
+            <div class="badges">
+              <span class="badge b-slide">📝 Unit 1</span>
+              <span class="badge b-new">NEW</span>
+            </div>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- 使い方ガイド -->
+    <div class="info-box">
+      <h3>💡 アプリの使い方</h3>
+      <ul class="update-list">
+        <li><span class="update-date">クイズ</span><span>4択から正解を選ぼう。5問連続正解でボーナスステージが出現！タイムアタックモードもあるよ</span></li>
+        <li><span class="update-date">単語②</span><span>英語→日本語・日本語→英語の両方向で練習できる。何度もやって覚えよう</span></li>
+        <li><span class="update-date">注意</span><span>スコアはそのブラウザに保存されます。別の端末では引き継がれません</span></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
 <!-- MOBILE BOTTOM NAV -->
 <div class="mobile-nav">
   <div class="mobile-nav-inner">
     <button class="mobile-nav-btn active" id="mn-portal" onclick="showPage('portal')">
-      <span class="mn-icon">🏫</span>授業
+      <span class="mn-icon">✍️</span>授業
     </button>
     <button class="mobile-nav-btn" id="mn-home" onclick="showPage('home')">
       <span class="mn-icon">🏠</span>ホーム
@@ -1312,17 +1152,8 @@
     <button class="mobile-nav-btn" id="mn-units" onclick="showPage('units')">
       <span class="mn-icon">📚</span>授業資料
     </button>
-    <button class="mobile-nav-btn" id="mn-handouts" onclick="showPage('handouts')">
-      <span class="mn-icon">📄</span>配布物
-    </button>
     <button class="mobile-nav-btn" id="mn-apps" onclick="showPage('apps')">
       <span class="mn-icon">🎮</span>アプリ
-    </button>
-    <button class="mobile-nav-btn" id="mn-videos" onclick="showPage('videos')">
-      <span class="mn-icon">🎬</span>動画
-    </button>
-    <button class="mobile-nav-btn" id="mn-exam" onclick="showPage('exam')">
-      <span class="mn-icon">🏫</span>入試対策
     </button>
     <button class="mobile-nav-btn" id="mn-contact" onclick="showPage('contact')">
       <span class="mn-icon">✉️</span>連絡
@@ -1409,7 +1240,7 @@
 
 <script>
   // ===== PAGE SWITCHING =====
-  const pages = ['portal','home','units','handouts','apps','videos','exam','contact'];
+  const pages = ['portal','home','units','apps','contact'];
   function showPage(name) {
     pages.forEach(p => {
       document.getElementById('page-' + p).classList.remove('active');
@@ -1478,25 +1309,13 @@
   // ===== SEARCH =====
   const searchData = [
     { title:'Unit 1 3-D Art', tag:'Unit 1', page:'units' },
-    { title:'Unit 1 本文プリント', tag:'配布物', page:'handouts' },
-    { title:'Unit 1 文法ワークシート（will / be going to）', tag:'配布物', page:'handouts' },
-    { title:'Unit 1 3-D Art 解説動画', tag:'動画', page:'videos' },
     { title:'Unit 2 From the Other Side', tag:'Unit 2', page:'units' },
-    { title:'Unit 2 本文プリント', tag:'配布物', page:'handouts' },
-    { title:'Unit 2 受動態ワークシート', tag:'配布物', page:'handouts' },
-    { title:'Unit 2 受動態マスター講座', tag:'動画', page:'videos' },
     { title:'Unit 3 For Our Future', tag:'Unit 3', page:'units' },
-    { title:'Unit 3 現在完了形 解説動画', tag:'動画', page:'videos' },
     { title:'Unit 4 Be Prepared', tag:'Unit 4', page:'units' },
-    { title:'Unit 4 関係代名詞 解説動画', tag:'動画', page:'videos' },
     { title:'Unit 5 A Legacy for Peace', tag:'Unit 5', page:'units' },
     { title:'3年生の文法ポイント総整理', tag:'文法まとめ', page:'units' },
     { title:'前期中間テスト対策スライド', tag:'テスト対策', page:'units' },
-    { title:'前期中間テスト 範囲表', tag:'配布物', page:'handouts' },
-    { title:'入試頻出文法まとめシート', tag:'入試対策', page:'exam' },
-    { title:'3年間の重要単語・熟語リスト', tag:'入試対策', page:'exam' },
-    { title:'千葉県公立高校入試 英語 過去問', tag:'入試対策', page:'exam' },
-    { title:'英作文で使える表現集', tag:'入試対策', page:'exam' },
+    { title:'千葉県公立高校入試 英語 過去問（2025・2026年度）', tag:'入試対策', page:'units' },
     { title:'宝箱クイズ', tag:'アプリ', page:'apps' },
     { title:'単語練習①', tag:'アプリ', page:'apps' },
     { title:'単語練習②', tag:'アプリ', page:'apps' },
@@ -1544,7 +1363,7 @@
 
   // ===== SCROLL TO SECTION =====
   function scrollToSection(id) {
-    showPage('exam');
+    showPage('units');
     setTimeout(function() {
       var el = document.getElementById(id);
       if (el) {
