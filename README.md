@@ -5,7 +5,7 @@
 **授業スライド・配布プリント・学習アプリ・解説動画**をまとめた、英語授業の復習用Webサイトです。  
 生徒がいつでも・どの端末からでもアクセスして復習できることを目的としています。
 
-🔗 **公開URL：** https://yc550114-create.github.io/english-review-room/
+🔗 **公開URL：** https://Sasaho0113.github.io/english_review/
 
 ---
 
@@ -13,6 +13,7 @@
 
 | ページ | 内容 |
 |--------|------|
+| ✍ 授業 | 授業中に開くアプリ |
 | 🏠 ホーム | お知らせ・クイックアクセス・更新情報 |
 | 📚 授業資料 | 各Unitのスライド・PDF（Googleドライブ連携） |
 | 📄 配布物 | 授業で配ったプリントのPDF保管庫 |
@@ -28,8 +29,7 @@
 | アプリ名 | 概要 |
 |---------|------|
 | 💎 宝箱クイズ | Kahoot!風4択クイズ。タイムアタック・ボーナスステージ・歴代スコア機能付き |
-| 📖 単語練習① | Blue Sky 3 Unit 1 単語練習（前半） |
-| 📖 単語練習② | Blue Sky 3 Unit 1 単語練習（後半） |
+| 📖 単語練習 | Blue Sky 3 Unit 1 単語練習 |
 
 ---
 
@@ -48,7 +48,6 @@
 english-review-room/
 ├── index.html               # メインサイト（全ページ含む）
 ├── 宝箱クイズ.html           # 学習クイズアプリ
-├── blusky3_unit1_vocab_1.html  # 単語練習①
 ├── blusky3_unit1_vocab_2.html  # 単語練習②
 ├── README.md
 └── SECURITY.md
