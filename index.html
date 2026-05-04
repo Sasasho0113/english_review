@@ -414,6 +414,166 @@
     @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
     .hero, .main > * { animation: fadeUp 0.45s ease both; }
 
+    /* ===== 授業ポータル ===== */
+    .portal-outer {
+      background: #EEF2FF;
+      min-height: calc(100vh - 62px);
+    }
+    .portal-subhd {
+      background: #1E1B4B; color: white;
+      padding: 11px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .portal-subhd-date { font-size: 0.95rem; font-weight: 700; }
+    .p-settings-btn {
+      background: rgba(255,255,255,0.18); border: none; color: white;
+      padding: 6px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 700; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .p-settings-btn:hover { background: rgba(255,255,255,0.28); }
+    .p-settings-panel {
+      display: none; background: #1a1a2e; color: white;
+      padding: 14px 20px 16px; border-bottom: 2px solid rgba(255,255,255,0.08);
+    }
+    .p-settings-panel.open { display: block; }
+    .p-s-label { font-size: 0.79rem; opacity: 0.75; margin-bottom: 5px; }
+    .p-s-row { display: flex; gap: 8px; margin-bottom: 8px; }
+    .p-s-input {
+      flex: 1; padding: 8px 11px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1);
+      color: white; font-size: 0.82rem;
+    }
+    .p-s-input::placeholder { color: rgba(255,255,255,0.38); }
+    .p-s-save {
+      padding: 8px 14px; background: #6366F1; color: white;
+      border: none; border-radius: 8px; font-size: 0.8rem; font-weight: 700;
+      cursor: pointer; white-space: nowrap;
+    }
+    .p-s-status { font-size: 0.73rem; opacity: 0.75; min-height: 16px; margin-bottom: 10px; }
+
+    .portal-content {
+      max-width: 860px; margin: 0 auto; padding: 14px 16px 32px;
+      display: flex; flex-direction: column; gap: 13px;
+    }
+
+    /* Goal card */
+    .p-goal-card {
+      background: linear-gradient(135deg, #4F46E5, #6366F1);
+      border-radius: 16px; padding: 18px 20px; color: white;
+      box-shadow: 0 4px 14px rgba(79,70,229,0.28); display: none;
+    }
+    .p-goal-card.show { display: block; }
+    .p-goal-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .p-goal-lbl { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; opacity: 0.8; }
+    .p-refresh-btn {
+      background: rgba(255,255,255,0.2); border: none; color: white;
+      padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; cursor: pointer;
+    }
+    .p-goal-text { font-size: 1.1rem; font-weight: 800; line-height: 1.5; }
+
+    /* Gas hint */
+    .p-gas-hint {
+      background: white; border: 2px dashed #C7D2FE; border-radius: 14px;
+      padding: 18px; text-align: center; color: #6B7280; font-size: 0.85rem; line-height: 1.7;
+    }
+    .p-gas-hint strong { color: #4F46E5; }
+
+    /* Tasks card */
+    .p-tasks-card {
+      background: white; border-radius: 16px; padding: 18px 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07); display: none;
+    }
+    .p-tasks-card.show { display: block; }
+    .p-prog-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .p-prog-lbl { font-size: 0.78rem; color: #6B7280; font-weight: 600; }
+    .p-prog-count { font-size: 0.78rem; font-weight: 800; color: #059669; }
+    .p-prog-bg { height: 8px; background: #F3F4F6; border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+    .p-prog-fill { height: 100%; background: linear-gradient(90deg,#10B981,#059669); border-radius: 10px; transition: width 0.4s ease; width: 0%; }
+    .p-all-done {
+      display: none; background: #D1FAE5; border: 2px solid #A7F3D0;
+      border-radius: 12px; padding: 13px; text-align: center;
+      font-size: 1rem; font-weight: 800; color: #059669; margin-bottom: 12px;
+      animation: pPopIn 0.4s ease;
+    }
+    .p-all-done.show { display: block; }
+    @keyframes pPopIn { from{transform:scale(0.9);opacity:0} to{transform:scale(1);opacity:1} }
+
+    /* Task item */
+    .p-task-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 13px; background: #F9FAFB; border-radius: 12px;
+      margin-bottom: 8px; border: 2px solid #E5E7EB;
+      transition: background 0.3s, border-color 0.3s;
+      position: relative; overflow: hidden; cursor: pointer; user-select: none;
+    }
+    .p-task-item:last-child { margin-bottom: 0; }
+    .p-task-item:hover { border-color: #C7D2FE; }
+    .p-task-item.done { background: #F0FDF4; border-color: #BBF7D0; }
+    .p-task-item.clearing { animation: pFlashGreen 0.5s ease; }
+    @keyframes pFlashGreen { 0%{background:#F9FAFB} 40%{background:#A7F3D0} 100%{background:#F0FDF4} }
+
+    .p-check-btn {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 2.5px solid #E5E7EB; background: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.88rem; flex-shrink: 0; transition: all 0.25s;
+    }
+    .p-task-item.done .p-check-btn { background: #059669; border-color: #059669; color: white; }
+    .p-task-num { font-size: 0.75rem; font-weight: 800; color: #9CA3AF; min-width: 16px; flex-shrink: 0; }
+    .p-task-item.done .p-task-num { color: #059669; }
+    .p-task-text { font-size: 0.93rem; font-weight: 600; flex: 1; line-height: 1.4; }
+    .p-task-item.done .p-task-text { text-decoration: line-through; color: #9CA3AF; }
+    .p-clear-badge {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%) scale(0);
+      background: #059669; color: white; font-size: 0.7rem; font-weight: 800;
+      padding: 3px 9px; border-radius: 20px; opacity: 0; pointer-events: none;
+    }
+    .p-task-item.done .p-clear-badge { transform: translateY(-50%) scale(1); opacity: 1; animation: pBadgePop 0.4s ease 0.1s both; }
+    @keyframes pBadgePop {
+      0%{transform:translateY(-50%) scale(0) rotate(-10deg);opacity:0}
+      60%{transform:translateY(-50%) scale(1.2) rotate(3deg);opacity:1}
+      100%{transform:translateY(-50%) scale(1) rotate(0deg);opacity:1}
+    }
+
+    /* Gem card */
+    .p-gem-card { background: linear-gradient(135deg,#7C3AED,#4F46E5); border-radius: 16px; box-shadow: 0 4px 16px rgba(124,58,237,0.32); overflow: hidden; }
+    .p-gem-btn { display: flex; align-items: center; gap: 14px; padding: 20px 22px; text-decoration: none; color: white; transition: filter 0.15s; }
+    .p-gem-btn:hover { filter: brightness(1.1); }
+    .p-gem-hint { background: white; border: 2px dashed #C4B5FD; border-radius: 14px; padding: 16px 18px; text-align: center; color: #6B7280; font-size: 0.83rem; line-height: 1.7; }
+    .p-gem-hint strong { color: #7C3AED; }
+
+    /* Timer */
+    .p-timer-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+    .p-timer-display { font-size: 4.2rem; font-weight: 800; text-align: center; font-variant-numeric: tabular-nums; color: #059669; letter-spacing: 0.02em; line-height: 1; margin: 4px 0 12px; transition: color 0.3s; }
+    .p-timer-display.p-danger { color: #DC2626; }
+    .p-presets { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .p-preset-btn { padding: 5px 14px; border: 2px solid #059669; background: white; color: #059669; border-radius: 20px; cursor: pointer; font-size: 0.88rem; font-weight: 600; transition: all 0.15s; }
+    .p-preset-btn.active, .p-preset-btn:hover { background: #059669; color: white; }
+    .p-timer-ctrl { display: flex; justify-content: center; gap: 10px; }
+    .p-ctrl { padding: 10px 28px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
+    .p-ctrl-start { background: #059669; color: white; }
+    .p-ctrl-reset { background: #E5E7EB; color: #374151; }
+
+    /* Quick row */
+    .p-quick-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .p-quick-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 15px 10px; border-radius: 12px; border: none; text-decoration: none; font-size: 0.95rem; font-weight: 700; color: white; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,0.13); transition: filter 0.15s; }
+    .p-quick-btn:hover { filter: brightness(1.08); }
+    .p-q-gem  { background: linear-gradient(135deg,#7C3AED,#4F46E5); }
+    .p-q-kah  { background: linear-gradient(135deg,#E11D48,#F97316); }
+
+    /* Form btn */
+    .p-form-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 17px; background: linear-gradient(135deg,#D97706,#F59E0B); color: white; border: none; border-radius: 14px; font-size: 1.05rem; font-weight: 700; cursor: pointer; text-decoration: none; box-shadow: 0 3px 12px rgba(217,119,6,0.3); transition: filter 0.15s; }
+    .p-form-btn:hover { filter: brightness(1.06); }
+    .p-form-btn.disabled { background: #9CA3AF; box-shadow: none; cursor: not-allowed; }
+
+    /* Portal section label */
+    .p-sec-lbl { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #6B7280; margin-bottom: 8px; }
+
+    /* Loading */
+    .p-loading { background: white; border-radius: 12px; padding: 13px 16px; font-size: 0.85rem; color: #6B7280; text-align: center; display: none; }
+    .p-loading.show { display: block; }
+
     /* ===== COMING SOON ===== */
     .coming-soon {
       pointer-events: none;
@@ -489,7 +649,8 @@
     </div>
 
     <nav class="main-nav">
-      <button class="nav-btn active" onclick="showPage('home')" id="tab-home">ホーム</button>
+      <button class="nav-btn active" onclick="showPage('portal')" id="tab-portal">🏫 授業</button>
+      <button class="nav-btn" onclick="showPage('home')" id="tab-home">ホーム</button>
       <button class="nav-btn" onclick="showPage('units')" id="tab-units">授業資料</button>
       <button class="nav-btn" onclick="showPage('handouts')" id="tab-handouts">配布物</button>
       <button class="nav-btn" onclick="showPage('apps')" id="tab-apps">🎮 アプリ</button>
@@ -512,9 +673,135 @@
 </div>
 
 <!-- ================================================ -->
+<!-- PAGE: PORTAL (授業ポータル) ← デフォルト -->
+<!-- ================================================ -->
+<div class="page active" id="page-portal">
+  <!-- 日付 + 設定ボタン -->
+  <div class="portal-subhd">
+    <div class="portal-subhd-date" id="portalDateDisplay"></div>
+    <button class="p-settings-btn" onclick="togglePortalSettings()">⚙️ 設定</button>
+  </div>
+
+  <!-- 設定パネル -->
+  <div class="p-settings-panel" id="portalSettingsPanel">
+    <div style="margin-bottom:4px;">
+      <div class="p-s-label">📡 スプレッドシート GAS URL（目標・課題）</div>
+      <div class="p-s-row">
+        <input class="p-s-input" id="pGasUrlInput" type="text" placeholder="https://script.google.com/macros/s/...">
+        <button class="p-s-save" onclick="pSaveGasUrl()">保存・接続</button>
+      </div>
+      <div class="p-s-status" id="pSettingsStatus"></div>
+    </div>
+    <div>
+      <div class="p-s-label">✨ Gemini Gem URL（授業用Gem）</div>
+      <div class="p-s-row">
+        <input class="p-s-input" id="pGemUrlInput" type="text" placeholder="https://gemini.google.com/gems/share/...">
+        <button class="p-s-save" onclick="pSaveGemUrl()">保存</button>
+      </div>
+      <div class="p-s-status" id="pGemStatus"></div>
+    </div>
+  </div>
+
+  <!-- ポータルコンテンツ -->
+  <div class="portal-outer">
+    <div class="portal-content">
+
+      <!-- ローディング -->
+      <div class="p-loading" id="pLoadingBar">📡 目標・課題を読み込み中...</div>
+
+      <!-- 本時の目標 -->
+      <div class="p-goal-card" id="pGoalCard">
+        <div class="p-goal-top">
+          <span class="p-goal-lbl">📌 本時の目標</span>
+          <button class="p-refresh-btn" onclick="pFetchLesson()">🔄 更新</button>
+        </div>
+        <div class="p-goal-text" id="pGoalText">—</div>
+      </div>
+
+      <!-- GAS未設定のとき -->
+      <div class="p-gas-hint" id="pGasHint" style="display:none;">
+        <div style="font-size:1.8rem;margin-bottom:8px;">📋</div>
+        <strong>本時の目標・課題</strong> はスプレッドシートで管理できます<br>
+        右上の <strong>⚙️ 設定</strong> から GAS URL を設定してください
+      </div>
+
+      <!-- 課題チェックリスト -->
+      <div class="p-tasks-card" id="pTasksCard">
+        <div class="p-sec-lbl" style="display:flex;justify-content:space-between;margin-bottom:10px;">
+          <span>✅ 今日の課題</span>
+        </div>
+        <div class="p-prog-row">
+          <span class="p-prog-lbl">進捗</span>
+          <span class="p-prog-count" id="pProgressCount">0 / 0</span>
+        </div>
+        <div class="p-prog-bg"><div class="p-prog-fill" id="pProgressFill"></div></div>
+        <div class="p-all-done" id="pAllDone">🎉 全部完了！お疲れ様でした！</div>
+        <div id="pTasksList"></div>
+      </div>
+
+      <!-- Gem カード -->
+      <div>
+        <div class="p-gem-card" id="pGemCard" style="display:none;">
+          <a class="p-gem-btn" id="pGemBtn" href="#" target="_blank" rel="noopener">
+            <span style="font-size:2rem;">✨</span>
+            <div>
+              <div style="font-size:1.05rem;font-weight:800;line-height:1.3;">今日のGemで学習する</div>
+              <div style="font-size:0.75rem;opacity:0.8;margin-top:2px;">英語学習アシスタントを開く</div>
+            </div>
+            <span style="margin-left:auto;font-size:1.3rem;opacity:0.8;">→</span>
+          </a>
+        </div>
+        <div class="p-gem-hint" id="pGemHint" style="display:none;">
+          <div style="font-size:1.5rem;margin-bottom:6px;">✨</div>
+          <strong>Gemini Gem</strong> のURLを設定すると、ここに大きなボタンが表示されます<br>
+          <strong>⚙️ 設定</strong> から Gem URL を設定してください
+        </div>
+      </div>
+
+      <!-- タイマー -->
+      <div class="p-timer-card">
+        <div class="p-sec-lbl">⏱ タイマー</div>
+        <div class="p-timer-display" id="pTimerDisplay">05:00</div>
+        <div class="p-presets">
+          <button class="p-preset-btn" onclick="pSetPreset(this,1)">1分</button>
+          <button class="p-preset-btn" onclick="pSetPreset(this,3)">3分</button>
+          <button class="p-preset-btn active" onclick="pSetPreset(this,5)">5分</button>
+          <button class="p-preset-btn" onclick="pSetPreset(this,10)">10分</button>
+          <button class="p-preset-btn" onclick="pSetPreset(this,15)">15分</button>
+        </div>
+        <div class="p-timer-ctrl">
+          <button class="p-ctrl p-ctrl-start" id="pStartBtn" onclick="pToggleTimer()">スタート</button>
+          <button class="p-ctrl p-ctrl-reset" onclick="pResetTimer()">リセット</button>
+        </div>
+      </div>
+
+      <!-- クイックリンク -->
+      <div>
+        <div class="p-sec-lbl">クイックリンク</div>
+        <div class="p-quick-row">
+          <a class="p-quick-btn p-q-gem" href="https://gemini.google.com" target="_blank" rel="noopener">
+            <span style="font-size:1.2rem;">✨</span> Gemini（通常）
+          </a>
+          <a class="p-quick-btn p-q-kah" href="https://kahoot.it" target="_blank" rel="noopener">
+            <span style="font-size:1.2rem;">🎮</span> Kahoot! に参加
+          </a>
+        </div>
+      </div>
+
+      <!-- 振り返りフォーム -->
+      <a class="p-form-btn disabled" href="#" id="pFormBtn" target="_blank" rel="noopener"
+         onclick="return pHandleForm(event)">
+        📝 振り返りフォームを提出する
+      </a>
+
+    </div>
+  </div>
+</div>
+
+<!-- ================================================ -->
 <!-- PAGE: HOME -->
 <!-- ================================================ -->
-<div class="page active" id="page-home">
+<div class="page" id="page-home">
 
   <div class="hero">
     <div class="hero-label">Welcome to</div>
@@ -532,10 +819,10 @@
 
     <div class="featured-banner">
       <div>
-        <h2>🎯 お知らせ</h2>
-        <p>Coming Soon!</p>
+        <h2>🏫 今日の授業はこちら</h2>
+        <p>本時の目標・課題チェックリスト・タイマーが使えます</p>
       </div>
-      <button class="btn-red" onclick="showPage('units')">資料を見る →</button>
+      <button class="btn-red" onclick="showPage('portal')">授業を始める →</button>
     </div>
 
     <!-- WELCOME SECTION -->
@@ -968,7 +1255,10 @@
 <!-- MOBILE BOTTOM NAV -->
 <div class="mobile-nav">
   <div class="mobile-nav-inner">
-    <button class="mobile-nav-btn active" id="mn-home" onclick="showPage('home')">
+    <button class="mobile-nav-btn active" id="mn-portal" onclick="showPage('portal')">
+      <span class="mn-icon">🏫</span>授業
+    </button>
+    <button class="mobile-nav-btn" id="mn-home" onclick="showPage('home')">
       <span class="mn-icon">🏠</span>ホーム
     </button>
     <button class="mobile-nav-btn" id="mn-units" onclick="showPage('units')">
@@ -1071,7 +1361,7 @@
 
 <script>
   // ===== PAGE SWITCHING =====
-  const pages = ['home','units','handouts','apps','videos','exam','contact'];
+  const pages = ['portal','home','units','handouts','apps','videos','exam','contact'];
   function showPage(name) {
     pages.forEach(p => {
       document.getElementById('page-' + p).classList.remove('active');
@@ -1215,6 +1505,169 @@
       }
     }, 80);
   }
+
+  // ===== 授業ポータル =====
+  const P_FORM_URL = 'https://forms.gle/Y3W5zfAzFXtmjwdD7';
+  const pDays = ['日','月','火','水','木','金','土'];
+  const pNow  = new Date();
+  const pDateStr = `${pNow.getFullYear()}-${pNow.getMonth()+1}-${pNow.getDate()}`;
+  document.getElementById('portalDateDisplay').textContent =
+    `🏫 3年1組　${pNow.getMonth()+1}月${pNow.getDate()}日（${pDays[pNow.getDay()]}）`;
+
+  // 設定パネル
+  function togglePortalSettings() {
+    const panel = document.getElementById('portalSettingsPanel');
+    panel.classList.toggle('open');
+    document.getElementById('pGasUrlInput').value = localStorage.getItem('portalGasUrl') || '';
+    document.getElementById('pGemUrlInput').value = localStorage.getItem('portalGemUrl') || '';
+  }
+  function pSaveGasUrl() {
+    const url = document.getElementById('pGasUrlInput').value.trim();
+    const st  = document.getElementById('pSettingsStatus');
+    if (!url) { localStorage.removeItem('portalGasUrl'); st.textContent = '❌ URLを削除しました'; return; }
+    localStorage.setItem('portalGasUrl', url);
+    st.textContent = '📡 接続中...';
+    pFetchLesson().then(() => {
+      st.textContent = '✅ 接続成功！';
+      document.getElementById('portalSettingsPanel').classList.remove('open');
+    }).catch(e => { st.textContent = `❌ 接続失敗：${e.message}`; });
+  }
+  function pSaveGemUrl() {
+    const url = document.getElementById('pGemUrlInput').value.trim();
+    const st  = document.getElementById('pGemStatus');
+    if (!url) { localStorage.removeItem('portalGemUrl'); st.textContent = '❌ URLを削除しました'; pRenderGem(); return; }
+    localStorage.setItem('portalGemUrl', url);
+    st.textContent = '✅ 保存しました！';
+    pRenderGem();
+  }
+  function pRenderGem() {
+    const url  = localStorage.getItem('portalGemUrl');
+    const card = document.getElementById('pGemCard');
+    const hint = document.getElementById('pGemHint');
+    if (url) { document.getElementById('pGemBtn').href = url; card.style.display = 'block'; hint.style.display = 'none'; }
+    else     { card.style.display = 'none'; hint.style.display = 'block'; }
+  }
+
+  // JSONP fetch
+  function pFetchFromGas(url) {
+    return new Promise((resolve, reject) => {
+      const cb = 'portal_' + Date.now();
+      const sc = document.createElement('script');
+      const t  = setTimeout(() => { cleanup(); reject(new Error('タイムアウト（10秒）')); }, 10000);
+      function cleanup() { clearTimeout(t); delete window[cb]; if (sc.parentNode) sc.parentNode.removeChild(sc); }
+      window[cb] = d => { cleanup(); resolve(d); };
+      sc.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cb;
+      sc.onerror = () => { cleanup(); reject(new Error('読み込みエラー')); };
+      document.head.appendChild(sc);
+    });
+  }
+  function pFetchLesson() {
+    const url = localStorage.getItem('portalGasUrl');
+    if (!url) { document.getElementById('pGasHint').style.display = 'block'; return Promise.reject(new Error('GAS URL未設定')); }
+    document.getElementById('pGasHint').style.display = 'none';
+    document.getElementById('pLoadingBar').classList.add('show');
+    return pFetchFromGas(url)
+      .then(data => {
+        document.getElementById('pLoadingBar').classList.remove('show');
+        pRenderLesson(data);
+        localStorage.setItem('portalCache', JSON.stringify(data));
+      })
+      .catch(e => {
+        document.getElementById('pLoadingBar').classList.remove('show');
+        const c = localStorage.getItem('portalCache');
+        if (c) pRenderLesson(JSON.parse(c));
+        throw e;
+      });
+  }
+  function pRenderLesson(data) {
+    if (data.goal) { document.getElementById('pGoalText').textContent = data.goal; document.getElementById('pGoalCard').classList.add('show'); }
+    if (data.tasks && data.tasks.length > 0) { pRenderTasks(data.tasks); document.getElementById('pTasksCard').classList.add('show'); }
+  }
+
+  // チェックリスト
+  const P_CHECKS_KEY = `portal_checks_${pDateStr}`;
+  let pChecks = JSON.parse(localStorage.getItem(P_CHECKS_KEY) || '{}');
+  function pRenderTasks(tasks) {
+    const list = document.getElementById('pTasksList');
+    list.innerHTML = '';
+    tasks.forEach((task, i) => {
+      const done = pChecks[i] === true;
+      const el = document.createElement('div');
+      el.className = 'p-task-item' + (done ? ' done' : '');
+      el.dataset.idx = i;
+      el.innerHTML = `<div class="p-check-btn">${done ? '✓' : ''}</div><div class="p-task-num">${i+1}</div><div class="p-task-text">${task}</div><div class="p-clear-badge">✅ Clear!</div>`;
+      el.addEventListener('click', () => pToggleCheck(i, tasks.length));
+      list.appendChild(el);
+    });
+    pUpdateProgress(tasks.length);
+  }
+  function pToggleCheck(idx, total) {
+    pChecks[idx] = !pChecks[idx];
+    localStorage.setItem(P_CHECKS_KEY, JSON.stringify(pChecks));
+    const el = document.querySelector(`.p-task-item[data-idx="${idx}"]`);
+    if (!el) return;
+    if (pChecks[idx]) {
+      el.classList.add('clearing');
+      setTimeout(() => { el.classList.remove('clearing'); el.classList.add('done'); el.querySelector('.p-check-btn').textContent = '✓'; }, 300);
+    } else {
+      el.classList.remove('done','clearing');
+      el.querySelector('.p-check-btn').textContent = '';
+    }
+    pUpdateProgress(total);
+  }
+  function pUpdateProgress(total) {
+    const done = Object.values(pChecks).filter(Boolean).length;
+    const pct  = total > 0 ? Math.round(done/total*100) : 0;
+    document.getElementById('pProgressCount').textContent = `${done} / ${total}`;
+    document.getElementById('pProgressFill').style.width = pct + '%';
+    const banner = document.getElementById('pAllDone');
+    if (done === total && total > 0) banner.classList.add('show'); else banner.classList.remove('show');
+  }
+
+  // タイマー
+  let pRem = 5*60, pActMin = 5, pRunning = false, pInterv = null;
+  const pDisp = document.getElementById('pTimerDisplay');
+  const pSBtn = document.getElementById('pStartBtn');
+  function pFmt(s) { return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+  function pUpdDisp() { pDisp.textContent = pFmt(pRem); pDisp.classList.toggle('p-danger', pRem<=30 && pRem>0); }
+  function pSetPreset(btn, min) {
+    if (pRunning) return;
+    document.querySelectorAll('.p-preset-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active'); pActMin = min; pRem = min*60; pUpdDisp();
+  }
+  function pToggleTimer() {
+    if (pRunning) { clearInterval(pInterv); pRunning = false; pSBtn.textContent = 'スタート'; }
+    else {
+      if (pRem <= 0) return;
+      pRunning = true; pSBtn.textContent = '一時停止';
+      pInterv = setInterval(() => { pRem--; pUpdDisp(); if (pRem<=0) { clearInterval(pInterv); pRunning=false; pSBtn.textContent='スタート'; pPlayAlarm(); } }, 1000);
+    }
+  }
+  function pResetTimer() { clearInterval(pInterv); pRunning=false; pSBtn.textContent='スタート'; pRem=pActMin*60; pDisp.classList.remove('p-danger'); pUpdDisp(); }
+  function pPlayAlarm() {
+    try {
+      const ctx = new (window.AudioContext||window.webkitAudioContext)();
+      [0,0.45,0.9].forEach(t => {
+        const o=ctx.createOscillator(), g=ctx.createGain();
+        o.connect(g); g.connect(ctx.destination); o.frequency.value=880;
+        g.gain.setValueAtTime(0.35,ctx.currentTime+t);
+        g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+t+0.35);
+        o.start(ctx.currentTime+t); o.stop(ctx.currentTime+t+0.35);
+      });
+    } catch(e) {}
+  }
+  pUpdDisp();
+
+  // フォームボタン
+  const pFBtn = document.getElementById('pFormBtn');
+  if (P_FORM_URL) { pFBtn.href = P_FORM_URL; pFBtn.classList.remove('disabled'); }
+  function pHandleForm(e) { if (!P_FORM_URL) { e.preventDefault(); alert('振り返りフォームはまだ準備中です。'); } }
+
+  // 起動時
+  pRenderGem();
+  const pGasUrl = localStorage.getItem('portalGasUrl');
+  if (pGasUrl) pFetchLesson().catch(()=>{});
+  else document.getElementById('pGasHint').style.display = 'block';
 
   // ===== VIDEO TOGGLE =====
   function toggleVideo(thumb, src) {
