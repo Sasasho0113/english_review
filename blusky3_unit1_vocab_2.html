@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Sky 3 Unit 1 Vocabulary</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #4AADE8;
+    --sky-dark: #1A7ABF;
+    --sky-light: #D6EEFA;
+    --sun: #FFD93D;
+    --green: #52C97B;
+    --green-dark: #2E9B58;
+    --red: #FF6B6B;
+    --red-dark: #D94040;
+    --gold: #F5A623;
+    --gold-light: #FFF3D6;
+    --text: #1a2a3a;
+    --text-light: #567;
+    --shadow: 0 4px 20px rgba(26,122,191,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', 'Noto Sans JP', sans-serif;
+    background: linear-gradient(160deg, #b8e2f7 0%, #dff2fd 40%, #f0faff 100%);
+    min-height: 100vh;
+    color: var(--text);
+    padding-bottom: 60px;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: linear-gradient(135deg, var(--sky-dark), var(--sky));
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 16px rgba(26,122,191,0.3);
+    position: sticky; top: 0; z-index: 100;
+  }
+  header h1 { font-size: 1.2rem; font-weight: 900; }
+  header h1 span { font-size: 0.8rem; font-weight: 600; opacity: 0.85; display: block; }
+  .progress-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .progress-label { font-size: 0.72rem; opacity: 0.85; }
+  .progress-bar-outer { width: 110px; height: 9px; background: rgba(255,255,255,0.3); border-radius: 20px; overflow: hidden; }
+  .progress-bar-inner { height: 100%; background: var(--sun); border-radius: 20px; transition: width 0.5s ease; }
+
+  /* trophy chips in header */
+  .trophy-header { display: flex; gap: 6px; align-items: center; }
+  .trophy-chip {
+    background: rgba(255,255,255,0.2); border-radius: 20px;
+    padding: 3px 10px; font-size: 0.8rem; font-weight: 800;
+    display: flex; align-items: center; gap: 4px; transition: background 0.3s;
+  }
+  .trophy-chip.earned { background: rgba(245,166,35,0.5); }
+
+  /* ===== MODE SELECT ===== */
+  #modeSelect { max-width: 700px; margin: 28px auto 0; padding: 0 18px; text-align: center; }
+  #modeSelect h2 { font-size: 1.5rem; font-weight: 900; color: var(--sky-dark); margin-bottom: 6px; }
+  #modeSelect > p { color: var(--text-light); margin-bottom: 20px; font-size: 0.9rem; }
+
+  .section-label {
+    font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-light);
+    margin: 16px 0 10px; text-align: left; padding-left: 4px;
+  }
+
+  .mode-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .mode-card {
+    background: white; border-radius: 18px; padding: 20px 14px;
+    cursor: pointer; box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 3px solid transparent; text-align: center;
+  }
+  .mode-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(26,122,191,0.2); }
+  .mode-card.selected { border-color: var(--sky); background: var(--sky-light); }
+  .mode-card .icon { font-size: 1.5rem; font-weight: 900; color: var(--sky-dark); margin-bottom: 7px; }
+  .mode-card h3 { font-size: 0.92rem; font-weight: 800; color: var(--sky-dark); margin-bottom: 4px; }
+  .mode-card p { font-size: 0.76rem; color: var(--text-light); line-height: 1.5; }
+
+  .start-btn {
+    background: linear-gradient(135deg, var(--sky-dark), var(--sky));
+    color: white; border: none; border-radius: 50px;
+    padding: 14px 40px; font-size: 1rem; font-weight: 800;
+    font-family: inherit; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(26,122,191,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 14px; width: 100%; max-width: 280px;
+  }
+  .start-btn:hover { transform: translateY(-2px); }
+
+  /* TEST CARDS */
+  .test-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .test-card {
+    background: white; border-radius: 18px; padding: 20px 14px;
+    cursor: pointer; box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 3px solid transparent; text-align: center;
+    position: relative;
+  }
+  .test-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(245,166,35,0.25); }
+  .test-card .icon { font-size: 1.8rem; margin-bottom: 7px; }
+  .test-card h3 { font-size: 0.92rem; font-weight: 800; color: #a07010; margin-bottom: 4px; }
+  .test-card p { font-size: 0.76rem; color: var(--text-light); line-height: 1.5; }
+  .test-card.cleared { border-color: var(--gold); background: var(--gold-light); }
+  .trophy-badge-card {
+    position: absolute; top: -9px; right: -9px;
+    background: var(--gold); color: white; border-radius: 50%;
+    width: 28px; height: 28px;
+    display: none; align-items: center; justify-content: center;
+    font-size: 0.85rem; box-shadow: 0 2px 8px rgba(245,166,35,0.5);
+  }
+  .test-card.cleared .trophy-badge-card { display: flex; }
+
+  /* double trophy banner */
+  #doubleChampBanner {
+    display: none; margin-top: 18px;
+    background: linear-gradient(135deg,#fff3c0,#ffe88a);
+    border: 3px solid var(--gold); border-radius: 18px; padding: 16px;
+  }
+  #doubleChampBanner .dc-icon { font-size: 1.8rem; margin-bottom: 4px; }
+  #doubleChampBanner .dc-title { font-weight: 900; color: #7a5000; font-size: 0.95rem; margin-bottom: 10px; }
+  .go-stamp-btn {
+    background: linear-gradient(135deg,#e6a800,var(--gold));
+    color: white; border: none; border-radius: 50px;
+    padding: 11px 26px; font-size: 0.88rem; font-weight: 800;
+    font-family: inherit; cursor: pointer; transition: transform 0.2s;
+  }
+  .go-stamp-btn:hover { transform: scale(1.03); }
+
+  /* ===== QUIZ AREA ===== */
+  #quizArea { display: none; max-width: 680px; margin: 26px auto 0; padding: 0 18px; }
+  .question-counter {
+    font-size: 0.82rem; font-weight: 700; color: var(--sky-dark);
+    text-align: center; margin-bottom: 8px;
+  }
+  .test-warning {
+    background: linear-gradient(135deg, #fff3d6, #ffe8a0);
+    border: 2px solid var(--gold); border-radius: 13px;
+    padding: 9px 14px; font-size: 0.8rem; font-weight: 700; color: #7a5000;
+    text-align: center; margin-bottom: 10px; display: none;
+  }
+  .test-warning.visible { display: block; }
+
+  .question-card {
+    background: white; border-radius: 24px; padding: 30px 22px 22px;
+    box-shadow: var(--shadow); margin-bottom: 18px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .question-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, var(--sky), var(--sun));
+    border-radius: 24px 24px 0 0;
+  }
+  .question-card.test-mode::before { background: linear-gradient(90deg, var(--gold), #ffb347); }
+  .mode-badge {
+    display: inline-block; background: var(--sky-light); color: var(--sky-dark);
+    font-size: 0.7rem; font-weight: 700; padding: 4px 12px;
+    border-radius: 20px; margin-bottom: 14px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .mode-badge.test { background: var(--gold-light); color: #7a5000; }
+  .question-text { font-size: 1.75rem; font-weight: 900; color: var(--text); margin-bottom: 7px; line-height: 1.3; }
+  .question-hint { font-size: 0.8rem; color: var(--text-light); margin-bottom: 4px; }
+
+  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .choice-btn {
+    background: var(--sky-light); border: 2.5px solid #c8e6f9;
+    border-radius: 13px; padding: 13px 10px;
+    font-size: 0.92rem; font-weight: 700; font-family: inherit;
+    color: var(--text); cursor: pointer; transition: all 0.18s;
+    text-align: center; min-height: 58px;
+    display: flex; align-items: center; justify-content: center; line-height: 1.3;
+  }
+  .choice-btn:hover:not(:disabled) { background: #b3d8f5; border-color: var(--sky); transform: scale(1.02); }
+  .choice-btn.correct { background: #c6f4d8; border-color: var(--green); color: var(--green-dark); }
+  .choice-btn.wrong { background: #ffd6d6; border-color: var(--red); color: var(--red-dark); }
+  .choice-btn:disabled { cursor: default; }
+
+  .typing-wrap { margin-top: 13px; }
+  .type-input {
+    width: 100%; border: 2.5px solid #c8e6f9; border-radius: 13px;
+    padding: 13px 16px; font-size: 1.2rem; font-family: 'Nunito', sans-serif;
+    font-weight: 700; color: var(--text); background: var(--sky-light);
+    outline: none; transition: border-color 0.2s; text-align: center;
+  }
+  .type-input:focus { border-color: var(--sky); background: white; }
+  .type-input.correct { background: #c6f4d8; border-color: var(--green); }
+  .type-input.wrong { background: #ffd6d6; border-color: var(--red); }
+  .submit-btn {
+    margin-top: 10px; background: var(--sky); color: white; border: none;
+    border-radius: 12px; padding: 12px; font-size: 0.95rem; font-weight: 800;
+    font-family: inherit; cursor: pointer; width: 100%; transition: background 0.2s;
+  }
+  .submit-btn:hover { background: var(--sky-dark); }
+
+  .flashcard-wrap { margin-top: 4px; }
+  .flashcard {
+    background: linear-gradient(135deg, var(--sky-light), white);
+    border: 2.5px solid #c8e6f9; border-radius: 18px; padding: 26px 16px;
+    min-height: 88px; cursor: pointer; font-size: 1.3rem; font-weight: 800;
+    color: var(--sky-dark); position: relative;
+  }
+  .flashcard .tap-hint { font-size: 0.72rem; color: var(--text-light); font-weight: 600; margin-top: 10px; }
+  .flashcard-btns { display: flex; gap: 10px; margin-top: 11px; }
+  .fc-btn {
+    flex: 1; padding: 12px; border: none; border-radius: 12px;
+    font-size: 0.88rem; font-weight: 800; font-family: inherit; cursor: pointer; transition: transform 0.15s;
+  }
+  .fc-btn:hover { transform: scale(1.03); }
+  .fc-btn.good { background: linear-gradient(135deg, var(--green), #3dba6b); color: white; }
+  .fc-btn.bad { background: linear-gradient(135deg, var(--red), #e05555); color: white; }
+
+  .feedback {
+    margin-top: 10px; padding: 11px 14px; border-radius: 11px;
+    font-size: 0.9rem; font-weight: 700; display: none; text-align: center; line-height: 1.5;
+  }
+  .feedback.correct { background: #c6f4d8; color: var(--green-dark); display: block; }
+  .feedback.wrong { background: #ffd6d6; color: var(--red-dark); display: block; }
+
+  .next-btn {
+    margin-top: 11px; background: linear-gradient(135deg, var(--sky-dark), var(--sky));
+    color: white; border: none; border-radius: 50px; padding: 12px;
+    font-size: 0.92rem; font-weight: 800; font-family: inherit;
+    cursor: pointer; width: 100%; display: none; transition: transform 0.15s;
+  }
+  .next-btn:hover { transform: scale(1.02); }
+  .next-btn.visible { display: block; }
+
+  /* ===== RESULT ===== */
+  #resultArea { display: none; max-width: 500px; margin: 32px auto; padding: 0 18px; text-align: center; }
+  .result-card { background: white; border-radius: 26px; padding: 34px 22px; box-shadow: var(--shadow); }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 12px; }
+  .result-card h2 { font-size: 1.45rem; font-weight: 900; color: var(--sky-dark); margin-bottom: 7px; }
+  .score-display { font-size: 2.6rem; font-weight: 900; color: var(--sky-dark); margin: 12px 0; }
+  .score-display span { font-size: 1rem; color: var(--text-light); }
+  .result-msg { font-size: 0.9rem; color: var(--text-light); margin-bottom: 22px; line-height: 1.6; }
+  .result-btns { display: flex; flex-direction: column; gap: 9px; }
+  .result-btn {
+    padding: 12px; border: none; border-radius: 12px; font-size: 0.92rem;
+    font-weight: 800; font-family: inherit; cursor: pointer; transition: transform 0.15s;
+  }
+  .result-btn:hover { transform: scale(1.02); }
+  .result-btn.primary { background: linear-gradient(135deg, var(--sky-dark), var(--sky)); color: white; }
+  .result-btn.secondary { background: var(--sky-light); color: var(--sky-dark); border: 2px solid #c8e6f9; }
+  .result-btn.gold { background: linear-gradient(135deg, #e6a800, var(--gold)); color: white; }
+
+  /* ===== TROPHY SCREEN ===== */
+  #trophyScreen { display: none; max-width: 520px; margin: 32px auto; padding: 0 18px; text-align: center; }
+  .trophy-card {
+    background: linear-gradient(160deg, #fffbe6, #fff3c0);
+    border: 3px solid var(--gold); border-radius: 28px; padding: 38px 22px;
+    box-shadow: 0 8px 40px rgba(245,166,35,0.3);
+  }
+  .trophy-card .congrats { font-size: 0.92rem; font-weight: 800; color: #a07000; margin-bottom: 6px; }
+  .trophy-card h2 { font-size: 1.5rem; font-weight: 900; color: #7a5000; margin-bottom: 8px; }
+  .trophy-card > p { font-size: 0.88rem; color: #9a6800; line-height: 1.7; margin-bottom: 6px; }
+
+  .trophy-row { display: flex; gap: 14px; justify-content: center; margin: 22px 0; }
+  .trophy-item {
+    background: white; border-radius: 16px; padding: 18px 14px;
+    box-shadow: 0 4px 14px rgba(245,166,35,0.2);
+    border: 2px solid #f0d080; flex: 1; text-align: center;
+  }
+  .trophy-item .t-icon { font-size: 2.4rem; margin-bottom: 7px; display: block; }
+  .trophy-item .t-label { font-size: 0.75rem; font-weight: 800; color: #7a5000; line-height: 1.5; }
+
+  .stamp-box {
+    background: white; border-radius: 14px; padding: 18px;
+    border: 2.5px dashed var(--gold); margin: 18px 0;
+  }
+  .stamp-box .stamp-icon { font-size: 2.2rem; display: block; margin-bottom: 8px; }
+  .stamp-box p { font-size: 0.88rem; font-weight: 700; color: #7a5000; line-height: 1.7; }
+  .stamp-box .note { font-size: 0.76rem; color: #a08030; margin-top: 4px; }
+
+  .trophy-back-btn {
+    background: linear-gradient(135deg, #e6a800, var(--gold));
+    color: white; border: none; border-radius: 50px;
+    padding: 13px 38px; font-size: 0.95rem; font-weight: 800;
+    font-family: inherit; cursor: pointer;
+    box-shadow: 0 6px 18px rgba(245,166,35,0.4);
+    transition: transform 0.2s;
+  }
+  .trophy-back-btn:hover { transform: scale(1.03); }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes popIn {
+    0% { transform: scale(0.85); opacity: 0; }
+    70% { transform: scale(1.04); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .pop { animation: popIn 0.35s ease forwards; }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+  .shake { animation: shake 0.3s ease; }
+
+  @keyframes trophyDrop {
+    0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+    65% { transform: scale(1.25) rotate(6deg); }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+
+  @media (max-width: 480px) {
+    .mode-cards, .test-cards { grid-template-columns: 1fr; }
+    .question-text { font-size: 1.35rem; }
+    .choices { grid-template-columns: 1fr; }
+    .trophy-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🌤 Blue Sky 3 <span>Unit 1 Vocabulary</span></h1>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="trophy-header" id="trophyHeader">
+      <div class="trophy-chip" id="chipSpelling">✍️ <span id="statusSpelling">－</span></div>
+      <div class="trophy-chip" id="chipMeaning">📖 <span id="statusMeaning">－</span></div>
+    </div>
+    <div class="progress-wrap" id="headerProgress" style="display:none">
+      <div class="progress-label" id="progressLabel">0 / 34</div>
+      <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- MODE SELECT -->
+<div id="modeSelect">
+  <h2>モードを選ぼう！</h2>
+  <p>今日はどんな練習をする？</p>
+
+  <div class="section-label">📝 練習モード（10問ランダム）</div>
+  <div class="mode-cards">
+    <div class="mode-card selected" data-mode="en2ja" onclick="selectMode(this)">
+      <div class="icon">EN→JP</div>
+      <h3>英語→日本語</h3>
+      <p>英単語を見て正しい意味を選ぼう（4択）</p>
+    </div>
+    <div class="mode-card" data-mode="ja2en" onclick="selectMode(this)">
+      <div class="icon">JP→EN</div>
+      <h3>日本語→英語</h3>
+      <p>日本語を見て正しい英単語を選ぼう（4択）</p>
+    </div>
+    <div class="mode-card" data-mode="typing" onclick="selectMode(this)">
+      <div class="icon">✍️</div>
+      <h3>スペリング練習</h3>
+      <p>日本語を見て英単語をタイプして答えよう</p>
+    </div>
+    <div class="mode-card" data-mode="flash" onclick="selectMode(this)">
+      <div class="icon">⚡</div>
+      <h3>フラッシュカード</h3>
+      <p>カードをタップして意味を確認しよう</p>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:8px">
+    <p style="font-size:0.8rem;color:var(--text-light)">📝 毎回ランダムな10問が出題されます</p>
+    <button class="start-btn" onclick="startQuiz()">スタート！ 🚀</button>
+  </div>
+
+  <div class="section-label" style="margin-top:26px">🏆 テストモード（全34問・全問正解でトロフィー！）</div>
+  <div class="test-cards">
+    <div class="test-card" id="testCardSpelling" onclick="startTest('spelling')">
+      <div class="trophy-badge-card">🏆</div>
+      <div class="icon">✍️</div>
+      <h3>スペリングテスト</h3>
+      <p>全34問に答えよう。<br>全問正解でトロフィーGET！</p>
+    </div>
+    <div class="test-card" id="testCardMeaning" onclick="startTest('meaning')">
+      <div class="trophy-badge-card">🏆</div>
+      <div class="icon">📖</div>
+      <h3>意味テスト</h3>
+      <p>全34問を4択で答えよう。<br>全問正解でトロフィーGET！</p>
+    </div>
+  </div>
+  <p style="font-size:0.76rem;color:var(--text-light);margin-top:8px;text-align:center">
+    ⚠️ テストモードは1問でも間違えるとやり直し！まず練習モードで準備しよう。
+  </p>
+
+  <div id="doubleChampBanner">
+    <div class="dc-icon">🏆🏆</div>
+    <div class="dc-title">2つのトロフィーをゲット中！</div>
+    <button class="go-stamp-btn" onclick="showTrophyScreen()">先生にスタンプをもらいに行く 👨‍🏫</button>
+  </div>
+</div>
+
+<!-- QUIZ AREA -->
+<div id="quizArea">
+  <div class="question-counter" id="questionCounter">問題 1 / 10</div>
+  <div class="test-warning" id="testWarning">⚠️ テストモード中！間違えると最初からやり直しです</div>
+  <div class="question-card" id="questionCard">
+    <div class="mode-badge" id="modeBadge"></div>
+    <div class="question-text" id="questionText"></div>
+    <div class="question-hint" id="questionHint"></div>
+    <div id="choicesWrap"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">次の問題 →</button>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="resultArea">
+  <div class="result-card pop">
+    <div class="result-emoji" id="resultEmoji"></div>
+    <h2 id="resultTitle"></h2>
+    <div class="score-display" id="scoreDisplay"></div>
+    <div class="result-msg" id="resultMsg"></div>
+    <div class="result-btns" id="resultBtns"></div>
+  </div>
+</div>
+
+<!-- TROPHY SCREEN -->
+<div id="trophyScreen">
+  <div class="trophy-card pop">
+    <div class="congrats">🎉 CONGRATULATIONS! 🎉</div>
+    <h2>2つのトロフィーGET！</h2>
+    <p>スペリングも意味も全問正解！<br>本物の実力を証明したね！</p>
+
+    <div class="trophy-row">
+      <div class="trophy-item">
+        <span class="t-icon" id="tIcon1">🏆</span>
+        <div class="t-label">スペリング<br>マスター</div>
+      </div>
+      <div class="trophy-item">
+        <span class="t-icon" id="tIcon2">🏆</span>
+        <div class="t-label">意味<br>マスター</div>
+      </div>
+    </div>
+
+    <div class="stamp-box">
+      <span class="stamp-icon">📋</span>
+      <p>このページを<strong>先生に見せて</strong>、<br>スタンプカードに<strong>スタンプ</strong>を押してもらおう！</p>
+      <div class="note">（先生がタブレットの画面を確認してスタンプを押します）</div>
+    </div>
+
+    <button class="trophy-back-btn" onclick="backToMenuFromTrophy()">🏠 メニューに戻る</button>
+  </div>
+</div>
+
+<script>
+const VOCAB = [
+  {en:"get here", ja:"ここに着く"},
+  {en:"all of", ja:"〜のすべて"},
+  {en:"from now on", ja:"これからずっと、今後は"},
+  {en:"next time", ja:"次回"},
+  {en:"mirror", ja:"鏡"},
+  {en:"become", ja:"becomeの過去分詞"},
+  {en:"become crazy about ~", ja:"〜に夢中になる"},
+  {en:"clear(ed)", ja:"〜を片付ける"},
+  {en:"have a haircut", ja:"髪を切る"},
+  {en:"ever", ja:"今までに、かつて"},
+  {en:"hear of", ja:"〜のことを聞く"},
+  {en:"take a look", ja:"見る、見てみる"},
+  {en:"How many times ~?", ja:"何回〜?（回数をたずねて）"},
+  {en:"lost", ja:"＜lose＞の過去形・過去分詞形"},
+  {en:"pack", ja:"〜を荷作りする"},
+  {en:"had", ja:"＜have＞の過去形・過去分詞形"},
+  {en:"done", ja:"＜do＞の過去分詞形"},
+  {en:"ridden", ja:"＜ride＞の過去分詞形"},
+  {en:"slept", ja:"＜sleep＞の過去形・過去分詞形"},
+  {en:"swum", ja:"＜swim＞の過去分詞形"},
+  {en:"turn ~ upside down", ja:"〜を上下さかさまにする"},
+  {en:"century", ja:"世紀"},
+  {en:"be about to ~", ja:"まさに〜するところだ"},
+  {en:"come out of ~", ja:"〜から出てくる"},
+  {en:"structure", ja:"構造、建物"},
+  {en:"possible", ja:"可能な"},
+  {en:"technique", ja:"技術、テクニック"},
+  {en:"in the late ~", ja:"〜の終わりに、遅くに"},
+  {en:"artwork", ja:"芸術作品"},
+  {en:"strike ~ pose", ja:"〜のポーズをとる"},
+  {en:"someone", ja:"だれか"},
+  {en:"three-dimensional", ja:"3次元の、立体感のある"},
+  {en:"print", ja:"印刷物、版画"},
+  {en:"been", ja:"＜be＞の過去分詞形"},
+];
+
+// セッション内トロフィー管理
+const trophies = { spelling: false, meaning: false };
+
+let currentMode = 'en2ja';
+let isTestMode = false;
+let testType = '';
+let questions = [];
+let currentIdx = 0;
+let score = 0;
+let wrongIdxs = [];
+let answered = false;
+let flashRevealed = false;
+let testFailed = false;
+
+/* ========== UI HELPERS ========== */
+function $(id) { return document.getElementById(id); }
+
+function hideAll() {
+  $('modeSelect').style.display = 'none';
+  $('quizArea').style.display = 'none';
+  $('resultArea').style.display = 'none';
+  $('trophyScreen').style.display = 'none';
+}
+
+function updateTrophyUI() {
+  // header chips
+  $('chipSpelling').classList.toggle('earned', trophies.spelling);
+  $('statusSpelling').textContent = trophies.spelling ? '🏆' : '－';
+  $('chipMeaning').classList.toggle('earned', trophies.meaning);
+  $('statusMeaning').textContent = trophies.meaning ? '🏆' : '－';
+  // test card badges
+  $('testCardSpelling').classList.toggle('cleared', trophies.spelling);
+  $('testCardMeaning').classList.toggle('cleared', trophies.meaning);
+  // double banner
+  $('doubleChampBanner').style.display = (trophies.spelling && trophies.meaning) ? 'block' : 'none';
+}
+
+/* ========== MODE SELECT ========== */
+function selectMode(el) {
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  currentMode = el.dataset.mode;
+}
+
+/* ========== SHUFFLE ========== */
+function shuffle(arr) {
+  const a = [...arr];
+  for(let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ========== START PRACTICE ========== */
+function startQuiz(items=null) {
+  isTestMode = false; testType = '';
+  questions = items ? shuffle(items) : shuffle(VOCAB).slice(0, 10);
+  currentIdx = 0; score = 0; wrongIdxs = []; testFailed = false;
+  launchQuiz();
+}
+
+/* ========== START TEST ========== */
+function startTest(type) {
+  isTestMode = true; testType = type;
+  currentMode = type === 'spelling' ? 'typing' : 'en2ja';
+  questions = shuffle(VOCAB); // 全34問
+  currentIdx = 0; score = 0; wrongIdxs = []; testFailed = false;
+  launchQuiz();
+}
+
+function launchQuiz() {
+  hideAll();
+  $('quizArea').style.display = 'block';
+  $('headerProgress').style.display = 'flex';
+  $('testWarning').classList.toggle('visible', isTestMode);
+  $('questionCard').classList.toggle('test-mode', isTestMode);
+  $('nextBtn').textContent = '次の問題 →';
+  renderQuestion();
+}
+
+/* ========== RENDER QUESTION ========== */
+function renderQuestion() {
+  if(currentIdx >= questions.length) { showResult(); return; }
+
+  answered = false; flashRevealed = false;
+  const item = questions[currentIdx];
+  const total = questions.length;
+
+  $('questionCounter').textContent = `問題 ${currentIdx+1} / ${total}`;
+  $('progressLabel').textContent = `${currentIdx} / ${total}`;
+  $('progressBar').style.width = `${(currentIdx/total)*100}%`;
+
+  const fb = $('feedback');
+  fb.className = 'feedback'; fb.textContent = '';
+  $('nextBtn').classList.remove('visible');
+
+  const qc = $('questionCard');
+  qc.style.animation = 'none'; qc.offsetHeight;
+  qc.style.animation = 'popIn 0.3s ease forwards';
+
+  const badge = $('modeBadge');
+  badge.classList.toggle('test', isTestMode);
+  $('choicesWrap').innerHTML = '';
+
+  if(currentMode === 'en2ja') {
+    badge.textContent = isTestMode ? '📖 意味テスト' : '英語 → 日本語';
+    $('questionText').textContent = item.en;
+    $('questionHint').textContent = '正しい意味を選ぼう';
+    renderChoices(item, 'ja');
+  } else if(currentMode === 'ja2en') {
+    badge.textContent = '日本語 → 英語';
+    $('questionText').textContent = item.ja;
+    $('questionHint').textContent = '正しい英語を選ぼう';
+    renderChoices(item, 'en');
+  } else if(currentMode === 'typing') {
+    badge.textContent = isTestMode ? '✍️ スペリングテスト' : 'スペリング練習';
+    $('questionText').textContent = item.ja;
+    $('questionHint').textContent = '英単語を入力してね';
+    renderTyping(item);
+  } else if(currentMode === 'flash') {
+    badge.textContent = 'フラッシュカード';
+    $('questionText').textContent = item.en;
+    $('questionHint').textContent = 'カードをタップして意味を確認！';
+    renderFlash(item);
+  }
+}
+
+/* ========== CHOICES ========== */
+function getDistractors(item, key, count) {
+  return shuffle(VOCAB.filter(v => v !== item)).slice(0, count).map(v => v[key]);
+}
+
+function renderChoices(item, answerKey) {
+  const correct = item[answerKey];
+  const all = shuffle([correct, ...getDistractors(item, answerKey, 3)]);
+  const grid = document.createElement('div');
+  grid.className = 'choices';
+  all.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = opt;
+    btn.onclick = () => checkChoice(btn, opt, correct);
+    grid.appendChild(btn);
+  });
+  $('choicesWrap').appendChild(grid);
+}
+
+function checkChoice(btn, selected, correct) {
+  if(answered) return;
+  answered = true;
+  document.querySelectorAll('.choice-btn').forEach(b => {
+    b.disabled = true;
+    if(b.textContent === correct) b.classList.add('correct');
+  });
+  const fb = $('feedback');
+  if(selected === correct) {
+    btn.classList.add('correct');
+    fb.textContent = '✅ 正解！Great job!';
+    fb.className = 'feedback correct';
+    score++;
+    $('nextBtn').classList.add('visible');
+  } else {
+    btn.classList.add('wrong');
+    btn.classList.add('shake');
+    if(isTestMode) {
+      testFailed = true;
+      fb.innerHTML = `❌ 不正解！正解は「${correct}」<br>テスト失敗…最初からやり直し！`;
+      fb.className = 'feedback wrong';
+      $('nextBtn').textContent = '結果を見る →';
+    } else {
+      fb.textContent = `❌ 不正解。正解は「${correct}」だよ！`;
+      fb.className = 'feedback wrong';
+      wrongIdxs.push(currentIdx);
+    }
+    $('nextBtn').classList.add('visible');
+  }
+}
+
+/* ========== TYPING ========== */
+function renderTyping(item) {
+  $('choicesWrap').innerHTML = `
+    <div class="typing-wrap">
+      <input class="type-input" id="typeInput" type="text"
+        placeholder="英語を入力…" autocapitalize="none" autocorrect="off" spellcheck="false">
+      <button class="submit-btn" onclick="checkTyping()">確認する ✓</button>
+    </div>`;
+  setTimeout(() => $('typeInput').focus(), 80);
+  $('typeInput').addEventListener('keydown', e => { if(e.key==='Enter') checkTyping(); });
+}
+
+function normalizeStr(s) {
+  return s.toLowerCase().replace(/[~〜\s\(\)（）＜＞<>]/g, '').trim();
+}
+
+function checkTyping() {
+  if(answered) return;
+  const input = $('typeInput');
+  const val = input.value.trim();
+  if(!val) return;
+  answered = true;
+  input.disabled = true;
+  const correct = questions[currentIdx].en;
+  const ok = normalizeStr(val) === normalizeStr(correct);
+  const fb = $('feedback');
+  if(ok) {
+    input.classList.add('correct');
+    fb.textContent = '✅ 正解！Excellent spelling!';
+    fb.className = 'feedback correct';
+    score++;
+    $('nextBtn').classList.add('visible');
+  } else {
+    input.classList.add('wrong');
+    if(isTestMode) {
+      testFailed = true;
+      fb.innerHTML = `❌ 不正解！正解は「${correct}」<br>テスト失敗…最初からやり直し！`;
+      fb.className = 'feedback wrong';
+      $('nextBtn').textContent = '結果を見る →';
+    } else {
+      fb.textContent = `❌ 惜しい！正解は「${correct}」`;
+      fb.className = 'feedback wrong';
+      wrongIdxs.push(currentIdx);
+    }
+    $('nextBtn').classList.add('visible');
+  }
+}
+
+/* ========== FLASHCARD ========== */
+function renderFlash(item) {
+  $('choicesWrap').innerHTML = `
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="revealFlash()">
+        <div id="flashContent">？？？</div>
+        <div class="tap-hint">タップして見る 👆</div>
+      </div>
+      <div class="flashcard-btns" id="fcBtns" style="display:none">
+        <button class="fc-btn bad" onclick="fcAnswer(false)">❌ もう一度</button>
+        <button class="fc-btn good" onclick="fcAnswer(true)">✅ 覚えた！</button>
+      </div>
+    </div>`;
+}
+
+function revealFlash() {
+  if(flashRevealed) return;
+  flashRevealed = true;
+  $('flashContent').textContent = questions[currentIdx].ja;
+  document.querySelector('.tap-hint').style.display = 'none';
+  $('fcBtns').style.display = 'flex';
+}
+
+function fcAnswer(good) {
+  if(answered) return;
+  answered = true;
+  if(good) score++; else wrongIdxs.push(currentIdx);
+  nextQuestion();
+}
+
+/* ========== NEXT ========== */
+function nextQuestion() {
+  if(isTestMode && testFailed) { showResult(); return; }
+  currentIdx++;
+  renderQuestion();
+}
+
+/* ========== RESULT ========== */
+function showResult() {
+  hideAll();
+  $('resultArea').style.display = 'block';
+  $('progressBar').style.width = '100%';
+  $('progressLabel').textContent = `${questions.length} / ${questions.length}`;
+
+  const total = questions.length;
+  const pct = Math.round((score/total)*100);
+  const btns = $('resultBtns');
+  btns.innerHTML = '';
+
+  if(isTestMode) {
+    // --- テストモード結果 ---
+    if(!testFailed && score === total) {
+      // 合格！
+      trophies[testType] = true;
+      updateTrophyUI();
+      $('resultEmoji').textContent = '🏆';
+      $('resultTitle').textContent = testType==='spelling' ? 'スペリング全問正解！' : '意味全問正解！';
+      $('scoreDisplay').innerHTML = `${score} <span>/ ${total}問</span>`;
+      $('resultMsg').textContent = testType==='spelling'
+        ? '34問全部スペルが書けた！スペリングマスターだ！'
+        : '34問全部の意味がわかった！意味マスターだ！';
+
+      if(trophies.spelling && trophies.meaning) {
+        addBtn(btns,'gold','👨‍🏫 先生にスタンプをもらいに行く！', showTrophyScreen);
+      } else {
+        const next = trophies.spelling ? '📖 意味テストに挑戦！' : '✍️ スペリングテストに挑戦！';
+        addBtn(btns,'gold', next, backToMenu);
+      }
+      addBtn(btns,'secondary','🏠 メニューに戻る', backToMenu);
+    } else {
+      // 不合格
+      $('resultEmoji').textContent = '😣';
+      $('resultTitle').textContent = 'テスト失敗…';
+      $('scoreDisplay').innerHTML = `${currentIdx+1} <span>問目でミス</span>`;
+      $('resultMsg').textContent = 'テストモードは全問正解が必要！練習モードで復習してから再挑戦しよう！';
+      addBtn(btns,'primary','🔄 もう一度テストに挑戦', () => startTest(testType));
+      addBtn(btns,'secondary','📝 練習モードで復習する', backToMenu);
+    }
+    return;
+  }
+
+  // --- 練習モード結果 ---
+  let emoji, title, msg;
+  if(pct===100){emoji='🌟';title='パーフェクト！';msg='全問正解！テストモードにも挑戦してみよう！';}
+  else if(pct>=80){emoji='😊';title='すばらしい！';msg=`${total-score}問惜しかったね。あと少し！`;}
+  else if(pct>=60){emoji='📚';title='よくできました！';msg=`正解率${pct}%！間違えた問題を復習しよう！`;}
+  else{emoji='💪';title='ファイト！';msg='フラッシュカードで復習してから再挑戦しよう！';}
+
+  $('resultEmoji').textContent = emoji;
+  $('resultTitle').textContent = title;
+  $('scoreDisplay').innerHTML = `${score} <span>/ ${total}問</span>`;
+  $('resultMsg').textContent = msg;
+  if(wrongIdxs.length>0) addBtn(btns,'primary','❌ 間違えた問題をもう一度', retryWrong);
+  addBtn(btns,'primary','🔄 もう一度（同じモード）', ()=>startQuiz());
+  addBtn(btns,'secondary','🏠 モード選択に戻る', backToMenu);
+}
+
+function addBtn(container, cls, label, fn) {
+  const b = document.createElement('button');
+  b.className = `result-btn ${cls}`;
+  b.textContent = label;
+  b.onclick = fn;
+  container.appendChild(b);
+}
+
+function retryWrong() { startQuiz(wrongIdxs.map(i=>questions[i])); }
+
+/* ========== TROPHY SCREEN ========== */
+function showTrophyScreen() {
+  hideAll();
+  $('trophyScreen').style.display = 'block';
+  $('headerProgress').style.display = 'none';
+  // トロフィーアニメ
+  const icons = [$('tIcon1'), $('tIcon2')];
+  icons.forEach((el, i) => {
+    el.style.animation = 'none';
+    setTimeout(() => {
+      el.style.animation = `trophyDrop 0.6s cubic-bezier(0.34,1.56,0.64,1) ${i*0.25}s forwards`;
+    }, 50);
+  });
+}
+
+function backToMenu() {
+  hideAll();
+  $('modeSelect').style.display = 'block';
+  $('headerProgress').style.display = 'none';
+  $('nextBtn').textContent = '次の問題 →';
+  updateTrophyUI();
+}
+
+function backToMenuFromTrophy() {
+  hideAll();
+  $('modeSelect').style.display = 'block';
+  updateTrophyUI();
+}
+
+// 初期化
+updateTrophyUI();
+</script>
+</body>
+</html>

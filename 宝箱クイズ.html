@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>💎 宝箱クイズ</title>
+<style>
+/* ═══════════════════════════════ BASE ═══════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --gold:#F59E0B;--gold-l:#FDE68A;--gold-d:#92400E;
+  --red:#EF4444;--blue:#3B82F6;--yel:#EAB308;--grn:#22C55E;
+  --bg:#0f0a1e;--panel:#1a1030;--card:#261a45;
+  --txt:#f1f5f9;--mut:#94a3b8;
+}
+body{
+  font-family:'Hiragino Sans','Meiryo',sans-serif;
+  background:var(--bg);color:var(--txt);
+  min-height:100dvh;overflow:hidden;user-select:none;
+}
+#starBg{
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse at 20% 20%,#1e0a4e 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 80%,#0a1e4e 0%,transparent 50%),
+    var(--bg);
+  z-index:-1;
+}
+
+/* ═══════════════════════════════ SCREENS ═══════════════════════════════ */
+.screen{
+  position:fixed;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:14px;
+  transition:opacity .25s,transform .25s;
+}
+.screen.hidden{opacity:0;pointer-events:none;transform:scale(.97);}
+
+/* ═══════════════════════════════ BUTTONS ═══════════════════════════════ */
+.btn-primary{
+  background:linear-gradient(135deg,var(--gold),#f97316);
+  border:none;border-radius:16px;color:#1a0a00;
+  font-size:1.25rem;font-weight:900;padding:15px 50px;
+  cursor:pointer;box-shadow:0 4px 24px #f59e0b55;
+  transition:transform .12s,box-shadow .12s;font-family:inherit;
+}
+.btn-primary:active{transform:scale(.94);}
+.btn-secondary{
+  background:transparent;border:2px solid #334155;border-radius:12px;
+  color:var(--mut);font-size:.9rem;font-weight:700;padding:10px 26px;
+  cursor:pointer;font-family:inherit;transition:border-color .15s,color .15s;
+}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold);}
+
+/* ═══════════════════════════════ TITLE ═══════════════════════════════ */
+#titleScreen{gap:14px;}
+.chest-anim{font-size:6rem;line-height:1;animation:chestBounce 1.8s ease-in-out infinite;filter:drop-shadow(0 0 20px #f59e0baa);}
+@keyframes chestBounce{0%,100%{transform:translateY(0) rotate(-2deg);}50%{transform:translateY(-12px) rotate(2deg);}}
+.title-text{
+  font-size:2.2rem;font-weight:900;text-align:center;line-height:1.1;
+  background:linear-gradient(135deg,var(--gold),#fff,var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 8px #f59e0b66);
+}
+.title-sub{font-size:.82rem;color:var(--mut);text-align:center;}
+
+/* モード選択タブ */
+.mode-tabs{display:flex;gap:8px;background:var(--panel);border-radius:14px;padding:6px;}
+.mode-tab{
+  flex:1;border:none;border-radius:10px;font-size:.88rem;font-weight:800;
+  padding:9px 18px;cursor:pointer;font-family:inherit;
+  background:transparent;color:var(--mut);transition:all .2s;
+}
+.mode-tab.active{background:linear-gradient(135deg,var(--gold),#f97316);color:#1a0a00;}
+
+/* 設定行 */
+.settings-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;}
+.settings-row label{font-size:.75rem;color:var(--mut);}
+.settings-row select{
+  background:#0f172a;border:1.5px solid #334155;border-radius:8px;
+  color:var(--txt);font-size:.82rem;padding:5px 8px;
+  outline:none;font-family:inherit;
+}
+
+/* 歴代スコアパネル */
+.hs-panel{
+  background:var(--card);border:1.5px solid #334155;border-radius:14px;
+  padding:12px 16px;width:100%;max-width:360px;
+}
+.hs-title{font-size:.72rem;font-weight:800;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;}
+.hs-row{display:flex;align-items:center;gap:10px;padding:4px 0;border-bottom:1px solid #1e293b;}
+.hs-row:last-child{border:none;}
+.hs-rank{font-size:.75rem;color:var(--mut);width:24px;flex-shrink:0;font-weight:800;}
+.hs-rank.gold{color:#f59e0b;}
+.hs-rank.silver{color:#94a3b8;}
+.hs-rank.bronze{color:#b45309;}
+.hs-name{flex:1;font-size:.85rem;font-weight:700;}
+.hs-score{font-size:.85rem;font-weight:900;color:var(--gold);}
+.hs-mode-badge{font-size:.62rem;background:#1e293b;border-radius:6px;padding:2px 6px;color:var(--mut);}
+.hs-empty{font-size:.8rem;color:#334155;text-align:center;padding:6px 0;}
+.hs-tabs{display:flex;gap:6px;margin-bottom:8px;}
+.hs-tab{
+  flex:1;border:none;border-radius:8px;font-size:.72rem;font-weight:700;
+  padding:5px 8px;cursor:pointer;font-family:inherit;
+  background:#0f172a;color:var(--mut);border:1.5px solid #334155;transition:all .15s;
+}
+.hs-tab.active{border-color:var(--gold);color:var(--gold);}
+
+/* ═══════════════════════════════ EDIT ═══════════════════════════════ */
+#editScreen{justify-content:flex-start;overflow-y:auto;padding:14px;gap:10px;}
+.edit-header{width:100%;max-width:700px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.edit-header h2{font-size:1.05rem;font-weight:900;flex:1;}
+.edit-body{width:100%;max-width:700px;display:flex;flex-direction:column;gap:10px;}
+.q-card{background:var(--card);border:1.5px solid #334155;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;position:relative;}
+.q-card-num{font-size:.65rem;color:var(--gold);font-weight:800;letter-spacing:.1em;}
+.q-row{display:flex;gap:8px;align-items:center;}
+.q-label{font-size:.72rem;color:var(--mut);width:28px;flex-shrink:0;}
+.q-input{flex:1;background:#0f172a;border:1.5px solid #334155;border-radius:8px;color:var(--txt);font-size:.88rem;padding:7px 10px;outline:none;font-family:inherit;}
+.q-input:focus{border-color:var(--gold);}
+.correct-radio{display:flex;gap:5px;align-items:center;font-size:.7rem;color:var(--mut);}
+.correct-radio input[type=radio]{accent-color:var(--grn);}
+.choices-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.choice-row{display:flex;gap:6px;align-items:center;}
+.choice-dot{width:20px;height:20px;border-radius:50%;font-size:.65rem;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;color:#fff;}
+.dot-r{background:var(--red)}.dot-b{background:var(--blue)}.dot-y{background:var(--yel);color:#000}.dot-g{background:var(--grn);}
+.del-q-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:#475569;font-size:1rem;cursor:pointer;padding:2px 6px;border-radius:6px;}
+.del-q-btn:hover{color:var(--red);background:#1e0000;}
+.add-q-btn{background:var(--card);border:2px dashed #334155;border-radius:14px;color:var(--mut);font-size:.9rem;font-weight:700;padding:14px;cursor:pointer;font-family:inherit;transition:all .15s;}
+.add-q-btn:hover{border-color:var(--gold);color:var(--gold);}
+.json-area{width:100%;background:#0f172a;border:1.5px solid #334155;border-radius:10px;color:var(--mut);font-size:.75rem;padding:10px;font-family:monospace;height:90px;resize:vertical;outline:none;}
+.json-area:focus{border-color:var(--gold);}
+.edit-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-sm{background:var(--card);border:1.5px solid #334155;border-radius:8px;color:var(--txt);font-size:.78rem;padding:7px 14px;cursor:pointer;font-family:inherit;font-weight:700;transition:border-color .15s;}
+.btn-sm:hover{border-color:var(--gold);}
+.btn-sm.green{border-color:var(--grn);color:var(--grn);}
+
+/* ═══════════════════════════════ GAME SCREEN ═══════════════════════════════ */
+#gameScreen{gap:0;justify-content:flex-start;padding:0;}
+.game-header{width:100%;background:var(--panel);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.q-progress{font-size:.78rem;color:var(--mut);font-weight:700;}
+.score-badge{background:var(--card);border-radius:20px;padding:4px 13px;font-size:.82rem;font-weight:900;color:var(--gold);display:flex;align-items:center;gap:4px;}
+.streak-badge{background:linear-gradient(135deg,#7c2d12,#ea580c);border-radius:20px;padding:4px 12px;font-size:.78rem;font-weight:900;color:#fff;display:flex;align-items:center;gap:4px;transition:all .2s;}
+.streak-badge.hidden{opacity:0;transform:scale(.6);}
+/* タイムアタック用グローバルタイマー */
+.attack-timer{
+  font-size:.82rem;font-weight:900;color:#fff;
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  border-radius:20px;padding:4px 14px;
+  display:flex;align-items:center;gap:4px;
+  transition:background .3s;
+}
+.attack-timer.danger{background:linear-gradient(135deg,#dc2626,#ef4444);animation:timerPulse .4s ease-in-out infinite alternate;}
+.attack-timer.hidden{display:none;}
+/* タイマーバー（問題ごと） */
+.timer-bar-wrap{width:100%;height:7px;background:#1e293b;flex-shrink:0;}
+.timer-bar{height:100%;background:linear-gradient(90deg,var(--grn),var(--gold),var(--red));transition:width .1s linear;}
+/* 問題エリア */
+.question-area{flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 18px;text-align:center;gap:8px;min-height:0;}
+.timer-num{font-size:2rem;font-weight:900;color:var(--gold);transition:color .3s;}
+.timer-num.danger{color:var(--red);animation:timerPulse .4s ease-in-out infinite alternate;}
+@keyframes timerPulse{from{transform:scale(1);}to{transform:scale(1.15);}}
+.question-text{font-size:clamp(1.05rem,4vw,1.75rem);font-weight:900;line-height:1.35;max-width:620px;}
+/* 選択肢 */
+.choices-area{width:100%;max-width:700px;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 14px 14px;flex-shrink:0;}
+.choice-btn{
+  border:none;border-radius:16px;font-size:clamp(.88rem,3vw,1.1rem);font-weight:800;
+  padding:18px 10px;cursor:pointer;display:flex;align-items:center;gap:8px;
+  color:#fff;font-family:inherit;transition:transform .1s,opacity .2s;
+  text-align:left;word-break:break-all;min-height:68px;position:relative;overflow:hidden;
+}
+.choice-btn::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,.12);opacity:0;transition:opacity .1s;}
+.choice-btn:hover::before{opacity:1;}
+.choice-btn:active{transform:scale(.95);}
+.choice-btn.r{background:linear-gradient(135deg,#dc2626,#ef4444);}
+.choice-btn.b{background:linear-gradient(135deg,#1d4ed8,#3b82f6);}
+.choice-btn.y{background:linear-gradient(135deg,#a16207,#eab308);}
+.choice-btn.g{background:linear-gradient(135deg,#15803d,#22c55e);}
+.choice-btn .btn-icon{width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.choice-btn.correct-flash{animation:correctPop .45s ease;filter:brightness(1.3);}
+.choice-btn.wrong-dim{opacity:.3;filter:grayscale(.7);}
+.choice-btn.correct-mark::after{content:'✓';position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:1.4rem;}
+@keyframes correctPop{0%{transform:scale(1);}40%{transform:scale(1.07);}100%{transform:scale(1);}}
+.shake{animation:shake .35s ease;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-6px);}80%{transform:translateX(6px);}}
+
+/* ═══════════════════════════════ RESULT OVERLAY ═══════════════════════════════ */
+#resultOverlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .2s;}
+#resultOverlay.show{opacity:1;pointer-events:all;}
+.result-card{background:var(--panel);border-radius:22px;padding:28px 44px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;transform:scale(.7);transition:transform .25s cubic-bezier(.17,.67,.38,1.3);max-width:340px;width:90%;box-shadow:0 8px 60px rgba(0,0,0,.8);}
+#resultOverlay.show .result-card{transform:scale(1);}
+.result-emoji{font-size:3.8rem;line-height:1;}
+.result-label{font-size:1.4rem;font-weight:900;}
+.result-label.ok{color:var(--grn);}
+.result-label.ng{color:var(--red);}
+.result-correct-ans{font-size:.88rem;color:var(--mut);background:var(--card);border-radius:10px;padding:7px 14px;width:100%;}
+.result-pts{font-size:1.05rem;font-weight:900;color:var(--gold);}
+/* タイムアタック：時間変動表示 */
+.time-change{font-size:.82rem;font-weight:800;}
+.time-change.plus{color:var(--grn);}
+.time-change.minus{color:var(--red);}
+
+/* ═══════════════════════════════ BONUS STAGE ═══════════════════════════════ */
+#bonusScreen{
+  gap:0;
+  background:
+    repeating-linear-gradient(45deg,#1a0a3e,#1a0a3e 10px,#220d4e 10px,#220d4e 20px);
+}
+/* フラッシングタイトル */
+.bonus-title-wrap{
+  padding:10px 0 6px;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.bonus-big{
+  font-size:clamp(2rem,8vw,3.5rem);font-weight:900;
+  color:var(--gold);letter-spacing:.1em;
+  text-shadow:0 0 20px #f59e0b,0 0 40px #f59e0b66;
+  animation:bonusFlash .5s ease-in-out infinite alternate;
+}
+@keyframes bonusFlash{from{text-shadow:0 0 10px #f59e0b;}to{text-shadow:0 0 30px #f59e0b,0 0 60px #facc15,0 0 80px #fbbf24;}}
+.bonus-sub{font-size:.9rem;color:#fde68a;font-weight:700;}
+
+/* 連打チェスト */
+.bonus-chest-wrap{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:8px;
+}
+#bonusChest{
+  font-size:clamp(7rem,25vw,11rem);line-height:1;
+  cursor:pointer;transition:transform .05s;
+  filter:drop-shadow(0 0 20px #f59e0b88);
+}
+#bonusChest:active{transform:scale(.88)!important;}
+.bonus-tap-hint{font-size:.82rem;color:#fde68a;animation:bonusFade 1s ease-in-out infinite alternate;}
+@keyframes bonusFade{from{opacity:.5;}to{opacity:1;}}
+
+/* 連打カウンター */
+.bonus-counter-wrap{display:flex;gap:20px;align-items:flex-end;padding:4px 0;}
+.bonus-taps{font-size:clamp(2rem,8vw,3rem);font-weight:900;color:var(--gold);}
+.bonus-taps-label{font-size:.75rem;color:#fde68a;margin-bottom:4px;}
+.bonus-pts-now{font-size:1.4rem;font-weight:900;color:#4ade80;}
+.bonus-pts-label{font-size:.72rem;color:#86efac;margin-bottom:3px;}
+
+/* ボーナスタイマーバー */
+.bonus-timer-wrap{width:90%;max-width:400px;padding:0 0 16px;}
+.bonus-timer-bar-bg{width:100%;height:18px;background:#0f172a;border-radius:9px;overflow:hidden;border:2px solid #334155;}
+.bonus-timer-bar{height:100%;background:linear-gradient(90deg,#facc15,#f59e0b);border-radius:9px;transition:width .1s linear;}
+.bonus-timer-txt{text-align:center;font-size:.78rem;color:#fde68a;margin-top:4px;font-weight:700;}
+
+/* ボーナス結果オーバーレイ */
+#bonusResultOverlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .2s;}
+#bonusResultOverlay.show{opacity:1;pointer-events:all;}
+.bonus-result-card{
+  background:linear-gradient(135deg,#1a0a3e,#261a45);
+  border:2px solid var(--gold);border-radius:24px;padding:30px 40px;
+  text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;
+  transform:scale(.6);transition:transform .3s cubic-bezier(.17,.67,.38,1.3);
+  max-width:320px;width:90%;box-shadow:0 0 40px #f59e0b55;
+}
+#bonusResultOverlay.show .bonus-result-card{transform:scale(1);}
+.br-title{font-size:1.5rem;font-weight:900;color:var(--gold);}
+.br-taps{font-size:3rem;font-weight:900;color:#fff;}
+.br-pts{font-size:1.3rem;font-weight:900;color:#4ade80;}
+.br-msg{font-size:.85rem;color:var(--mut);}
+
+/* ═══════════════════════════════ NAME ENTRY ═══════════════════════════════ */
+#nameEntryScreen{gap:18px;}
+.ne-chest{font-size:5rem;animation:chestBounce 1.5s infinite;}
+.ne-title{font-size:1.4rem;font-weight:900;color:var(--gold);}
+.ne-score{font-size:2.5rem;font-weight:900;color:#fff;}
+.ne-label{font-size:.82rem;color:var(--mut);}
+.ne-input{
+  background:#0f172a;border:2px solid var(--gold);border-radius:12px;
+  color:var(--txt);font-size:1.1rem;padding:12px 20px;
+  outline:none;font-family:inherit;width:100%;max-width:300px;text-align:center;
+}
+.ne-input::placeholder{color:#334155;}
+.ne-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+
+/* ═══════════════════════════════ FINAL ═══════════════════════════════ */
+#finalScreen{gap:16px;}
+.final-chest{font-size:5.5rem;animation:chestBounce 1.5s infinite;}
+.final-stars{font-size:2.4rem;letter-spacing:4px;}
+.final-score{font-size:2.8rem;font-weight:900;color:var(--gold);filter:drop-shadow(0 0 12px #f59e0b88);}
+.final-label{font-size:.9rem;color:var(--mut);}
+.final-detail{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;}
+.final-stat{background:var(--card);border-radius:14px;padding:12px 20px;text-align:center;}
+.final-stat .sv{font-size:1.5rem;font-weight:900;}
+.final-stat .sl{font-size:.7rem;color:var(--mut);}
+.final-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+
+/* ═══════════════════════════════ COINS ═══════════════════════════════ */
+.coin{position:fixed;font-size:1.6rem;pointer-events:none;z-index:999;animation:coinFly 1s ease-out forwards;}
+@keyframes coinFly{0%{opacity:1;transform:translate(0,0) scale(1);}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.3) rotate(720deg);}}
+
+/* ═══════════════════════════════ RESPONSIVE ═══════════════════════════════ */
+@media(max-width:480px){
+  .choices-area{gap:8px;padding:8px 10px 10px;}
+  .choice-btn{padding:14px 8px;border-radius:12px;min-height:58px;font-size:.85rem;}
+  .result-card{padding:22px 24px;}
+  .hs-panel{max-width:100%;}
+}
+
+/* ═══════════════════════════════ LOADING ═══════════════════════════════ */
+#loadingScreen{gap:20px;}
+.loading-spinner{
+  width:60px;height:60px;border-radius:50%;
+  border:5px solid #261a45;
+  border-top-color:var(--gold);
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-txt{font-size:1rem;color:var(--mut);font-weight:700;}
+.loading-sub{font-size:.78rem;color:#334155;}
+
+/* ═══════════════════════════════ SETTINGS ═══════════════════════════════ */
+#settingsScreen{gap:14px;justify-content:flex-start;overflow-y:auto;padding-top:20px;}
+.settings-header{width:100%;max-width:500px;display:flex;align-items:center;gap:10px;}
+.settings-header h2{flex:1;font-size:1.1rem;font-weight:900;}
+.settings-body{width:100%;max-width:500px;display:flex;flex-direction:column;gap:12px;}
+.settings-card{background:var(--card);border:1.5px solid #334155;border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;}
+.settings-card-title{font-size:.7rem;font-weight:800;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;}
+.gas-url-row{display:flex;gap:8px;}
+.gas-url-input{
+  flex:1;background:#0f172a;border:1.5px solid #334155;border-radius:8px;
+  color:var(--txt);font-size:.82rem;padding:8px 12px;outline:none;font-family:inherit;
+  min-width:0;
+}
+.gas-url-input:focus{border-color:var(--gold);}
+.btn-test{
+  background:#0f172a;border:1.5px solid #38bdf8;border-radius:8px;
+  color:#38bdf8;font-size:.78rem;font-weight:700;padding:8px 14px;
+  cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0;
+  transition:background .15s;
+}
+.btn-test:hover{background:#0c1f30;}
+.btn-test:disabled{opacity:.4;cursor:not-allowed;}
+.gas-status{
+  font-size:.78rem;padding:8px 12px;border-radius:8px;font-weight:700;
+  display:flex;align-items:center;gap:6px;
+}
+.gas-status.ok  {background:#052e16;color:#4ade80;border:1px solid #166534;}
+.gas-status.err {background:#1e0000;color:#f87171;border:1px solid #7f1d1d;}
+.gas-status.idle{background:#0f172a;color:#475569;border:1px solid #1e293b;}
+.gas-save-row{display:flex;gap:8px;}
+.btn-save-gas{
+  flex:1;background:linear-gradient(135deg,var(--gold),#f97316);
+  border:none;border-radius:10px;color:#1a0a00;font-size:.9rem;font-weight:900;
+  padding:10px;cursor:pointer;font-family:inherit;
+}
+.btn-clear-gas{
+  background:#0f172a;border:1.5px solid var(--red);border-radius:10px;
+  color:var(--red);font-size:.82rem;font-weight:700;padding:10px 16px;
+  cursor:pointer;font-family:inherit;
+}
+.settings-info{font-size:.75rem;color:#475569;line-height:1.6;}
+.settings-info a{color:#38bdf8;}
+
+/* GAS接続状態バッジ（タイトル画面） */
+.gas-badge{
+  font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:10px;
+  display:flex;align-items:center;gap:4px;cursor:pointer;
+}
+.gas-badge.connected{background:#052e16;color:#4ade80;border:1px solid #166534;}
+.gas-badge.offline{background:#1e293b;color:#475569;border:1px solid #334155;}
+
+/* ═══════════════════════════════ TOAST ═══════════════════════════════ */
+#toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:#1e293b;color:var(--txt);font-size:.85rem;font-weight:700;
+  padding:10px 22px;border-radius:12px;border:1.5px solid #334155;
+  z-index:9999;transition:transform .3s cubic-bezier(.17,.67,.38,1.3),opacity .3s;
+  opacity:0;pointer-events:none;white-space:nowrap;
+}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+#toast.success{border-color:var(--grn);background:#052e16;}
+#toast.error  {border-color:var(--red);background:#1e0000;}
+</style>
+</head>
+<body>
+<div id="starBg"></div>
+<div id="toast"></div>
+
+<!-- ══════════════ LOADING ══════════════ -->
+<div class="screen" id="loadingScreen">
+  <div style="font-size:4rem;">🎁</div>
+  <div class="loading-spinner"></div>
+  <div class="loading-txt" id="loadingTxt">📡 問題を読み込み中...</div>
+  <div class="loading-sub" id="loadingSub">Googleスプレッドシートに接続しています</div>
+</div>
+
+<!-- ══════════════ TITLE ══════════════ -->
+<div class="screen" id="titleScreen">
+  <div class="chest-anim">🎁</div>
+  <div class="title-text">宝箱クイズ</div>
+  <div class="title-sub">5問連続正解でボーナスステージ突入！</div>
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" data-mode="normal">📚 ノーマル</button>
+    <button class="mode-tab" data-mode="timeattack">⚡ タイムアタック</button>
+  </div>
+
+  <div class="settings-row" id="normalSettings">
+    <label>⏱ 制限時間</label>
+    <select id="timerSetting">
+      <option value="10">10秒</option>
+      <option value="15" selected>15秒</option>
+      <option value="20">20秒</option>
+      <option value="30">30秒</option>
+      <option value="0">なし</option>
+    </select>
+  </div>
+  <div class="settings-row hidden" id="attackSettings">
+    <label>⚡ 制限時間</label>
+    <select id="attackTimeSetting">
+      <option value="60" selected>60秒</option>
+      <option value="90">90秒</option>
+      <option value="120">120秒</option>
+    </select>
+    <label style="margin-left:8px;">正解で</label>
+    <select id="attackBonusSetting">
+      <option value="3">+3秒</option>
+      <option value="5" selected>+5秒</option>
+      <option value="7">+7秒</option>
+    </select>
+  </div>
+
+  <!-- 歴代スコア -->
+  <div class="hs-panel">
+    <div class="hs-tabs">
+      <button class="hs-tab active" data-hstab="normal">📚 ノーマル</button>
+      <button class="hs-tab" data-hstab="timeattack">⚡ タイムアタック</button>
+    </div>
+    <div class="hs-title">🏆 歴代最高スコア</div>
+    <div id="hsList"></div>
+  </div>
+
+  <button class="btn-primary" id="startBtn">▶ スタート！</button>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+    <button class="btn-secondary" id="editBtn">✏️ 問題を編集</button>
+    <button class="btn-secondary" id="settingsBtn">⚙️ GAS設定</button>
+    <button class="btn-secondary" id="clearHsBtn">🗑 スコアリセット</button>
+  </div>
+  <div class="gas-badge offline" id="gasBadge" onclick="document.getElementById('settingsBtn').click()">
+    🔗 スプレッドシート未接続
+  </div>
+</div>
+
+<!-- ══════════════ EDIT ══════════════ -->
+<div class="screen hidden" id="editScreen">
+  <div class="edit-header">
+    <h2>✏️ 問題エディタ</h2>
+    <button class="btn-sm" id="importJsonBtn">📥 JSON読込</button>
+    <button class="btn-sm" id="exportJsonBtn">📤 JSON出力</button>
+    <button class="btn-sm green" id="editDoneBtn">✅ 完了</button>
+  </div>
+  <div class="edit-body" id="editBody"></div>
+  <div class="edit-body" style="margin-top:4px;">
+    <button class="add-q-btn" id="addQBtn">＋ 問題を追加</button>
+    <textarea class="json-area" id="jsonArea" placeholder='[{"q":"問題文","choices":["A","B","C","D"],"answer":0}]'></textarea>
+  </div>
+</div>
+
+<!-- ══════════════ GAME ══════════════ -->
+<div class="screen hidden" id="gameScreen">
+  <div class="game-header">
+    <div class="q-progress" id="qProgress">1 / 10</div>
+    <div style="flex:1"></div>
+    <div class="streak-badge hidden" id="streakBadge">🔥 <span id="streakNum">0</span> 連続</div>
+    <div class="attack-timer hidden" id="attackTimerBadge">⚡ <span id="attackTimerNum">60</span>s</div>
+    <div class="score-badge">💰 <span id="scoreNum">0</span></div>
+  </div>
+  <div class="timer-bar-wrap"><div class="timer-bar" id="timerBar" style="width:100%"></div></div>
+  <div class="question-area">
+    <div class="timer-num" id="timerNum">15</div>
+    <div class="question-text" id="questionText"></div>
+  </div>
+  <div class="choices-area" id="choicesArea">
+    <button class="choice-btn r" data-idx="0"><span class="btn-icon">🔴</span><span class="btn-text"></span></button>
+    <button class="choice-btn b" data-idx="1"><span class="btn-icon">🔵</span><span class="btn-text"></span></button>
+    <button class="choice-btn y" data-idx="2"><span class="btn-icon">🟡</span><span class="btn-text"></span></button>
+    <button class="choice-btn g" data-idx="3"><span class="btn-icon">🟢</span><span class="btn-text"></span></button>
+  </div>
+</div>
+
+<!-- ══════════════ 正解/不正解 OVERLAY ══════════════ -->
+<div id="resultOverlay">
+  <div class="result-card">
+    <div class="result-emoji" id="resultEmoji">🎉</div>
+    <div class="result-label" id="resultLabel">せいかい！</div>
+    <div class="result-correct-ans" id="resultAns"></div>
+    <div class="result-pts" id="resultPts"></div>
+    <div class="time-change" id="timeChange"></div>
+  </div>
+</div>
+
+<!-- ══════════════ BONUS STAGE ══════════════ -->
+<div class="screen hidden" id="bonusScreen">
+  <div class="bonus-title-wrap">
+    <div class="bonus-big">⭐ BONUS STAGE ⭐</div>
+    <div class="bonus-sub">5問連続正解ボーナス！チェストを連打せよ！</div>
+  </div>
+  <div class="bonus-chest-wrap">
+    <div id="bonusChest">🎁</div>
+    <div class="bonus-tap-hint">タップ！タップ！タップ！</div>
+    <div class="bonus-counter-wrap">
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div class="bonus-taps" id="bonusTapNum">0</div>
+        <div class="bonus-taps-label">連打</div>
+      </div>
+      <div style="font-size:1.5rem;margin-bottom:6px;">＝</div>
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div class="bonus-pts-now" id="bonusPtsNow">+0</div>
+        <div class="bonus-pts-label">ポイント</div>
+      </div>
+    </div>
+  </div>
+  <div class="bonus-timer-wrap">
+    <div class="bonus-timer-bar-bg"><div class="bonus-timer-bar" id="bonusTimerBar" style="width:100%"></div></div>
+    <div class="bonus-timer-txt" id="bonusTimerTxt">5秒</div>
+  </div>
+</div>
+
+<!-- ボーナス結果 -->
+<div id="bonusResultOverlay">
+  <div class="bonus-result-card">
+    <div class="br-title">🏆 ボーナス結果！</div>
+    <div class="br-taps" id="brTaps">0</div>
+    <div style="font-size:.8rem;color:var(--mut);">連打</div>
+    <div class="br-pts" id="brPts">+0 ポイント獲得！</div>
+    <div class="br-msg" id="brMsg"></div>
+  </div>
+</div>
+
+<!-- ══════════════ SETTINGS ══════════════ -->
+<div class="screen hidden" id="settingsScreen">
+  <div class="settings-header">
+    <h2>⚙️ スプレッドシート連携設定</h2>
+    <button class="btn-secondary" id="settingsDoneBtn">✅ 閉じる</button>
+  </div>
+  <div class="settings-body">
+    <div class="settings-card">
+      <div class="settings-card-title">📡 Google Apps Script URL</div>
+      <div class="gas-url-row">
+        <input class="gas-url-input" type="url" id="gasUrlInput"
+               placeholder="https://script.google.com/macros/s/.../exec">
+        <button class="btn-test" id="gasTestBtn">接続テスト</button>
+      </div>
+      <div class="gas-status idle" id="gasStatusMsg">⬆️ URLを入力して「接続テスト」を押してください</div>
+      <div class="gas-save-row">
+        <button class="btn-save-gas" id="gasSaveBtn">💾 保存して問題を更新</button>
+        <button class="btn-clear-gas" id="gasClearBtn">✕ 解除</button>
+      </div>
+    </div>
+    <div class="settings-card">
+      <div class="settings-card-title">📋 セットアップ手順</div>
+      <div class="settings-info">
+        <b>① Googleスプレッドシートを作る</b><br>
+        1行目（ヘッダー）：問題文 / 選択肢A / 選択肢B / 選択肢C / 選択肢D / 正解番号<br>
+        2行目以降に問題を入力。正解番号は A=0, B=1, C=2, D=3<br><br>
+        <b>② Apps Scriptを設定する</b><br>
+        スプレッドシートのメニュー「拡張機能」→「Apps Script」→<br>
+        コードをすべて削除して、先生から渡されたコードを貼り付け→「デプロイ」<br><br>
+        <b>③ URLをここに貼り付けて「保存」</b><br>
+        以降はスプシを編集するだけで全員に自動反映されます ✅
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ NAME ENTRY ══════════════ -->
+<div class="screen hidden" id="nameEntryScreen">
+  <div class="ne-chest">🏆</div>
+  <div class="ne-title">スコアを登録！</div>
+  <div class="ne-score" id="neScore">0</div>
+  <div class="ne-label">ポイント</div>
+  <input class="ne-input" type="text" id="neNameInput" placeholder="名前を入力（8文字まで）" maxlength="8" autocomplete="off">
+  <div class="ne-btns">
+    <button class="btn-primary" id="saveScoreBtn" style="font-size:1rem;padding:12px 36px;">登録する</button>
+    <button class="btn-secondary" id="skipScoreBtn">スキップ</button>
+  </div>
+</div>
+
+<!-- ══════════════ FINAL ══════════════ -->
+<div class="screen hidden" id="finalScreen">
+  <div class="final-chest" id="finalChest">🎁</div>
+  <div class="final-stars" id="finalStars">⭐⭐⭐</div>
+  <div class="final-score" id="finalScore">0</div>
+  <div class="final-label">ポイント</div>
+  <div class="final-detail">
+    <div class="final-stat"><div class="sv" id="fCorrect">0</div><div class="sl">正解数</div></div>
+    <div class="final-stat"><div class="sv" id="fWrong">0</div><div class="sl">不正解</div></div>
+    <div class="final-stat"><div class="sv" id="fBestStreak">0</div><div class="sl">最大連続</div></div>
+    <div class="final-stat" id="fBonusStatWrap"><div class="sv" id="fBonus">0</div><div class="sl">ボーナスPT</div></div>
+  </div>
+  <div class="final-btns">
+    <button class="btn-primary" id="retryBtn">🔁 もう一度</button>
+    <button class="btn-secondary" id="backTitleBtn">🏠 タイトルへ</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// デフォルト問題
+// ═══════════════════════════════════════════════════════
+const DEFAULT_Q = [
+  {q:'「walk」の意味は？',      choices:['歩く','走る','泳ぐ','飛ぶ'],        answer:0},
+  {q:'「beautiful」の意味は？', choices:['悲しい','美しい','速い','小さい'],  answer:1},
+  {q:'「friend」の意味は？',    choices:['敵','先生','友達','家族'],          answer:2},
+  {q:'「tomorrow」の意味は？',  choices:['昨日','今日','明日','毎日'],        answer:2},
+  {q:'「study」の意味は？',     choices:['遊ぶ','食べる','眠る','勉強する'], answer:3},
+  {q:'「interesting」の意味は？',choices:['退屈な','難しい','面白い','簡単な'],answer:2},
+  {q:'「music」の意味は？',     choices:['絵画','音楽','体育','数学'],       answer:1},
+  {q:'「usually」の意味は？',   choices:['決して','いつも','たいてい','時々'],answer:2},
+  {q:'「want to」の意味は？',   choices:['〜したい','〜できる','〜すべき','〜した'],answer:0},
+  {q:'「enjoy」の意味は？',     choices:['我慢する','楽しむ','悩む','選ぶ'], answer:1},
+];
+
+// ═══════════════════════════════════════════════════════
+// 状態
+// ═══════════════════════════════════════════════════════
+let questions       = JSON.parse(JSON.stringify(DEFAULT_Q));
+let gameMode        = 'normal';   // 'normal' | 'timeattack'
+let qOrder          = [];
+let currentQ        = 0;
+let score           = 0;
+let streak          = 0;
+let bestStreak      = 0;
+let correctCount    = 0;
+let wrongCount      = 0;
+let totalBonusPts   = 0;
+let answered        = false;
+// ノーマル用タイマー
+let timerSec        = 15;
+let timerLeft       = 0;
+let timerInterval   = null;
+let TIMER_TOTAL     = 15;
+// タイムアタック用
+let attackTotal     = 60;
+let attackBonus     = 5;
+let attackLeft      = 60;
+let attackInterval  = null;
+// ボーナスステージ
+let bonusTaps       = 0;
+let bonusPts        = 0;
+let bonusInterval   = null;
+let bonusTimeLeft   = 5;
+const BONUS_EVERY   = 5;   // 何連続でボーナス
+const BONUS_PT_PER  = 30;  // 1連打あたりのポイント
+const BONUS_SECS    = 5;   // ボーナス時間
+
+// ハイスコア
+let highScores = {normal:[],timeattack:[]};
+let hsTab      = 'normal';
+let pendingScore= 0;
+
+// ═══════════════════════════════════════════════════════
+// ユーティリティ
+// ═══════════════════════════════════════════════════════
+const $ = id => document.getElementById(id);
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.add('hidden');});
+  $(id).classList.remove('hidden');
+}
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ═══════════════════════════════════════════════════════
+// ハイスコア
+// ═══════════════════════════════════════════════════════
+function loadHS(){ try{ const s=localStorage.getItem('takaraQuiz_hs2'); if(s) highScores=JSON.parse(s); }catch(e){} }
+function saveHS(){ try{ localStorage.setItem('takaraQuiz_hs2',JSON.stringify(highScores)); }catch(e){} }
+function addHS(mode,name,score){
+  if(!highScores[mode]) highScores[mode]=[];
+  highScores[mode].push({name,score,date:new Date().toLocaleDateString('ja-JP')});
+  highScores[mode].sort((a,b)=>b.score-a.score);
+  highScores[mode]=highScores[mode].slice(0,5);
+  saveHS();
+}
+function renderHS(tab){
+  const list = $('hsList');
+  const rows = highScores[tab]||[];
+  if(!rows.length){ list.innerHTML='<div class="hs-empty">まだ記録がありません</div>'; return; }
+  const medals=['🥇','🥈','🥉','4','5'];
+  const clss  =['gold','silver','bronze','',''];
+  list.innerHTML = rows.map((r,i)=>`
+    <div class="hs-row">
+      <div class="hs-rank ${clss[i]}">${medals[i]}</div>
+      <div class="hs-name">${escHtml(r.name)}</div>
+      <div class="hs-score">${r.score.toLocaleString()} pt</div>
+      <div style="font-size:.65rem;color:var(--mut);">${r.date}</div>
+    </div>`).join('');
+}
+
+// ─── ハイスコアタブ切替 ───
+document.querySelectorAll('.hs-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.hs-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    hsTab = tab.dataset.hstab;
+    renderHS(hsTab);
+  });
+});
+
+$('clearHsBtn').addEventListener('click',()=>{
+  if(!confirm('歴代スコアをすべてリセットしますか？')) return;
+  highScores={normal:[],timeattack:[]};
+  saveHS();
+  renderHS(hsTab);
+});
+
+// ═══════════════════════════════════════════════════════
+// モード選択
+// ═══════════════════════════════════════════════════════
+document.querySelectorAll('.mode-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    gameMode = tab.dataset.mode;
+    $('normalSettings').classList.toggle('hidden', gameMode!=='normal');
+    $('attackSettings').classList.toggle('hidden', gameMode!=='timeattack');
+    hsTab = gameMode;
+    document.querySelectorAll('.hs-tab').forEach(t=>{
+      t.classList.toggle('active', t.dataset.hstab===gameMode);
+    });
+    renderHS(hsTab);
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+// ゲーム開始
+// ═══════════════════════════════════════════════════════
+$('startBtn').addEventListener('click',()=>{
+  timerSec    = parseInt($('timerSetting').value);
+  TIMER_TOTAL = timerSec;
+  attackTotal = parseInt($('attackTimeSetting').value);
+  attackBonus = parseInt($('attackBonusSetting').value);
+  startGame();
+});
+
+function startGame(){
+  qOrder       = [...Array(questions.length).keys()].sort(()=>Math.random()-.5);
+  currentQ     = 0;
+  score        = 0;
+  streak       = 0;
+  bestStreak   = 0;
+  correctCount = 0;
+  wrongCount   = 0;
+  totalBonusPts= 0;
+  clearInterval(attackInterval);
+
+  if(gameMode==='timeattack'){
+    attackLeft = attackTotal;
+    $('attackTimerBadge').classList.remove('hidden');
+    $('attackTimerNum').textContent = attackLeft;
+    $('attackTimerBadge').classList.remove('danger');
+    // タイムアタックの問題はループ用に無限シャッフルキュー
+    startAttackTimer();
+  } else {
+    $('attackTimerBadge').classList.add('hidden');
+  }
+
+  showScreen('gameScreen');
+  loadQuestion();
+}
+
+// ─── タイムアタック グローバルタイマー ───
+function startAttackTimer(){
+  clearInterval(attackInterval);
+  attackInterval = setInterval(()=>{
+    attackLeft--;
+    $('attackTimerNum').textContent = attackLeft;
+    if(attackLeft<=10) $('attackTimerBadge').classList.add('danger');
+    if(attackLeft<=0){
+      clearInterval(attackInterval);
+      // 現在回答中なら強制終了
+      if(!answered){ answered=true; clearInterval(timerInterval); }
+      endGame();
+    }
+  },1000);
+}
+
+// ═══════════════════════════════════════════════════════
+// 問題ロード
+// ═══════════════════════════════════════════════════════
+function loadQuestion(){
+  answered = false;
+
+  // タイムアタックは問題をループ
+  if(gameMode==='timeattack' && currentQ>=questions.length){
+    qOrder   = [...Array(questions.length).keys()].sort(()=>Math.random()-.5);
+    currentQ = 0;
+  }
+
+  const idx = qOrder[currentQ % questions.length];
+  const q   = questions[idx];
+
+  $('qProgress').textContent = gameMode==='timeattack'
+    ? `${correctCount} 正解`
+    : `${currentQ+1} / ${questions.length}`;
+  $('scoreNum').textContent = score.toLocaleString();
+  $('questionText').textContent = q.q;
+
+  document.querySelectorAll('.choice-btn').forEach((btn,i)=>{
+    btn.querySelector('.btn-text').textContent = q.choices[i]||'';
+    btn.classList.remove('correct-flash','wrong-dim','correct-mark','shake');
+    btn.style.opacity='';
+    btn.disabled=false;
+  });
+
+  if(gameMode==='normal' && timerSec>0){
+    timerLeft = timerSec;
+    $('timerNum').textContent = timerLeft;
+    $('timerNum').classList.remove('danger');
+    $('timerBar').style.width='100%';
+    clearInterval(timerInterval);
+    timerInterval=setInterval(tickTimer,1000);
+  } else if(gameMode==='normal'){
+    $('timerNum').textContent='∞';
+    $('timerBar').style.width='0%';
+  } else {
+    // タイムアタック：問題ごとタイマーなし
+    $('timerNum').textContent='⚡';
+    $('timerNum').classList.remove('danger');
+    $('timerBar').style.width='0%';
+  }
+
+  updateStreakBadge();
+}
+
+function tickTimer(){
+  timerLeft--;
+  $('timerNum').textContent=timerLeft;
+  $('timerBar').style.width=(timerLeft/TIMER_TOTAL*100)+'%';
+  if(timerLeft<=5) $('timerNum').classList.add('danger');
+  if(timerLeft<=0){ clearInterval(timerInterval); if(!answered) timeUp(); }
+}
+function timeUp(){
+  answered=true;
+  const q=questions[qOrder[currentQ]];
+  playSound('wrong');
+  document.querySelectorAll('.choice-btn').forEach((btn,i)=>{
+    btn.disabled=true;
+    if(i===q.answer) btn.classList.add('correct-mark','correct-flash');
+    else             btn.classList.add('wrong-dim');
+  });
+  streak=0; wrongCount++;
+  updateStreakBadge();
+  showResultOverlay(false,q.choices[q.answer],0,0);
+}
+
+// ═══════════════════════════════════════════════════════
+// 回答
+// ═══════════════════════════════════════════════════════
+document.querySelectorAll('.choice-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(answered) return;
+    answered=true;
+    clearInterval(timerInterval);
+
+    const chosen = parseInt(btn.dataset.idx);
+    const q      = questions[qOrder[currentQ%questions.length]];
+    const ok     = chosen===q.answer;
+
+    document.querySelectorAll('.choice-btn').forEach(b=>b.disabled=true);
+
+    if(ok){
+      const timeBonus  = (gameMode==='normal'&&timerSec>0) ? Math.round((timerLeft/TIMER_TOTAL)*500) : 0;
+      const strkBonus  = Math.min(streak,5)*80;
+      const pts        = 400+timeBonus+strkBonus;
+      score   += pts;
+      streak++;
+      if(streak>bestStreak) bestStreak=streak;
+      correctCount++;
+      btn.classList.add('correct-flash','correct-mark');
+      document.querySelectorAll('.choice-btn').forEach((b,i)=>{ if(i!==chosen) b.classList.add('wrong-dim'); });
+      spawnCoins(btn);
+      playSound('correct');
+      updateStreakBadge();
+
+      let timeAdd = 0;
+      if(gameMode==='timeattack'){
+        attackLeft += attackBonus;
+        timeAdd = attackBonus;
+        $('attackTimerNum').textContent=attackLeft;
+        if(attackLeft>10) $('attackTimerBadge').classList.remove('danger');
+      }
+      showResultOverlay(true,q.choices[q.answer],pts,timeAdd);
+    } else {
+      streak=0; wrongCount++;
+      const btns=document.querySelectorAll('.choice-btn');
+      btns[q.answer].classList.add('correct-flash','correct-mark');
+      btns.forEach((b,i)=>{ if(i!==chosen&&i!==q.answer) b.classList.add('wrong-dim'); });
+      btn.classList.add('shake','wrong-dim');
+      playSound('wrong');
+      updateStreakBadge();
+
+      let timeLose=0;
+      if(gameMode==='timeattack'){
+        // タイムアタックは不正解でもペナルティなし（優しい設定）
+      }
+      showResultOverlay(false,q.choices[q.answer],0,timeLose);
+    }
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+// 結果オーバーレイ
+// ═══════════════════════════════════════════════════════
+function showResultOverlay(ok, correctAns, pts, timeChange){
+  $('resultEmoji').textContent  = ok ? '🎉' : '😢';
+  $('resultLabel').textContent  = ok ? 'せいかい！' : 'ざんねん…';
+  $('resultLabel').className    = 'result-label '+(ok?'ok':'ng');
+  $('resultAns').textContent    = '正解：'+correctAns;
+  $('resultPts').textContent    = ok ? `＋${pts.toLocaleString()} pt` : '';
+  const tc=$('timeChange');
+  if(gameMode==='timeattack'&&timeChange!==0){
+    tc.textContent = timeChange>0 ? `⚡ +${timeChange}秒` : `⚡ ${timeChange}秒`;
+    tc.className   = 'time-change '+(timeChange>0?'plus':'minus');
+  } else { tc.textContent=''; }
+
+  const ov=$('resultOverlay');
+  ov.classList.add('show');
+
+  const delay = ok ? 1300 : 1800;
+  setTimeout(()=>{
+    ov.classList.remove('show');
+
+    // ボーナス判定（ノーマルのみ）
+    if(ok && gameMode==='normal' && streak>0 && streak%BONUS_EVERY===0){
+      clearInterval(attackInterval);
+      goBonus();
+      return;
+    }
+
+    nextStep();
+  }, delay);
+}
+
+function nextStep(){
+  currentQ++;
+  if(gameMode==='normal' && currentQ>=questions.length){
+    clearInterval(attackInterval);
+    endGame();
+  } else {
+    loadQuestion();
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// ボーナスステージ
+// ═══════════════════════════════════════════════════════
+function goBonus(){
+  bonusTaps    = 0;
+  bonusPts     = 0;
+  bonusTimeLeft= BONUS_SECS;
+  $('bonusTapNum').textContent = 0;
+  $('bonusPtsNow').textContent = '+0';
+  $('bonusTimerBar').style.width='100%';
+  $('bonusTimerTxt').textContent= BONUS_SECS+'秒';
+  $('bonusChest').textContent = '🎁';
+  $('bonusChest').style.transform='';
+
+  // 点滅開始演出
+  playSound('bonus');
+  showScreen('bonusScreen');
+
+  // カウントダウン
+  bonusInterval = setInterval(()=>{
+    bonusTimeLeft -= 0.1;
+    const pct = Math.max(0, bonusTimeLeft/BONUS_SECS*100);
+    $('bonusTimerBar').style.width = pct+'%';
+    $('bonusTimerTxt').textContent = Math.ceil(bonusTimeLeft)+'秒';
+    if(bonusTimeLeft<=0){
+      clearInterval(bonusInterval);
+      endBonus();
+    }
+  }, 100);
+}
+
+$('bonusChest').addEventListener('click', bonusTap);
+$('bonusChest').addEventListener('touchstart', e=>{ e.preventDefault(); bonusTap(); },{passive:false});
+
+function bonusTap(){
+  if(bonusTimeLeft<=0) return;
+  bonusTaps++;
+  bonusPts = bonusTaps * BONUS_PT_PER;
+  $('bonusTapNum').textContent = bonusTaps;
+  $('bonusPtsNow').textContent = '+'+bonusPts.toLocaleString();
+
+  // チェストアニメ
+  const chest=$('bonusChest');
+  const emojis=['🎁','💥','✨','🎊','🎁'];
+  chest.textContent = emojis[bonusTaps%emojis.length];
+  chest.style.transform='scale(.8) rotate('+( (bonusTaps%2===0)?5:-5)+'deg)';
+  setTimeout(()=>{ chest.style.transform='scale(1) rotate(0deg)'; },80);
+
+  // コイン演出（まばら）
+  if(bonusTaps%3===0){
+    const rect=chest.getBoundingClientRect();
+    spawnCoinsAt(rect.left+rect.width/2, rect.top+rect.height/2, 3);
+  }
+  playSound('tap');
+}
+
+function endBonus(){
+  score        += bonusPts;
+  totalBonusPts+= bonusPts;
+
+  // 評価メッセージ
+  const msgs = bonusTaps>=30?'🔥 超連打！神レベル！':bonusTaps>=20?'⚡ すごい！':bonusTaps>=10?'👍 いいね！':'💪 もっと連打だ！';
+
+  $('brTaps').textContent = bonusTaps;
+  $('brPts').textContent  = `＋${bonusPts.toLocaleString()} ポイント獲得！`;
+  $('brMsg').textContent  = msgs;
+
+  const ov=$('bonusResultOverlay');
+  ov.classList.add('show');
+  spawnCoinsAt(window.innerWidth/2, window.innerHeight/2, 15);
+  playSound('bonusEnd');
+
+  setTimeout(()=>{
+    ov.classList.remove('show');
+    showScreen('gameScreen');
+    nextStep();
+  },2200);
+}
+
+// ═══════════════════════════════════════════════════════
+// ゲーム終了
+// ═══════════════════════════════════════════════════════
+function endGame(){
+  clearInterval(timerInterval);
+  clearInterval(attackInterval);
+  pendingScore = score;
+  showScreen('nameEntryScreen');
+  $('neScore').textContent = score.toLocaleString();
+  $('neNameInput').value   = '';
+  setTimeout(()=>$('neNameInput').focus(),300);
+}
+
+$('saveScoreBtn').addEventListener('click',()=>{
+  const name = ($('neNameInput').value.trim()||'名無し').slice(0,8);
+  addHS(gameMode, name, pendingScore);
+  showFinal();
+});
+$('skipScoreBtn').addEventListener('click', showFinal);
+$('neNameInput').addEventListener('keydown',e=>{ if(e.key==='Enter') $('saveScoreBtn').click(); });
+
+function showFinal(){
+  showScreen('finalScreen');
+  $('finalScore').textContent    = score.toLocaleString();
+  $('fCorrect').textContent      = correctCount;
+  $('fWrong').textContent        = wrongCount;
+  $('fBestStreak').textContent   = bestStreak;
+  $('fBonus').textContent        = totalBonusPts.toLocaleString();
+
+  const total = correctCount+wrongCount||1;
+  const ratio = correctCount/total;
+  $('finalStars').textContent = ratio>=1?'⭐⭐⭐':ratio>=.7?'⭐⭐':ratio>=.4?'⭐':'　';
+  $('finalChest').textContent = ratio>=.8?'🏆':ratio>=.5?'🎁':'📦';
+
+  if(ratio>=.7) setTimeout(()=>{
+    for(let i=0;i<20;i++) setTimeout(()=>spawnCoinsAt(Math.random()*window.innerWidth,Math.random()*window.innerHeight*.6,1),i*80);
+  },400);
+}
+
+// ─── タイトルに戻る ───
+$('retryBtn').addEventListener('click',()=>{
+  hsTab=gameMode;
+  renderHS(hsTab);
+  startGame();
+});
+$('backTitleBtn').addEventListener('click',()=>{
+  hsTab=gameMode;
+  renderHS(hsTab);
+  showScreen('titleScreen');
+});
+
+// ═══════════════════════════════════════════════════════
+// 連続バッジ・スコア更新
+// ═══════════════════════════════════════════════════════
+function updateStreakBadge(){
+  $('streakNum').textContent = streak;
+  $('scoreNum').textContent  = score.toLocaleString();
+  if(streak>=2) $('streakBadge').classList.remove('hidden');
+  else          $('streakBadge').classList.add('hidden');
+}
+
+// ═══════════════════════════════════════════════════════
+// コイン演出
+// ═══════════════════════════════════════════════════════
+function spawnCoins(btn){
+  const r=btn.getBoundingClientRect();
+  spawnCoinsAt(r.left+r.width/2, r.top+r.height/2, 8);
+}
+function spawnCoinsAt(cx,cy,count){
+  const items=['💰','⭐','💎','🏅','✨'];
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    el.className='coin';
+    el.textContent=items[Math.floor(Math.random()*items.length)];
+    const angle=(i/count)*2*Math.PI+(Math.random()*.5);
+    const dist=60+Math.random()*80;
+    el.style.left=cx+'px'; el.style.top=cy+'px';
+    el.style.setProperty('--dx',Math.cos(angle)*dist+'px');
+    el.style.setProperty('--dy',Math.sin(angle)*dist-70+'px');
+    el.style.animationDelay=(Math.random()*.12)+'s';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),1300);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// 効果音
+// ═══════════════════════════════════════════════════════
+let audioCtx=null;
+function getAC(){ if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)(); return audioCtx; }
+function playSound(type){
+  try{
+    const ctx=getAC();
+    const osc=ctx.createOscillator();
+    const g=ctx.createGain();
+    osc.connect(g); g.connect(ctx.destination);
+    const t=ctx.currentTime;
+    if(type==='correct'){
+      osc.type='sine';
+      osc.frequency.setValueAtTime(523,t); osc.frequency.setValueAtTime(659,t+.1); osc.frequency.setValueAtTime(784,t+.2);
+      g.gain.setValueAtTime(.22,t); g.gain.exponentialRampToValueAtTime(.001,t+.5);
+      osc.start(t); osc.stop(t+.5);
+    } else if(type==='wrong'){
+      osc.type='sawtooth';
+      osc.frequency.setValueAtTime(200,t); osc.frequency.setValueAtTime(120,t+.15);
+      g.gain.setValueAtTime(.18,t); g.gain.exponentialRampToValueAtTime(.001,t+.4);
+      osc.start(t); osc.stop(t+.4);
+    } else if(type==='bonus'){
+      // ファンファーレ
+      const notes=[523,659,784,1047];
+      notes.forEach((freq,i)=>{
+        const o=ctx.createOscillator(); const g2=ctx.createGain();
+        o.connect(g2); g2.connect(ctx.destination);
+        o.type='square'; o.frequency.setValueAtTime(freq,t+i*.1);
+        g2.gain.setValueAtTime(.15,t+i*.1); g2.gain.exponentialRampToValueAtTime(.001,t+i*.1+.25);
+        o.start(t+i*.1); o.stop(t+i*.1+.3);
+      });
+      return;
+    } else if(type==='bonusEnd'){
+      const notes=[784,1047,1318,1568];
+      notes.forEach((freq,i)=>{
+        const o=ctx.createOscillator(); const g2=ctx.createGain();
+        o.connect(g2); g2.connect(ctx.destination);
+        o.type='sine'; o.frequency.setValueAtTime(freq,t+i*.08);
+        g2.gain.setValueAtTime(.2,t+i*.08); g2.gain.exponentialRampToValueAtTime(.001,t+i*.08+.3);
+        o.start(t+i*.08); o.stop(t+i*.08+.35);
+      });
+      return;
+    } else if(type==='tap'){
+      osc.type='triangle';
+      osc.frequency.setValueAtTime(880+Math.random()*220,t);
+      g.gain.setValueAtTime(.1,t); g.gain.exponentialRampToValueAtTime(.001,t+.08);
+      osc.start(t); osc.stop(t+.1);
+    }
+  }catch(e){}
+}
+
+// ═══════════════════════════════════════════════════════
+// エディタ
+// ═══════════════════════════════════════════════════════
+const CLABELS=[{cls:'dot-r',l:'A'},{cls:'dot-b',l:'B'},{cls:'dot-y',l:'C'},{cls:'dot-g',l:'D'}];
+
+function renderEditScreen(){
+  const body=$('editBody'); body.innerHTML='';
+  questions.forEach((q,qi)=>{
+    const card=document.createElement('div'); card.className='q-card';
+    card.innerHTML=`
+      <div class="q-card-num">Q ${qi+1}</div>
+      <button class="del-q-btn" data-qi="${qi}">✕</button>
+      <div class="q-row">
+        <span class="q-label">問</span>
+        <input class="q-input" data-qi="${qi}" data-key="q" value="${escHtml(q.q)}" placeholder="問題文を入力">
+      </div>
+      <div class="choices-grid">
+        ${q.choices.map((ch,ci)=>`
+          <div class="choice-row">
+            <div class="choice-dot ${CLABELS[ci].cls}">${CLABELS[ci].l}</div>
+            <input class="q-input" data-qi="${qi}" data-ci="${ci}" value="${escHtml(ch)}" placeholder="選択肢 ${CLABELS[ci].l}">
+            <label class="correct-radio"><input type="radio" name="ans_${qi}" value="${ci}" ${q.answer===ci?'checked':''} data-qi="${qi}"> 正解</label>
+          </div>`).join('')}
+      </div>`;
+    body.appendChild(card);
+  });
+  body.querySelectorAll('.q-input[data-key="q"]').forEach(inp=>{
+    inp.addEventListener('input',()=>{ questions[+inp.dataset.qi].q=inp.value; });
+  });
+  body.querySelectorAll('.q-input[data-ci]').forEach(inp=>{
+    inp.addEventListener('input',()=>{ questions[+inp.dataset.qi].choices[+inp.dataset.ci]=inp.value; });
+  });
+  body.querySelectorAll('input[type=radio]').forEach(r=>{
+    r.addEventListener('change',()=>{ questions[+r.dataset.qi].answer=+r.value; });
+  });
+  body.querySelectorAll('.del-q-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      if(questions.length<=1){alert('問題は1問以上必要です');return;}
+      questions.splice(+btn.dataset.qi,1); renderEditScreen();
+    });
+  });
+}
+
+// editBtn は下部の GAS 設定セクションで定義済み
+$('addQBtn').addEventListener('click',()=>{
+  questions.push({q:'',choices:['','','',''],answer:0});
+  renderEditScreen();
+  setTimeout(()=>$('editBody').lastChild.scrollIntoView({behavior:'smooth'}),50);
+});
+$('editDoneBtn').addEventListener('click',()=>{
+  questions=questions.filter(q=>q.q.trim());
+  if(!questions.length) questions=JSON.parse(JSON.stringify(DEFAULT_Q));
+  saveQuestions();
+  showScreen('titleScreen');
+});
+$('exportJsonBtn').addEventListener('click',()=>{ $('jsonArea').value=JSON.stringify(questions,null,2); });
+$('importJsonBtn').addEventListener('click',()=>{
+  try{
+    const p=JSON.parse($('jsonArea').value);
+    if(!Array.isArray(p)||!p.length) throw 0;
+    questions=p.map(q=>({q:String(q.q||''),choices:(q.choices||[]).map(String),answer:Number(q.answer)||0}));
+    renderEditScreen(); $('jsonArea').value='';
+    alert(`✅ ${questions.length}問を読み込みました`);
+  }catch(e){ alert('JSONの形式が正しくありません'); }
+});
+
+// ═══════════════════════════════════════════════════════
+// LocalStorage
+// ═══════════════════════════════════════════════════════
+function saveQuestions(){ try{ localStorage.setItem('takaraQuiz_q2',JSON.stringify(questions)); }catch(e){} }
+function loadQuestions(){ try{ const s=localStorage.getItem('takaraQuiz_q2'); if(s){ const p=JSON.parse(s); if(Array.isArray(p)&&p.length) questions=p; } }catch(e){} }
+function loadGasUrl(){ return localStorage.getItem('takaraQuiz_gasUrl')||''; }
+function saveGasUrl(url){ try{ localStorage.setItem('takaraQuiz_gasUrl',url); }catch(e){} }
+window.addEventListener('beforeunload',saveQuestions);
+
+// ═══════════════════════════════════════════════════════
+// トースト通知
+// ═══════════════════════════════════════════════════════
+let toastTimer=null;
+function showToast(msg, type='', duration=2800){
+  const el=$('toast');
+  el.textContent=msg;
+  el.className='show '+(type);
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{ el.classList.remove('show'); },duration);
+}
+
+// ═══════════════════════════════════════════════════════
+// GAS バッジ更新
+// ═══════════════════════════════════════════════════════
+function updateGasBadge(){
+  const url=loadGasUrl();
+  const badge=$('gasBadge');
+  if(url){
+    badge.textContent='✅ スプレッドシート連携中';
+    badge.className='gas-badge connected';
+    // エディタボタンをスプシリンク風に変更
+    $('editBtn').textContent='📊 スプレッドシートで編集';
+  } else {
+    badge.textContent='🔗 スプレッドシート未接続';
+    badge.className='gas-badge offline';
+    $('editBtn').textContent='✏️ 問題を編集';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// GAS から問題を取得
+// ═══════════════════════════════════════════════════════
+function fetchFromGas(url){
+  // JSONP方式：CORS制限・学校ドメイン制限を回避
+  return new Promise((resolve, reject) => {
+    const cbName = 'gasQ_' + Date.now();
+    const script = document.createElement('script');
+    const timer  = setTimeout(() => {
+      cleanup();
+      reject(new Error('タイムアウト（10秒）。URLとデプロイ設定を確認してください'));
+    }, 10000);
+
+    function cleanup(){
+      clearTimeout(timer);
+      delete window[cbName];
+      if(script.parentNode) script.parentNode.removeChild(script);
+    }
+
+    window[cbName] = function(data){
+      cleanup();
+      if(!Array.isArray(data) || !data.length) reject(new Error('問題データが空です（スプレッドシートに問題が入力されているか確認）'));
+      else resolve(data);
+    };
+
+    script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cbName;
+    script.onerror = () => { cleanup(); reject(new Error('スクリプト読み込みエラー。URLを確認してください')); };
+    document.head.appendChild(script);
+  });
+}
+
+async function loadQuestionsFromGas(){
+  const url = loadGasUrl();
+  if(!url){
+    // GAS未設定 → キャッシュ or DEFAULT_Q
+    loadQuestions();
+    showTitleWithDelay(false,'');
+    return;
+  }
+
+  $('loadingTxt').textContent  = '📡 問題を読み込み中...';
+  $('loadingSub').textContent  = 'スプレッドシートに接続しています';
+  showScreen('loadingScreen');
+
+  try{
+    const fetched = await fetchFromGas(url);
+    questions = fetched;
+    saveQuestions();  // キャッシュ更新
+    showTitleWithDelay(true, `✅ ${fetched.length}問を読み込みました`);
+  } catch(e){
+    // fetch失敗 → キャッシュを使用
+    loadQuestions();
+    const isCache = questions !== DEFAULT_Q;
+    showTitleWithDelay(false, isCache
+      ? '⚠️ オフライン：前回のキャッシュを使用中'
+      : '⚠️ 接続失敗：デフォルト問題を使用中');
+  }
+}
+
+function showTitleWithDelay(success, msg){
+  setTimeout(()=>{
+    loadHS();
+    renderHS('normal');
+    updateGasBadge();
+    showScreen('titleScreen');
+    if(msg) showToast(msg, success?'success':'error', 3000);
+  }, success ? 400 : 600);
+}
+
+// ═══════════════════════════════════════════════════════
+// 設定画面
+// ═══════════════════════════════════════════════════════
+$('settingsBtn').addEventListener('click',()=>{
+  $('gasUrlInput').value = loadGasUrl();
+  $('gasStatusMsg').textContent='⬆️ URLを入力して「接続テスト」を押してください';
+  $('gasStatusMsg').className='gas-status idle';
+  showScreen('settingsScreen');
+});
+$('settingsDoneBtn').addEventListener('click',()=>{
+  updateGasBadge();
+  showScreen('titleScreen');
+});
+
+// 接続テスト
+$('gasTestBtn').addEventListener('click', async()=>{
+  const url = $('gasUrlInput').value.trim();
+  if(!url){ showToast('URLを入力してください','error'); return; }
+  const btn=$('gasTestBtn');
+  btn.disabled=true; btn.textContent='確認中…';
+  $('gasStatusMsg').className='gas-status idle';
+  $('gasStatusMsg').textContent='🔄 接続を確認しています...';
+  try{
+    const data = await fetchFromGas(url);
+    $('gasStatusMsg').className='gas-status ok';
+    $('gasStatusMsg').textContent=`✅ 接続成功！ ${data.length}問 取得できます`;
+  } catch(e){
+    $('gasStatusMsg').className='gas-status err';
+    $('gasStatusMsg').textContent='❌ 接続失敗：URLを確認してください（'+e.message+')';
+  } finally{
+    btn.disabled=false; btn.textContent='接続テスト';
+  }
+});
+
+// 保存して問題更新
+$('gasSaveBtn').addEventListener('click', async()=>{
+  const url = $('gasUrlInput').value.trim();
+  if(!url){ showToast('URLを入力してください','error'); return; }
+  saveGasUrl(url);
+  showToast('💾 保存しました。問題を取得します…','success');
+  // ローディング経由で再取得
+  await loadQuestionsFromGas();
+  $('gasUrlInput').value = url;
+  $('gasStatusMsg').className='gas-status ok';
+  $('gasStatusMsg').textContent=`✅ 接続中（${questions.length}問）`;
+  updateGasBadge();
+  showScreen('settingsScreen');
+});
+
+// GAS設定を解除
+$('gasClearBtn').addEventListener('click',()=>{
+  if(!confirm('スプレッドシート連携を解除しますか？\n問題はキャッシュのものが引き続き使われます。')) return;
+  saveGasUrl('');
+  $('gasUrlInput').value='';
+  $('gasStatusMsg').className='gas-status idle';
+  $('gasStatusMsg').textContent='⬆️ URLを入力して「接続テスト」を押してください';
+  updateGasBadge();
+  showToast('連携を解除しました','');
+});
+
+// editBtn：GAS連携中はスプシで開く（先生用）
+$('editBtn').addEventListener('click',()=>{
+  const url=loadGasUrl();
+  if(url){
+    // GAS URLからスプレッドシートは直接開けないのでエディタを表示
+    if(confirm('問題はスプレッドシートで管理されています。\nブラウザ上のエディタで一時編集しますか？\n（スプシが正として次回上書きされます）')){
+      renderEditScreen(); showScreen('editScreen');
+    }
+  } else {
+    renderEditScreen(); showScreen('editScreen');
+  }
+});
+
+// ═══════════════════════════════════════════════════════
+// 初期化
+// ═══════════════════════════════════════════════════════
+loadQuestionsFromGas();
+</script>
+</body>
+</html>
