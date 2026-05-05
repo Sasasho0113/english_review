@@ -1,0 +1,68 @@
+name: 📄 PDFマニフェスト自動更新
+
+on:
+  push:
+    paths:
+      - 'pdfs/**'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: manifest.json を生成
+        run: |
+          python3 - <<'PYEOF'
+          import os, json
+
+          pdfs_dir = 'pdfs'
+          unit_order = ['unit1','unit2','unit3','unit4','unit5','unit6','grammar','test']
+          manifest = {u: [] for u in unit_order}
+
+          if os.path.exists(pdfs_dir):
+              for unit in os.listdir(pdfs_dir):
+                  unit_path = os.path.join(pdfs_dir, unit)
+                  if os.path.isdir(unit_path):
+                      files = sorted([
+                          f for f in os.listdir(unit_path)
+                          if f.lower().endswith('.pdf') and not f.startswith('.')
+                      ])
+                      manifest[unit] = files
+                      if unit not in manifest:
+                          manifest[unit] = files
+
+          # unit_order の順番に並べ直す
+          ordered = {}
+          for u in unit_order:
+              ordered[u] = manifest.get(u, [])
+          # unit_order 以外のフォルダも追加
+          for u, files in manifest.items():
+              if u not in ordered:
+                  ordered[u] = files
+
+          with open('manifest.json', 'w', encoding='utf-8') as f:
+              json.dump(ordered, f, ensure_ascii=False, indent=2)
+
+          total = sum(len(v) for v in ordered.values())
+          print(f'✅ manifest.json を更新しました（合計 {total} ファイル）')
+          for u, files in ordered.items():
+              if files:
+                  print(f'  {u}: {len(files)} 件')
+          PYEOF
+
+      - name: 変更をコミット＆プッシュ
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add manifest.json
+          if git diff --staged --quiet; then
+            echo "変更なし（スキップ）"
+          else
+            git commit -m "🤖 manifest.json 自動更新"
+            git push
+          fi

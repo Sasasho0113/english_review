@@ -204,6 +204,15 @@
     .t-orange { background: #fffbeb; color: #d97706; }
     .t-purple { background: #f5f3ff; color: #7c3aed; }
     .t-gray { background: #f3f4f6; color: #374151; }
+    .c-teal { background: linear-gradient(90deg,#0891b2,#06b6d4); }
+    .t-teal { background: #ecfeff; color: #0891b2; }
+    .li-teal { background: #ecfeff; }
+    .li-orange { background: #fffbeb; }
+    .c-gray { background: linear-gradient(90deg,#374151,#6b7280); }
+    .li-gray { background: #f3f4f6; }
+    .c-pink { background: linear-gradient(90deg,#db2777,#ec4899); }
+    .t-pink { background: #fdf2f8; color: #db2777; }
+    .li-pink { background: #fdf2f8; }
     .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; line-height: 1.4; }
     .card p { font-size: 12px; color: var(--gray); margin-bottom: 14px; line-height: 1.6; }
     .card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid var(--border); }
@@ -959,6 +968,7 @@
         <div class="filter-tab" data-filter="unit3">Unit 3</div>
         <div class="filter-tab" data-filter="unit4">Unit 4</div>
         <div class="filter-tab" data-filter="unit5">Unit 5</div>
+        <div class="filter-tab" data-filter="unit6">Unit 6</div>
         <div class="filter-tab" data-filter="grammar">文法まとめ</div>
         <div class="filter-tab" data-filter="test">テスト対策</div>
         <div class="filter-tab" data-filter="exam">入試対策</div>
@@ -983,84 +993,13 @@
         </div>
       </div>
 
-      <div class="card" data-category="unit1" onclick="document.getElementById('section-unit1').scrollIntoView({behavior:'smooth'})">
-        <div class="card-top c-red"></div>
-        <div class="card-body">
-          <span class="card-tag t-red">Unit 1</span>
-          <h3>📂 3-D Art 授業資料</h3>
-          <p>スライド・ワークシートなど Unit 1 の全資料（6点）をまとめています。</p>
-          <div class="card-footer">
-            <div class="badges"><span class="badge b-pdf">📄 PDF</span><span class="badge b-new">NEW</span></div>
-            <span class="card-arrow">→</span>
-          </div>
-        </div>
-      </div>
+      <!-- 動的カード（manifest.jsonから自動生成） -->
+      <div id="dynamicCards"></div>
 
     </div>
 
-    <!-- Unit 1 資料一覧 -->
-    <div id="section-unit1" class="unit-section" data-category="unit1" style="scroll-margin-top:130px;margin-top:24px;">
-      <div class="section-label">📂 Unit 1 — 3-D Art 授業資料一覧</div>
-      <div class="content-list">
-        <div class="content-list-header">
-          <div class="list-icon li-red">📚</div>
-          Unit 1「3-D Art」— 現在完了形
-        </div>
-        <div class="content-row" onclick="openPdfRow('pdfs/unit1/授業スライド.pdf','授業スライド「3-D Art」')">
-          <span class="content-row-icon">📊</span>
-          <div class="content-row-info">
-            <div class="content-row-title">授業スライド「3-D Art」</div>
-            <div class="content-row-meta">Unit 1 ・ スライド</div>
-          </div>
-          <span class="content-row-arrow">→</span>
-        </div>
-        <div class="content-row" onclick="openPdfRow('pdfs/unit1/part1 現在完了形（完了）.pdf','現在完了形① 完了の意味')">
-          <span class="content-row-icon">📄</span>
-          <div class="content-row-info">
-            <div class="content-row-title">現在完了形① 完了の意味</div>
-            <div class="content-row-meta">Unit 1 Part 1 ・ ワークシート</div>
-          </div>
-          <span class="content-row-badge"><span class="badge b-new">NEW</span></span>
-          <span class="content-row-arrow">→</span>
-        </div>
-        <div class="content-row" onclick="openPdfRow('pdfs/unit1/part2 現在完了形（完了）疑問文.pdf','現在完了形② 疑問文・否定文')">
-          <span class="content-row-icon">📄</span>
-          <div class="content-row-info">
-            <div class="content-row-title">現在完了形② 疑問文・否定文</div>
-            <div class="content-row-meta">Unit 1 Part 2 ・ ワークシート</div>
-          </div>
-          <span class="content-row-badge"><span class="badge b-new">NEW</span></span>
-          <span class="content-row-arrow">→</span>
-        </div>
-        <div class="content-row" onclick="openPdfRow('pdfs/unit1/part3 現在完了形（経験）.pdf','現在完了形③ 経験の意味')">
-          <span class="content-row-icon">📄</span>
-          <div class="content-row-info">
-            <div class="content-row-title">現在完了形③ 経験の意味</div>
-            <div class="content-row-meta">Unit 1 Part 3 ・ ワークシート</div>
-          </div>
-          <span class="content-row-badge"><span class="badge b-new">NEW</span></span>
-          <span class="content-row-arrow">→</span>
-        </div>
-        <div class="content-row" onclick="openPdfRow('pdfs/unit1/レベル別音読ワークシート.pdf','レベル別音読ワークシート')">
-          <span class="content-row-icon">📄</span>
-          <div class="content-row-info">
-            <div class="content-row-title">レベル別音読ワークシート</div>
-            <div class="content-row-meta">Unit 1 ・ ワークシート</div>
-          </div>
-          <span class="content-row-badge"><span class="badge b-new">NEW</span></span>
-          <span class="content-row-arrow">→</span>
-        </div>
-        <div class="content-row" onclick="openPdfRow('pdfs/unit1/本文内容理解ワークシート.pdf','本文内容理解ワークシート')">
-          <span class="content-row-icon">📄</span>
-          <div class="content-row-info">
-            <div class="content-row-title">本文内容理解ワークシート</div>
-            <div class="content-row-meta">Unit 1 ・ ワークシート</div>
-          </div>
-          <span class="content-row-badge"><span class="badge b-new">NEW</span></span>
-          <span class="content-row-arrow">→</span>
-        </div>
-      </div>
-    </div>
+    <!-- 動的セクション（manifest.jsonから自動生成） -->
+    <div id="dynamicSections"></div>
 
     <!-- 入試対策：過去問リンク集 -->
     <div id="section-past" class="unit-section" data-category="exam" style="scroll-margin-top:130px;margin-top:16px;">
@@ -1318,6 +1257,10 @@
     if (tb) tb.classList.add('active');
     if (mn) mn.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (name === 'units' && !window._manifestLoaded) {
+      window._manifestLoaded = true;
+      loadUnitManifest();
+    }
   }
 
   // ===== CONTACT FORM =====
@@ -1353,23 +1296,121 @@
     document.getElementById('formSuccess').style.display = 'block';
   }
 
-  // ===== UNIT FILTER =====
-  document.getElementById('unitFilterTabs').addEventListener('click', e => {
-    const tab = e.target.closest('.filter-tab');
-    if (!tab) return;
-    document.querySelectorAll('#unitFilterTabs .filter-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    const filter = tab.dataset.filter;
-    document.querySelectorAll('#unitCardGrid .card').forEach(card => {
-      if (filter === 'all' || card.dataset.category === filter) {
-        card.classList.remove('hidden');
-      } else {
-        card.classList.add('hidden');
-      }
+  // ===== UNIT META（各ユニットのタイトル・カラー設定） =====
+  // ※ Unit 2 以降は title/subtitle を学習が始まったら更新してください
+  const UNIT_META = {
+    unit1:   { label: 'Unit 1',    title: '3-D Art',   subtitle: '現在完了形',    color: 'red' },
+    unit2:   { label: 'Unit 2',    title: '',           subtitle: '',             color: 'blue' },
+    unit3:   { label: 'Unit 3',    title: '',           subtitle: '',             color: 'green' },
+    unit4:   { label: 'Unit 4',    title: '',           subtitle: '',             color: 'orange' },
+    unit5:   { label: 'Unit 5',    title: '',           subtitle: '',             color: 'purple' },
+    unit6:   { label: 'Unit 6',    title: '',           subtitle: '',             color: 'teal' },
+    grammar: { label: '文法まとめ', title: '文法まとめ', subtitle: 'まとめプリント', color: 'gray' },
+    test:    { label: 'テスト対策', title: 'テスト対策', subtitle: '練習問題',      color: 'pink' },
+  };
+  const UNIT_ORDER = ['unit1','unit2','unit3','unit4','unit5','unit6','grammar','test'];
+
+  // ファイル名からアイコンを判定
+  function getPdfIcon(filename) {
+    if (filename.includes('スライド') || /slide/i.test(filename)) return '📊';
+    if (filename.includes('ワークシート') || filename.includes('WS')) return '📄';
+    if (/^part\d/i.test(filename)) return '📝';
+    return '📎';
+  }
+
+  // data-src / data-title を使って PDF を開く（動的行用）
+  function openPdfFromRow(el) {
+    openPdfRow(el.dataset.src, el.dataset.title);
+  }
+
+  // ユニットカードのHTML生成
+  function buildUnitCard(key, meta, count) {
+    const titleText = meta.title ? meta.title + ' 授業資料' : meta.label + ' 授業資料';
+    const desc = meta.title
+      ? 'スライド・ワークシートなど ' + meta.label + ' の全資料（' + count + '点）をまとめています。'
+      : meta.label + ' の授業資料（' + count + '点）をまとめています。';
+    return '<div class="card" data-category="' + key + '" onclick="document.getElementById(\'section-' + key + '\').scrollIntoView({behavior:\'smooth\'})">'
+      + '<div class="card-top c-' + meta.color + '"></div>'
+      + '<div class="card-body">'
+      + '<span class="card-tag t-' + meta.color + '">' + meta.label + '</span>'
+      + '<h3>📂 ' + titleText + '</h3>'
+      + '<p>' + desc + '</p>'
+      + '<div class="card-footer"><div class="badges"><span class="badge b-pdf">📄 PDF</span><span class="badge b-new">NEW</span></div><span class="card-arrow">→</span></div>'
+      + '</div></div>';
+  }
+
+  // ユニットセクション（ファイルリスト）のHTML生成
+  function buildUnitSection(key, meta, files) {
+    const fullTitle = meta.title ? meta.label + ' — ' + meta.title : meta.label;
+    const headerText = (meta.title && meta.subtitle)
+      ? meta.label + '「' + meta.title + '」— ' + meta.subtitle
+      : meta.label;
+    const rows = files.map(function(f) {
+      const displayName = f.replace(/\.pdf$/i, '');
+      const icon = getPdfIcon(f);
+      return '<div class="content-row" data-src="pdfs/' + key + '/' + f + '" data-title="' + displayName + '" onclick="openPdfFromRow(this)">'
+        + '<span class="content-row-icon">' + icon + '</span>'
+        + '<div class="content-row-info">'
+        + '<div class="content-row-title">' + displayName + '</div>'
+        + '<div class="content-row-meta">' + meta.label + ' ・ PDF</div>'
+        + '</div>'
+        + '<span class="content-row-badge"><span class="badge b-new">NEW</span></span>'
+        + '<span class="content-row-arrow">→</span>'
+        + '</div>';
+    }).join('');
+    return '<div id="section-' + key + '" class="unit-section" data-category="' + key + '" style="scroll-margin-top:130px;margin-top:24px;">'
+      + '<div class="section-label">📂 ' + fullTitle + ' 授業資料一覧</div>'
+      + '<div class="content-list">'
+      + '<div class="content-list-header"><div class="list-icon li-' + meta.color + '">📚</div>' + headerText + '</div>'
+      + rows
+      + '</div></div>';
+  }
+
+  // フィルター適用
+  function applyFilter(filter) {
+    document.querySelectorAll('#unitCardGrid .card').forEach(function(card) {
+      card.classList.toggle('hidden', filter !== 'all' && card.dataset.category !== filter);
     });
-    document.querySelectorAll('.unit-section').forEach(sec => {
+    document.querySelectorAll('.unit-section').forEach(function(sec) {
       sec.style.display = (filter === 'all' || sec.dataset.category === filter) ? '' : 'none';
     });
+  }
+
+  // manifest.json を取得してカード＋セクションを動的生成
+  async function loadUnitManifest() {
+    let manifest;
+    try {
+      const res = await fetch('manifest.json?t=' + Date.now());
+      if (!res.ok) throw new Error('not found');
+      manifest = await res.json();
+    } catch(e) {
+      // フォールバック：Unit 1 のみ固定表示
+      manifest = {
+        unit1: ['授業スライド.pdf','part1 現在完了形（完了）.pdf','part2 現在完了形（完了）疑問文.pdf','part3 現在完了形（経験）.pdf','レベル別音読ワークシート.pdf','本文内容理解ワークシート.pdf']
+      };
+    }
+    let cardHtml = '', secHtml = '';
+    UNIT_ORDER.forEach(function(key) {
+      const files = manifest[key] || [];
+      if (!files.length) return;
+      const meta = UNIT_META[key];
+      if (!meta) return;
+      cardHtml += buildUnitCard(key, meta, files.length);
+      secHtml  += buildUnitSection(key, meta, files);
+    });
+    document.getElementById('dynamicCards').innerHTML    = cardHtml;
+    document.getElementById('dynamicSections').innerHTML = secHtml;
+    const activeTab = document.querySelector('#unitFilterTabs .filter-tab.active');
+    if (activeTab) applyFilter(activeTab.dataset.filter);
+  }
+
+  // ===== UNIT FILTER =====
+  document.getElementById('unitFilterTabs').addEventListener('click', function(e) {
+    const tab = e.target.closest('.filter-tab');
+    if (!tab) return;
+    document.querySelectorAll('#unitFilterTabs .filter-tab').forEach(function(t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+    applyFilter(tab.dataset.filter);
   });
 
   // ===== SEARCH =====
