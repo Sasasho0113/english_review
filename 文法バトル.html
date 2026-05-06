@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>⚔️ 文法バトル — Grammar Battle RPG</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;background:#0d1117;overflow-x:hidden;}
+    body{font-family:'Noto Sans JP',sans-serif;color:#f0f6fc;display:flex;justify-content:center;}
+    .app{width:100%;max-width:480px;min-height:100vh;position:relative;background:#0d1117;}
+
+    /* SCREENS */
+    .screen{display:none;flex-direction:column;min-height:100vh;width:100%;}
+    .screen.active{display:flex;}
+
+    /* TITLE */
+    #screen-title{
+      background:linear-gradient(160deg,#0d1117 0%,#1a1033 50%,#0d1117 100%);
+      align-items:center;justify-content:center;text-align:center;padding:40px 20px;
+    }
+    .title-logo{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:4px;color:#8b5cf6;margin-bottom:8px;text-transform:uppercase;}
+    .title-h1{font-size:46px;font-weight:900;line-height:1.1;margin-bottom:6px;
+      background:linear-gradient(135deg,#f0f6fc,#c084fc,#818cf8);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .title-sub{font-size:12px;color:#8b949e;letter-spacing:2px;margin-bottom:28px;}
+    .title-player-status{
+      display:flex;gap:20px;align-items:center;justify-content:center;
+      background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+      border-radius:12px;padding:10px 24px;margin-bottom:32px;
+    }
+    .status-item{font-size:13px;color:#8b949e;}
+    .status-item span{color:#c084fc;font-weight:700;font-size:16px;}
+    .btn-start{
+      background:linear-gradient(135deg,#7c3aed,#4f46e5);color:white;border:none;
+      border-radius:16px;padding:16px 48px;font-size:18px;font-weight:700;
+      font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all 0.2s;
+      box-shadow:0 4px 24px rgba(124,58,237,0.4);margin-bottom:12px;width:240px;
+    }
+    .btn-start:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(124,58,237,0.6);}
+    .btn-ghost{background:none;border:1px solid rgba(255,255,255,0.15);color:#8b949e;
+      border-radius:10px;padding:8px 20px;font-size:12px;font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all 0.2s;}
+    .btn-ghost:hover{border-color:rgba(255,255,255,0.3);color:#f0f6fc;}
+
+    /* STAGE SELECT */
+    #screen-stage{background:#0d1117;padding-bottom:40px;}
+    .screen-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08);
+      position:sticky;top:0;background:#0d1117;z-index:10;
+    }
+    .btn-back{background:none;border:none;color:#8b949e;font-size:20px;cursor:pointer;padding:4px;}
+    .btn-back:hover{color:#f0f6fc;}
+    .screen-header h2{font-size:16px;font-weight:700;}
+    .player-mini{font-size:12px;color:#c084fc;font-weight:700;}
+
+    .diff-bar{display:flex;gap:8px;padding:16px 20px 8px;}
+    .diff-btn{
+      flex:1;padding:8px 4px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.12);
+      background:rgba(255,255,255,0.04);color:#8b949e;font-size:12px;font-weight:500;
+      font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all 0.2s;
+    }
+    .diff-btn.active{border-color:#7c3aed;background:rgba(124,58,237,0.15);color:#c084fc;}
+
+    .stage-list{padding:12px 20px;display:flex;flex-direction:column;gap:10px;}
+    .stage-card{
+      background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);
+      border-radius:16px;padding:16px;cursor:pointer;transition:all 0.2s;
+      display:flex;align-items:center;gap:14px;
+    }
+    .stage-card:hover{border-color:rgba(255,255,255,0.2);transform:translateX(4px);}
+    .stage-icon{
+      width:48px;height:48px;border-radius:12px;display:flex;align-items:center;
+      justify-content:center;font-size:24px;flex-shrink:0;
+    }
+    .stage-info-text{flex:1;min-width:0;}
+    .stage-label{font-size:11px;font-weight:500;opacity:0.7;margin-bottom:2px;}
+    .stage-title-text{font-size:13px;font-weight:700;margin-bottom:3px;line-height:1.3;}
+    .stage-grammar{font-size:11px;opacity:0.55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .stage-stars{font-size:16px;flex-shrink:0;}
+
+    /* BATTLE */
+    #screen-battle{background:#0d1117;flex-direction:column;}
+    .battle-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+    .battle-stage-name{font-size:11px;color:#8b949e;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .battle-q-count{font-size:12px;color:#c084fc;font-weight:700;flex-shrink:0;}
+
+    .timer-bar{height:4px;background:rgba(255,255,255,0.1);position:relative;}
+    .timer-bar.hidden{display:none;}
+    .timer-fill{height:100%;background:linear-gradient(90deg,#ef4444,#f59e0b);transition:width 0.1s linear;border-radius:2px;}
+    .timer-danger .timer-fill{background:#ef4444;animation:pulse-red 0.5s infinite alternate;}
+    @keyframes pulse-red{0%{opacity:1}100%{opacity:0.4}}
+
+    .enemy-area{
+      padding:14px 20px 10px;text-align:center;
+      background:linear-gradient(180deg,rgba(124,58,237,0.08) 0%,transparent 100%);
+      position:relative;
+    }
+    .hp-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#8b949e;margin-bottom:4px;}
+    .hp-track{height:10px;background:rgba(255,255,255,0.08);border-radius:6px;overflow:hidden;}
+    .hp-fill{height:100%;border-radius:6px;transition:width 0.4s ease;}
+    .hp-enemy{background:linear-gradient(90deg,#ef4444,#f87171);}
+    .hp-player{background:linear-gradient(90deg,#10b981,#34d399);}
+    .hp-boss{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
+    .hp-text{font-size:11px;color:#8b949e;margin-top:3px;text-align:right;}
+
+    .enemy-sprite-wrap{position:relative;display:inline-block;margin:6px 0 2px;}
+    .enemy-sprite{font-size:68px;line-height:1;display:block;filter:drop-shadow(0 0 18px rgba(124,58,237,0.5));transition:transform 0.15s;}
+    .enemy-sprite.boss-sprite{font-size:76px;filter:drop-shadow(0 0 26px rgba(245,158,11,0.6));}
+    .enemy-sprite.shake{animation:shake 0.3s ease;}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}50%{transform:translateX(-4px)}}
+    .player-shake{animation:pshake 0.3s ease;}
+    @keyframes pshake{0%,100%{transform:translateX(0)}25%{transform:translateX(8px)}75%{transform:translateX(-8px)}}
+
+    .enemy-name{font-size:13px;font-weight:700;margin-bottom:3px;}
+    .enemy-name.boss-name{color:#fbbf24;}
+    .boss-tag{display:inline-block;background:linear-gradient(90deg,#f59e0b,#ef4444);
+      color:white;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:4px;letter-spacing:1px;}
+    .battle-msg{font-size:12px;color:#8b949e;min-height:16px;}
+
+    .dmg-num{position:absolute;font-size:26px;font-weight:900;pointer-events:none;
+      animation:float-up 1.2s ease forwards;z-index:100;}
+    .dmg-num.player-dmg{color:#ef4444;}
+    .dmg-num.enemy-dmg{color:#34d399;}
+    @keyframes float-up{0%{opacity:1;transform:translateY(0) scale(1)}60%{opacity:1;transform:translateY(-38px) scale(1.2)}100%{opacity:0;transform:translateY(-65px) scale(0.8)}}
+
+    .question-card{
+      margin:8px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+      border-radius:20px;padding:18px 16px;flex:1;
+    }
+    .question-text{
+      font-size:16px;font-weight:700;line-height:1.7;text-align:center;margin-bottom:6px;
+      color:#f0f6fc;min-height:50px;display:flex;align-items:center;justify-content:center;
+    }
+    .hint-text{
+      font-size:12px;color:#7c3aed;text-align:center;margin-bottom:10px;min-height:20px;
+      background:rgba(124,58,237,0.1);border-radius:8px;padding:4px 10px;
+    }
+    .hint-text:empty{background:none;padding:0;}
+    .choices-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .choice-btn{
+      background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);
+      border-radius:12px;padding:11px 6px;font-size:14px;font-weight:700;
+      font-family:'Noto Sans JP',sans-serif;color:#f0f6fc;cursor:pointer;
+      transition:all 0.15s;text-align:center;min-height:50px;line-height:1.3;
+    }
+    .choice-btn:hover:not(:disabled){background:rgba(124,58,237,0.2);border-color:#7c3aed;transform:scale(1.02);}
+    .choice-btn.correct{background:rgba(16,185,129,0.25);border-color:#10b981;color:#34d399;}
+    .choice-btn.wrong{background:rgba(239,68,68,0.2);border-color:#ef4444;color:#f87171;}
+    .choice-btn:disabled{cursor:not-allowed;}
+
+    .explanation{
+      margin-top:12px;background:rgba(255,255,255,0.04);border-left:3px solid #7c3aed;
+      border-radius:0 8px 8px 0;padding:10px 12px;font-size:11px;color:#8b949e;line-height:1.7;
+    }
+    .explanation .correct-ans{color:#34d399;font-weight:700;font-size:13px;}
+
+    .flash-overlay{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:200;opacity:0;transition:opacity 0.1s;}
+    .flash-overlay.flash-green{background:rgba(16,185,129,0.15);}
+    .flash-overlay.flash-red{background:rgba(239,68,68,0.12);}
+    .flash-overlay.show{opacity:1;}
+
+    .player-area{padding:10px 18px 18px;border-top:1px solid rgba(255,255,255,0.06);}
+    .player-hp-wrap{margin-bottom:6px;}
+    .player-xp-bar{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#8b949e;margin-top:6px;}
+    .player-xp-bar .xp-val{color:#c084fc;font-weight:700;}
+    .player-xp-bar .lv-val{color:#fbbf24;font-weight:700;}
+
+    /* RESULT */
+    #screen-result{align-items:center;justify-content:center;padding:40px 24px;text-align:center;
+      background:linear-gradient(160deg,#0d1117,#1a1033,#0d1117);}
+    .result-icon{font-size:76px;margin-bottom:14px;display:block;animation:bounce-in 0.5s cubic-bezier(0.36,0.07,0.19,0.97) forwards;}
+    @keyframes bounce-in{0%{transform:scale(0);opacity:0}60%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+    .result-title{font-size:26px;font-weight:900;margin-bottom:6px;}
+    .result-title.clear{color:#34d399;}
+    .result-title.gameover{color:#ef4444;}
+    .result-stars{font-size:38px;margin:10px 0;letter-spacing:4px;}
+    .result-stats{
+      background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+      border-radius:16px;padding:14px 22px;margin:14px 0;width:100%;max-width:280px;
+    }
+    .stat-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;}
+    .stat-row .stat-val{font-weight:700;color:#c084fc;}
+    .result-xp{font-size:24px;font-weight:900;color:#fbbf24;margin:6px 0;}
+    .result-xp-label{font-size:12px;color:#8b949e;margin-bottom:18px;}
+    .result-btns{display:flex;flex-direction:column;gap:10px;width:100%;max-width:240px;}
+    .btn-primary{
+      background:linear-gradient(135deg,#7c3aed,#4f46e5);color:white;border:none;
+      border-radius:12px;padding:14px 24px;font-size:15px;font-weight:700;
+      font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all 0.2s;
+    }
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(124,58,237,0.4);}
+    .btn-secondary{
+      background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
+      color:#f0f6fc;border-radius:12px;padding:12px 24px;font-size:14px;font-weight:500;
+      font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all 0.2s;
+    }
+    .btn-secondary:hover{background:rgba(255,255,255,0.1);}
+
+    @media(max-width:380px){
+      .title-h1{font-size:38px;}
+      .enemy-sprite{font-size:56px;}
+      .question-text{font-size:14px;}
+      .choice-btn{font-size:13px;padding:9px 5px;}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="flash-overlay flash-green" id="flash-green"></div>
+  <div class="flash-overlay flash-red" id="flash-red"></div>
+
+  <!-- TITLE -->
+  <div id="screen-title" class="screen active">
+    <div class="title-logo">Grammar Battle RPG</div>
+    <div class="title-h1">⚔️ 文法<br>バトル</div>
+    <div class="title-sub">中1〜中3 英文法を制覇せよ！</div>
+    <div class="title-player-status">
+      <div class="status-item">Lv.<span id="title-level">1</span></div>
+      <div class="status-item">XP <span id="title-xp">0</span></div>
+      <div class="status-item">🏆 <span id="title-clears">0</span> クリア</div>
+    </div>
+    <button class="btn-start" onclick="goStageSelect()">はじめる ▶</button><br>
+    <button class="btn-ghost" onclick="resetData()">🗑 データリセット</button>
+  </div>
+
+  <!-- STAGE SELECT -->
+  <div id="screen-stage" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" onclick="showScreen('title')">←</button>
+      <h2>ステージ選択</h2>
+      <div class="player-mini">Lv.<span id="stage-level">1</span>&nbsp;⭐<span id="stage-xp">0</span></div>
+    </div>
+    <div class="diff-bar">
+      <button class="diff-btn" data-diff="easy" onclick="setDiff(this)">かんたん</button>
+      <button class="diff-btn active" data-diff="normal" onclick="setDiff(this)">ふつう</button>
+      <button class="diff-btn" data-diff="hard" onclick="setDiff(this)">むずかしい</button>
+    </div>
+    <div class="stage-list" id="stage-list"></div>
+  </div>
+
+  <!-- BATTLE -->
+  <div id="screen-battle" class="screen">
+    <div class="battle-header">
+      <span class="battle-stage-name" id="battle-stage-name">Stage 1</span>
+      <span class="battle-q-count" id="battle-q-count">Q 1 / 8</span>
+    </div>
+    <div class="timer-bar hidden" id="timer-bar">
+      <div class="timer-fill" id="timer-fill" style="width:100%"></div>
+    </div>
+    <div class="enemy-area" id="enemy-area">
+      <div class="enemy-hp-wrap">
+        <div class="hp-label" id="enemy-hp-label">ENEMY HP</div>
+        <div class="hp-track"><div class="hp-fill hp-enemy" id="enemy-hp-fill" style="width:100%"></div></div>
+        <div class="hp-text" id="enemy-hp-text">100 / 100</div>
+      </div>
+      <div id="boss-tag-wrap"></div>
+      <div class="enemy-sprite-wrap">
+        <div class="enemy-sprite" id="enemy-sprite">👹</div>
+      </div>
+      <div class="enemy-name" id="enemy-name">文法モンスター</div>
+      <div class="battle-msg" id="battle-msg"></div>
+    </div>
+    <div class="question-card">
+      <div class="question-text" id="question-text"></div>
+      <div class="hint-text" id="hint-text"></div>
+      <div class="choices-grid" id="choices-grid"></div>
+      <div class="explanation" id="explanation" style="display:none"></div>
+    </div>
+    <div class="player-area" id="player-area">
+      <div class="player-hp-wrap">
+        <div class="hp-label">あなたのHP</div>
+        <div class="hp-track"><div class="hp-fill hp-player" id="player-hp-fill" style="width:100%"></div></div>
+        <div class="hp-text" id="player-hp-text">100 / 100</div>
+      </div>
+      <div class="player-xp-bar">
+        <span>⭐ XP: <span class="xp-val" id="battle-xp">0</span></span>
+        <span>Lv.<span class="lv-val" id="battle-level">1</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result" class="screen">
+    <span class="result-icon" id="result-icon">🏆</span>
+    <div class="result-title" id="result-title">ステージクリア！</div>
+    <div class="result-stars" id="result-stars">⭐⭐⭐</div>
+    <div class="result-stats" id="result-stats"></div>
+    <div class="result-xp" id="result-xp">+120 XP</div>
+    <div class="result-xp-label" id="result-xp-label">獲得XP</div>
+    <div class="result-btns">
+      <button class="btn-primary" id="btn-retry" onclick="retryStage()">もう一度 🔄</button>
+      <button class="btn-secondary" onclick="goStageSelect()">ステージ選択に戻る</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =============================================
+   STAGE DATA（全8ステージ）
+============================================= */
+const STAGE_DATA = [
+  { key:'s1', label:'Stage 1', title:'be動詞と一般動詞', sub:'中1 基礎',
+    grammar:'am/is/are・一般動詞・疑問文・否定文', color:'#22c55e', icon:'📝' },
+  { key:'s2', label:'Stage 2', title:'疑問詞・進行形・can', sub:'中1 発展',
+    grammar:'what/who/when/where・進行形・can・命令文', color:'#06b6d4', icon:'❓' },
+  { key:'s3', label:'Stage 3', title:'過去形・過去進行形', sub:'中1〜中2',
+    grammar:'一般動詞・be動詞の過去形・過去進行形', color:'#f59e0b', icon:'⏰' },
+  { key:'s4', label:'Stage 4', title:'不定詞と動名詞', sub:'中2 基礎',
+    grammar:'to不定詞3用法・動名詞（-ing）', color:'#3b82f6', icon:'🎯' },
+  { key:'s5', label:'Stage 5', title:'助動詞・will・have to', sub:'中2 発展',
+    grammar:'will・be going to・have to・must・may', color:'#8b5cf6', icon:'⚡' },
+  { key:'s6', label:'Stage 6', title:'比較・接続詞・SVOO', sub:'中2 完成',
+    grammar:'比較級・最上級・as〜as・接続詞・SVOO', color:'#ec4899', icon:'⚖️' },
+  { key:'s7', label:'Stage 7', title:'受動態と現在完了形', sub:'中3 基礎',
+    grammar:'受け身（受動態）・現在完了形3種', color:'#e63946', icon:'🔄' },
+  { key:'s8', label:'Stage 8', title:'分詞・関係代名詞・不定詞応用', sub:'中3 応用',
+    grammar:'後置修飾・関係代名詞・間接疑問・仮定法', color:'#eab308', icon:'🌟' },
+];
+
+/* =============================================
+   MONSTERS & BOSSES
+============================================= */
+const MONSTERS = {
+  s1:[['be動詞ゴブリン','👹'],['一般動詞スライム','🟢'],['否定文ゾンビ','🧟'],['疑問文ゴースト','👻'],['主語オーク','👺']],
+  s2:[['疑問詞モンスター','🤔'],['進行形スライム','🫧'],['canウルフ','🐺'],['命令文鬼','😈'],['whereドラゴン','🐊']],
+  s3:[['過去形ゴーレム','🪨'],['edウィッチ','🧙'],['不規則動詞鬼','😡'],['過去進行スライム','💧'],['did Titan','💀']],
+  s4:[['不定詞ゴブリン','👾'],['to動名詞鬼','🧌'],['enjoy Elf','🧝'],['want Witch','🧙‍♀️'],['動名詞スライム','🫧']],
+  s5:[['will Dragon','🐉'],['have to Orc','💪'],['mustモンスター','😤'],['may Ghost','👻'],['助動詞ボス','🤖']],
+  s6:[['比較モンスター','⚖️'],['最上級鬼','👑'],['as Specter','🌫️'],['接続詞スライム','🔗'],['SVOOゴーレム','🪨']],
+  s7:[['受動態ドラゴン','🐲'],['受け身ゾンビ','🧟'],['現在完了ゴブリン','👹'],['everゴースト','👻'],['完了形鬼','😈']],
+  s8:[['分詞モンスター','🦕'],['後置修飾鬼','😡'],['関係代名詞狼','🐺'],['whose Wraith','🌫️'],['間接疑問ウィッチ','🧙']],
+};
+const BOSSES = {
+  s1:['be動詞の大魔王「AM Lord」','👑'],
+  s2:['疑問の守護者「What Dragon」','🐉'],
+  s3:['時の番人「Past Master」','⚙️'],
+  s4:['不定詞の王者「To King」','🦁'],
+  s5:['助動詞の神「Modal God」','⚡'],
+  s6:['比較の覇者「Best Lord」','🌟'],
+  s7:['完了の魔王「Perfect Dark」','🌑'],
+  s8:['英文法の終神「Grammar God」','🔮'],
+};
+
+/* =============================================
+   QUESTIONS（各ステージ10問 + ボス3問）
+============================================= */
+const QS = {
+/* ---- Stage 1: be動詞と一般動詞 ---- */
+s1:[
+  {q:"I (   ) a student.",ch:["am","is","are","be"],a:0,hint:"I → am",exp:"be動詞：I → am、he/she/it → is、you/we/they → are。"},
+  {q:"She (   ) kind and smart.",ch:["is","am","are","be"],a:0,hint:"She → is",exp:"3人称単数（he/she/it）にはbe動詞 is を使う。"},
+  {q:"They (   ) from Tokyo.",ch:["are","is","am","be"],a:0,hint:"They → are",exp:"you/we/they にはbe動詞 are を使う。"},
+  {q:"He (   ) not a doctor.",ch:["is","am","are","does"],a:0,hint:"He → is not",exp:"be動詞の否定文：am/is/are + not。He is not = He isn't。"},
+  {q:"(   ) you happy?",ch:["Are","Is","Am","Do"],a:0,hint:"You → Are",exp:"be動詞の疑問文：Are/Is/Am + 主語 ...？ You には Are を使う。"},
+  {q:"I (   ) soccer every day.",ch:["play","plays","playing","played"],a:0,hint:"I → 動詞の原形",exp:"一般動詞：I / you / we / they のときは動詞の原形をそのまま使う。"},
+  {q:"She (   ) English very well.",ch:["speaks","speak","speaking","spoke"],a:0,hint:"She → 動詞に s/es",exp:"3人称単数（he/she/it）の一般動詞には s/es をつける。speak → speaks。"},
+  {q:"Do you (   ) cats?",ch:["like","likes","liked","liking"],a:0,hint:"Do you のあとは原形",exp:"一般動詞の疑問文：Do/Does + 主語 + 動詞の原形？ Do のあとは原形。"},
+  {q:"He (   ) not eat fish.",ch:["does","do","is","has"],a:0,hint:"He → does not",exp:"3人称単数の否定文：does not（doesn't）+ 動詞の原形。"},
+  {q:"(   ) she have a dog?",ch:["Does","Do","Is","Has"],a:0,hint:"She → Does",exp:"3人称単数の疑問文：Does + 主語 + 動詞の原形？"},
+],
+s1boss:[
+  {q:"My sister (   ) in Tokyo.",ch:["lives","live","living","lived"],a:0,hint:"My sister → 3人称単数",exp:"3人称単数の一般動詞は s/es をつける。live → lives。"},
+  {q:"(   ) they study math?",ch:["Do","Does","Are","Is"],a:0,hint:"They → Do",exp:"一般動詞の疑問文：Do（you/we/they）/ Does（he/she/it）+ 主語 + 原形？"},
+  {q:"He (   ) not play baseball.",ch:["does","do","is","are"],a:0,hint:"He → does not",exp:"3人称単数の否定文：He does not（doesn't）+ 動詞の原形。"},
+],
+/* ---- Stage 2: 疑問詞・進行形・can ---- */
+s2:[
+  {q:"(   ) is this?",ch:["What","Who","Where","When"],a:0,hint:"「何ですか？」= What",exp:"What（何）は物や事柄を尋ねる疑問詞。What is this?（これは何ですか？）"},
+  {q:"(   ) is that girl?",ch:["Who","What","Where","Which"],a:0,hint:"「誰ですか？」= Who",exp:"Who（誰）は人を尋ねる疑問詞。Who is that girl?（あの女の子は誰ですか？）"},
+  {q:"(   ) do you live?",ch:["Where","When","Who","What"],a:0,hint:"「どこに」= Where",exp:"Where（どこ）は場所を尋ねる疑問詞。Where do you live?（どこに住んでいますか？）"},
+  {q:"(   ) do you usually get up?",ch:["When","Where","Who","What"],a:0,hint:"「いつ」= When",exp:"When（いつ）は時を尋ねる疑問詞。When do you get up?（いつ起きますか？）"},
+  {q:"I am (   ) TV now.",ch:["watching","watch","watched","watches"],a:0,hint:"am + 動詞ing = 進行形",exp:"現在進行形：am/is/are + 動詞ing。「今〜しているところ」を表す。"},
+  {q:"They are (   ) soccer in the park.",ch:["playing","play","played","plays"],a:0,hint:"are + 動詞ing",exp:"現在進行形：are + 動詞ing。They are playing = 彼らはサッカーをしている（今）。"},
+  {q:"(   ) she playing the piano?",ch:["Is","Are","Am","Does"],a:0,hint:"she → Is",exp:"進行形の疑問文：Is/Are/Am + 主語 + 動詞ing？ she には Is を使う。"},
+  {q:"She can (   ) the guitar.",ch:["play","plays","playing","played"],a:0,hint:"can の後は原形",exp:"助動詞 can の後は動詞の原形。can play = 弾くことができる。"},
+  {q:"Can you (   ) Japanese?",ch:["speak","speaks","speaking","spoke"],a:0,hint:"Can の後は原形",exp:"Can + 主語 + 動詞の原形？ Can you speak ...?（〜できますか？）"},
+  {q:"(   ) quiet, please.",ch:["Be","Am","Is","Are"],a:0,hint:"命令文 = 動詞の原形で始める",exp:"命令文はbe動詞でも原形の Be を使う。Be quiet.（静かにしなさい。）"},
+],
+s2boss:[
+  {q:"(   ) does she live?",ch:["Where","When","Who","What"],a:0,hint:"「どこに」= Where",exp:"Where + does + 主語 + 動詞の原形？（3人称単数の場合は does）"},
+  {q:"He is (   ) his homework now.",ch:["doing","do","did","done"],a:0,hint:"is + 動詞ing",exp:"現在進行形：is + 動詞ing。do の現在分詞は doing。"},
+  {q:"I can (   ) French a little.",ch:["speak","speaks","spoke","speaking"],a:0,hint:"can の後は原形",exp:"助動詞（can / will / must など）の後は必ず動詞の原形。"},
+],
+/* ---- Stage 3: 過去形・過去進行形 ---- */
+s3:[
+  {q:"I (   ) to school by bus yesterday.",ch:["went","go","goes","going"],a:0,hint:"go の過去形は went",exp:"go の過去形は went（不規則変化）。yesterday（昨日）は過去のサイン。"},
+  {q:"She (   ) English hard last night.",ch:["studied","study","studies","studying"],a:0,hint:"study の過去形（規則変化）",exp:"study の過去形は studied（y → ied）。last night（昨夜）= 過去の時を表す語。"},
+  {q:"He (   ) not come to school yesterday.",ch:["did","does","do","was"],a:0,hint:"過去の否定 = did not",exp:"一般動詞の過去否定文：did not（didn't）+ 動詞の原形。"},
+  {q:"(   ) you watch TV last night?",ch:["Did","Do","Were","Was"],a:0,hint:"過去の疑問文 = Did",exp:"一般動詞の過去疑問文：Did + 主語 + 動詞の原形？ did のあとは原形。"},
+  {q:"The weather (   ) fine yesterday.",ch:["was","is","were","be"],a:0,hint:"it/he/she → was",exp:"be動詞の過去形：I/he/she/it → was、you/we/they → were。"},
+  {q:"They (   ) not at home last Sunday.",ch:["were","was","are","is"],a:0,hint:"They → were not",exp:"be動詞の過去否定：was not / were not。they → were not（weren't）。"},
+  {q:"I was (   ) when you called.",ch:["sleeping","sleep","slept","to sleep"],a:0,hint:"was + 動詞ing = 過去進行形",exp:"過去進行形：was/were + 動詞ing。「〜していた（ところだった）」を表す。"},
+  {q:"She was (   ) in the park at that time.",ch:["running","ran","run","to run"],a:0,hint:"was + 動詞ing",exp:"run の現在分詞は running（n を重ねて ing）。過去進行形 was running。"},
+  {q:"What (   ) you doing at 7 p.m.?",ch:["were","was","did","do"],a:0,hint:"You → were",exp:"過去進行形の疑問文：What were/was + 主語 + 動詞ing？ you → were。"},
+  {q:"He (   ) the book last week.",ch:["read","reads","reading","to read"],a:0,hint:"read の過去形は read（発音が変わる）",exp:"read（読む）の過去形は read（形は同じ、発音は「レッド」）。不規則変化動詞。"},
+],
+s3boss:[
+  {q:"(   ) she at school yesterday?",ch:["Was","Is","Were","Did"],a:0,hint:"she → Was",exp:"be動詞過去の疑問文：Was/Were + 主語 ...？ she/he/it → Was。"},
+  {q:"I (   ) a great movie last weekend.",ch:["saw","see","sees","seeing"],a:0,hint:"see の過去形 = saw",exp:"see（見る）の過去形は saw（不規則変化）。last weekend = 先週末（過去）。"},
+  {q:"They were (   ) when I arrived.",ch:["studying","study","studied","to study"],a:0,hint:"were + 動詞ing",exp:"過去進行形：were + 動詞ing。「私が着いたとき、彼らは勉強していた」。"},
+],
+/* ---- Stage 4: 不定詞と動名詞 ---- */
+s4:[
+  {q:"I want (   ) a doctor.",ch:["to be","being","be","been"],a:0,hint:"want + to 不定詞",exp:"want + to 不定詞（to + 動詞の原形）。「〜したい」という願望を表す。"},
+  {q:"She enjoys (   ) songs.",ch:["singing","to sing","sing","sang"],a:0,hint:"enjoy + ing（動名詞）",exp:"enjoy は後ろに動名詞（-ing）だけを置く動詞。enjoy singing = 歌うことを楽しむ。"},
+  {q:"I have a lot of homework (   ) today.",ch:["to do","doing","do","done"],a:0,hint:"名詞を修飾するto不定詞（形容詞的用法）",exp:"to不定詞の形容詞的用法：名詞 + to 動詞原形（〜するための）。homework to do = やるべき宿題。"},
+  {q:"He went to the store (   ) milk.",ch:["to buy","buying","buy","bought"],a:0,hint:"目的（〜するために）= to不定詞（副詞的用法）",exp:"to不定詞の副詞的用法（目的）：「〜するために」。went to the store to buy = 牛乳を買うために店に行った。"},
+  {q:"It is important (   ) English every day.",ch:["to study","studying","study","studied"],a:0,hint:"It is + 形容詞 + to 不定詞",exp:"It is + 形容詞 + to 動詞原形（〜することは〜だ）。to不定詞の名詞的用法（主語）。"},
+  {q:"I'm good at (   ) pictures.",ch:["drawing","draw","to draw","drew"],a:0,hint:"at のあとは動名詞（-ing）",exp:"前置詞（at / in / of など）の後には動名詞（-ing）を使う。be good at + ing。"},
+  {q:"He finished (   ) his report.",ch:["writing","write","to write","wrote"],a:0,hint:"finish + ing（動名詞）",exp:"finish は後ろに動名詞（-ing）だけを置く動詞。finished writing = 書き終えた。"},
+  {q:"I decided (   ) abroad.",ch:["to study","studying","study","studied"],a:0,hint:"decide + to 不定詞",exp:"decide は後ろに to 不定詞を置く動詞。decided to study = 勉強することに決めた。"},
+  {q:"He stopped (   ) games and started studying.",ch:["playing","to play","play","played"],a:0,hint:"stop + ing（〜するのをやめる）",exp:"stop + 動名詞（-ing）= 〜するのをやめる。stop + to不定詞（〜するために立ち止まる）と区別。"},
+  {q:"My dream is (   ) a teacher.",ch:["to be","being","be","been"],a:0,hint:"主語の補語 = to 不定詞（名詞的用法）",exp:"to不定詞の名詞的用法（補語）。My dream is to be ...（私の夢は〜になることです）。"},
+],
+s4boss:[
+  {q:"Thank you for (   ) me.",ch:["helping","help","to help","helped"],a:0,hint:"for のあとは動名詞（-ing）",exp:"前置詞 for の後には動名詞（-ing）。Thank you for helping = 手伝ってくれてありがとう。"},
+  {q:"It is fun (   ) soccer.",ch:["to play","playing","play","played"],a:0,hint:"It is + 形容詞 + to 不定詞",exp:"It is fun to play soccer.（サッカーをするのは楽しい）。to不定詞の名詞的用法。"},
+  {q:"I need (   ) early tomorrow.",ch:["to get up","getting up","get up","got up"],a:0,hint:"need + to 不定詞",exp:"need は後ろに to 不定詞を置く動詞。need to get up = 早く起きる必要がある。"},
+],
+/* ---- Stage 5: 助動詞・will・have to ---- */
+s5:[
+  {q:"I (   ) study harder from now on.",ch:["will","am","going","have"],a:0,hint:"未来の意志 = will",exp:"will + 動詞の原形で未来や意志を表す。「これからもっと勉強するつもりだ」。"},
+  {q:"She is (   ) to visit Paris next year.",ch:["going","go","went","gone"],a:0,hint:"be going to + 動詞原形（予定）",exp:"be going to + 動詞の原形で「〜する予定だ」（すでに決まった予定）を表す。"},
+  {q:"You (   ) wear a seat belt in a car.",ch:["must","can","will","may"],a:0,hint:"「〜しなければならない」= must",exp:"must + 動詞の原形で「〜しなければならない」（強い義務・必要）を表す。"},
+  {q:"(   ) I open the window?",ch:["May","Must","Will","Have"],a:0,hint:"丁寧な許可 = May",exp:"May I ...?（〜してもよいですか？）は丁寧に許可を求める表現。"},
+  {q:"You (   ) not smoke here.",ch:["must","will","can","may"],a:0,hint:"禁止 = must not",exp:"must not（mustn't）は「〜してはいけない」という禁止を表す。"},
+  {q:"He (   ) not have to come tomorrow.",ch:["does","do","will","must"],a:0,hint:"have to の否定 = don't/doesn't have to",exp:"don't/doesn't have to = 「〜しなくてよい」（不必要）。must not（禁止）と区別。"},
+  {q:"They are (   ) to have a big party.",ch:["going","go","went","gone"],a:0,hint:"be going to",exp:"be going to + 動詞原形。They are going to have = 彼らはパーティーをする予定だ。"},
+  {q:"She (   ) speak three languages.",ch:["can","will","must","may"],a:0,hint:"「〜できる」= can",exp:"can + 動詞の原形で「〜できる」（能力・可能性）を表す。"},
+  {q:"You should (   ) more vegetables.",ch:["eat","eats","eating","ate"],a:0,hint:"should + 動詞の原形（アドバイス）",exp:"should + 動詞の原形で「〜すべきだ」（アドバイス・提案）を表す。"},
+  {q:"It (   ) rain tomorrow.",ch:["may","must","will","should"],a:0,hint:"「〜かもしれない」= may",exp:"may + 動詞の原形で「〜かもしれない」（弱い可能性）を表す。"},
+],
+s5boss:[
+  {q:"You (   ) to hand in this form by Friday.",ch:["have","must","will","should"],a:0,hint:"「〜しなければならない」= have to",exp:"have to + 動詞原形で「〜しなければならない」。must より客観的なルールや状況による必要性。"},
+  {q:"I will (   ) you with your homework.",ch:["help","helps","helped","helping"],a:0,hint:"will の後は動詞の原形",exp:"助動詞（will/can/must など）の後は必ず動詞の原形。will help = 手伝う（つもりだ）。"},
+  {q:"(   ) you pass me the salt, please?",ch:["Will","Are","Do","Should"],a:0,hint:"Will you ...?（〜してくれますか？）",exp:"Will you ...? は「〜してくれますか？」という依頼の表現。"},
+],
+/* ---- Stage 6: 比較・接続詞・SVOO ---- */
+s6:[
+  {q:"She is (   ) than her sister.",ch:["taller","tallest","tall","most tall"],a:0,hint:"2つを比べる = 比較級（-er）",exp:"2つのものを比べるときは比較級：形容詞 + er（または more + 形容詞）+ than。"},
+  {q:"This is the (   ) movie I have ever seen.",ch:["best","better","good","most good"],a:0,hint:"最もすぐれている = 最上級",exp:"最上級は the + 形容詞 + est（または most + 形容詞）。good → best（不規則変化）。"},
+  {q:"He is as (   ) as his father.",ch:["tall","taller","tallest","more tall"],a:0,hint:"as + 原級 + as（同じくらい）",exp:"as + 形容詞/副詞の原級 + as で「同じくらい〜だ」という同等比較を表す。"},
+  {q:"This bag is (   ) expensive than that one.",ch:["more","most","much","very"],a:0,hint:"2音節以上の形容詞の比較級 = more",exp:"2音節以上の形容詞の比較級は more + 形容詞 + than。expensive → more expensive。"},
+  {q:"She gave (   ) a birthday present.",ch:["him","he","his","himself"],a:0,hint:"与える相手は目的格（him/her/us）",exp:"SVOO：主語 + 動詞 + 人（間接目的語）+ もの（直接目的語）。he の目的格は him。"},
+  {q:"My teacher told (   ) an interesting story.",ch:["us","we","our","ours"],a:0,hint:"told のあとは目的格（us/me/him）",exp:"tell + 人 + もの（SVOO）。we の目的格は us。told us a story = 私たちに話してくれた。"},
+  {q:"She looks (   ).",ch:["happy","happily","happiness","more happy"],a:0,hint:"look + 形容詞（見た目・状態）",exp:"look/sound/become/get などのあとには形容詞を置く（SVOC のような形）。She looks happy."},
+  {q:"I think (   ) it will rain tomorrow.",ch:["that","what","if","which"],a:0,hint:"「〜と思う」that節",exp:"接続詞 that は「〜ということ」。I think that it will ...（〜だと思う）。that は省略可能。"},
+  {q:"She was tired, (   ) she went to bed early.",ch:["so","but","and","because"],a:0,hint:"「だから」= so",exp:"接続詞 so は「だから・それで」。「疲れていた、だから早く寝た」。"},
+  {q:"English is the (   ) subject for me.",ch:["most interesting","more interesting","interesting","interestingly"],a:0,hint:"3つ以上での最上級 = the most",exp:"2音節以上の形容詞の最上級は the most + 形容詞。most interesting = 最もおもしろい。"},
+],
+s6boss:[
+  {q:"He sent (   ) a nice gift.",ch:["me","I","my","mine"],a:0,hint:"sent のあとは目的格",exp:"send + 人 + もの（SVOO）。I の目的格は me。sent me a gift = 私にプレゼントを送ってくれた。"},
+  {q:"She looks (   ) when she smiles.",ch:["beautiful","beautifully","beauty","more beautiful"],a:0,hint:"look + 形容詞",exp:"look のあとには形容詞（beautiful）を置く。副詞（beautifully）は不可。"},
+  {q:"He is (   ) student in the class.",ch:["the tallest","tallest","the taller","most tall"],a:0,hint:"最上級は the + 形容詞 + est",exp:"最上級には the が必要。tall → the tallest。クラスで一番背が高い生徒。"},
+],
+/* ---- Stage 7: 受動態と現在完了形 ---- */
+s7:[
+  {q:"This bridge (   ) in 1990.",ch:["was built","built","is built","builds"],a:0,hint:"過去の受動態 = was/were + 過去分詞",exp:"受動態（受け身）：be動詞 + 過去分詞（+ by ...）。過去の文なので was built。"},
+  {q:"English (   ) all over the world.",ch:["is spoken","speaks","spoke","was speaking"],a:0,hint:"現在の受動態 = is/are + 過去分詞",exp:"現在の受動態：am/is/are + 過去分詞。English is spoken = 英語が話されている。"},
+  {q:"The window (   ) by the storm.",ch:["was broken","broke","breaks","breaking"],a:0,hint:"過去の受動態",exp:"過去の受動態：was/were + 過去分詞。break（壊す）の過去分詞は broken。"},
+  {q:"Have you (   ) sushi before?",ch:["eaten","eat","ate","eating"],a:0,hint:"現在完了形（経験）have + 過去分詞",exp:"現在完了形（経験）：Have/Has + 主語 + 過去分詞？ eat → eaten（不規則変化）。"},
+  {q:"She has (   ) to the store.",ch:["gone","go","went","going"],a:0,hint:"has + 過去分詞（完了・結果）",exp:"have/has + gone は「行ってしまった（今ここにいない）」という結果を表す。"},
+  {q:"I have never (   ) abroad.",ch:["been","go","went","going"],a:0,hint:"been to = 行ったことがある",exp:"have been to ...（〜へ行ったことがある）。never（一度も〜ない）と一緒に使うことが多い。"},
+  {q:"He has (   ) finished his work.",ch:["already","yet","ever","never"],a:0,hint:"「もう〜した」= already",exp:"already（もう、すでに）は現在完了（完了）でよく使う。has already finished。"},
+  {q:"How long have you (   ) here?",ch:["lived","live","living","lives"],a:0,hint:"継続の現在完了 have + 過去分詞",exp:"現在完了形（継続）：How long + have + 主語 + 過去分詞？「どのくらいここに住んでいますか？」"},
+  {q:"Have you cleaned your room (   )?",ch:["yet","already","just","ever"],a:0,hint:"疑問文で「もう」= yet",exp:"yet（もう、まだ）は疑問文・否定文で使う。Have you ... yet?（もう〜しましたか？）"},
+  {q:"This picture (   ) by a famous artist.",ch:["was painted","painted","is painting","paints"],a:0,hint:"過去の受動態",exp:"受動態（過去）：was/were + 過去分詞。paint → painted（過去分詞・規則変化）。"},
+],
+s7boss:[
+  {q:"Japanese (   ) in Japan.",ch:["is spoken","speaks","spoke","speaking"],a:0,hint:"現在の受動態",exp:"is/are + 過去分詞（現在の受動態）。speak → spoken（不規則変化）。Japanese is spoken."},
+  {q:"She has (   ) this book twice.",ch:["read","reading","reads","to read"],a:0,hint:"have + 過去分詞（経験）",exp:"現在完了形（経験）：have/has + 過去分詞。read の過去分詞は read（形は同じ）。twice = 2回。"},
+  {q:"I haven't done my homework (   ).",ch:["yet","already","just","ever"],a:0,hint:"否定文で「まだ」= yet",exp:"yet（まだ）は否定文で「まだ〜していない」。haven't done ... yet = まだやっていない。"},
+],
+/* ---- Stage 8: 分詞・関係代名詞・間接疑問・仮定法 ---- */
+s8:[
+  {q:"The boy (   ) soccer is my brother.",ch:["playing","played","play","to play"],a:0,hint:"「〜している」名詞を修飾 = 現在分詞",exp:"現在分詞（-ing）が後ろから名詞を修飾（能動の意味）。playing soccer = サッカーをしている。"},
+  {q:"The letter (   ) in English was hard.",ch:["written","writing","write","writes"],a:0,hint:"「〜された」名詞を修飾 = 過去分詞",exp:"過去分詞が後ろから名詞を修飾（受動の意味）。written in English = 英語で書かれた。"},
+  {q:"The girl (   ) is singing is my sister.",ch:["who","which","whose","what"],a:0,hint:"人を修飾する関係代名詞 = who",exp:"関係代名詞 who は人を先行詞にするときに使う。The girl who is singing = 歌っている女の子。"},
+  {q:"I like the music (   ) he plays.",ch:["that","who","whose","what"],a:0,hint:"物を修飾する関係代名詞 = that/which",exp:"関係代名詞 that または which は物を先行詞にするときに使う。music that he plays = 彼が弾く音楽。"},
+  {q:"The woman (   ) cat is black lives nearby.",ch:["whose","who","which","that"],a:0,hint:"「〜の」= whose（所有格）",exp:"whose は所有格の関係代名詞。whose cat = 彼女の猫（〜のという所有の関係）。"},
+  {q:"Do you know (   ) she lives?",ch:["where","what","how","when"],a:0,hint:"「どこに住んでいるか」= where",exp:"間接疑問文：Do you know + 疑問詞 + 主語 + 動詞（平叙文の語順）。where she lives。"},
+  {q:"I wonder (   ) he will come.",ch:["if","what","when","where"],a:0,hint:"「〜かどうか」= if",exp:"I wonder if/whether ...（〜かどうか不思議に思う）。if は「〜かどうか」という間接疑問を導く。"},
+  {q:"It is easy (   ) this game.",ch:["to play","playing","play","played"],a:0,hint:"It is + 形容詞 + to 不定詞",exp:"It is + 形容詞 + to 動詞原形（〜することは〜だ）。It is easy to play。"},
+  {q:"If I (   ) you, I would apologize.",ch:["were","was","am","be"],a:0,hint:"仮定法過去 → were を使う",exp:"仮定法過去：If + 主語 + were（人称に関係なく）..., 主語 + would + 動詞原形。"},
+  {q:"I wish I (   ) fly like a bird.",ch:["could","can","will","would"],a:0,hint:"I wish + could（叶わない願望）",exp:"I wish + 仮定法過去。could は can の過去形で「〜できたらなあ」という叶わない願望を表す。"},
+],
+s8boss:[
+  {q:"The man (   ) helped me was very kind.",ch:["who","which","whose","what"],a:0,hint:"人を修飾 → who",exp:"関係代名詞 who は人を先行詞にする。The man who helped me = 私を助けてくれた男性。"},
+  {q:"Tell me (   ) you like best.",ch:["what","which","how","where"],a:0,hint:"間接疑問「何を」= what",exp:"Tell me + what + 主語 + 動詞（間接疑問文）。what you like best = あなたが一番好きなもの。"},
+  {q:"She made me (   ) the sentences.",ch:["write","writing","wrote","to write"],a:0,hint:"make + 人 + 動詞の原形（使役動詞）",exp:"使役動詞 make：make + 目的語 + 動詞の原形（to なし）。「〜に〜させる（強制）」。"},
+],
+};
+
+/* =============================================
+   GAME STATE
+============================================= */
+let gs = {
+  difficulty:'normal',
+  currentStage:null,
+  currentStageData:null,
+  playerHP:100,
+  playerMaxHP:100,
+  questionList:[],
+  currentQIndex:0,
+  answered:false,
+  timerInterval:null,
+  timeLeft:10,
+  bossHP:90,
+  bossMaxHP:90,
+  correctThisRun:0,
+  wrongThisRun:0,
+  xpGained:0,
+  stars:{},
+  totalXP:0,
+  totalClears:0,
+};
+
+function saveData(){
+  localStorage.setItem('grammarBattle_v3',JSON.stringify({stars:gs.stars,totalXP:gs.totalXP,totalClears:gs.totalClears}));
+}
+function loadData(){
+  try{
+    const d=JSON.parse(localStorage.getItem('grammarBattle_v3')||'{}');
+    gs.stars=d.stars||{};gs.totalXP=d.totalXP||0;gs.totalClears=d.totalClears||0;
+  }catch(e){gs.stars={};gs.totalXP=0;gs.totalClears=0;}
+}
+function resetData(){
+  if(!confirm('データをリセットしますか？'))return;
+  localStorage.removeItem('grammarBattle_v3');
+  loadData();updateTitleUI();
+}
+function calcLevel(xp){return Math.floor(xp/100)+1;}
+function calcStars(hp){return hp>=90?3:hp>=50?2:1;}
+function starStr(n){return'⭐'.repeat(n)+'☆'.repeat(3-n);}
+
+/* =============================================
+   SCREENS
+============================================= */
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+/* =============================================
+   TITLE
+============================================= */
+function updateTitleUI(){
+  document.getElementById('title-level').textContent=calcLevel(gs.totalXP);
+  document.getElementById('title-xp').textContent=gs.totalXP;
+  document.getElementById('title-clears').textContent=gs.totalClears;
+}
+function goStageSelect(){buildStageList();updateStageHeader();showScreen('stage');}
+function updateStageHeader(){
+  document.getElementById('stage-level').textContent=calcLevel(gs.totalXP);
+  document.getElementById('stage-xp').textContent=gs.totalXP;
+}
+
+/* =============================================
+   STAGE SELECT
+============================================= */
+function setDiff(btn){
+  document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  gs.difficulty=btn.dataset.diff;
+}
+function buildStageList(){
+  const list=document.getElementById('stage-list');
+  list.innerHTML='';
+  STAGE_DATA.forEach(st=>{
+    const stars=gs.stars[st.key]||0;
+    const card=document.createElement('div');
+    card.className='stage-card';
+    card.style.borderColor=stars>0?st.color+'55':'';
+    card.innerHTML=`
+      <div class="stage-icon" style="background:${st.color}22;color:${st.color}">${st.icon}</div>
+      <div class="stage-info-text">
+        <div class="stage-label" style="color:${st.color}">${st.label}　<span style="opacity:0.6;font-size:10px">${st.sub}</span></div>
+        <div class="stage-title-text">${st.title}</div>
+        <div class="stage-grammar">${st.grammar}</div>
+      </div>
+      <div class="stage-stars">${stars>0?starStr(stars):'─'}</div>
+    `;
+    card.onclick=()=>startBattle(st.key);
+    list.appendChild(card);
+  });
+}
+
+/* =============================================
+   BATTLE
+============================================= */
+function startBattle(stageKey){
+  gs.currentStage=stageKey;
+  gs.currentStageData=STAGE_DATA.find(s=>s.key===stageKey);
+  gs.playerHP=100;gs.playerMaxHP=100;
+  gs.bossHP=90;gs.bossMaxHP=90;
+  gs.currentQIndex=0;gs.answered=false;
+  gs.correctThisRun=0;gs.wrongThisRun=0;gs.xpGained=0;
+
+  const bossKey=stageKey+'boss';
+  const regPool=shuffle([...QS[stageKey]]).slice(0,5);
+  const bossPool=shuffle([...QS[bossKey]]).slice(0,3);
+  gs.questionList=[...regPool,...bossPool];
+
+  showScreen('battle');
+  updateHPBar();updateBattleXP();
+  showQuestion();
+}
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+function isInBossPhase(){return gs.currentQIndex>=5;}
+
+function showQuestion(){
+  const q=gs.questionList[gs.currentQIndex];
+  const st=gs.currentStageData;
+  const boss=isInBossPhase();
+  document.getElementById('battle-stage-name').textContent=st.label+' — '+st.title;
+  document.getElementById('battle-q-count').textContent='Q '+(gs.currentQIndex+1)+' / 8';
+
+  const bossTagWrap=document.getElementById('boss-tag-wrap');
+  const sprite=document.getElementById('enemy-sprite');
+  const eName=document.getElementById('enemy-name');
+  const eHpLabel=document.getElementById('enemy-hp-label');
+  const eHpFill=document.getElementById('enemy-hp-fill');
+  const eHpText=document.getElementById('enemy-hp-text');
+  document.getElementById('battle-msg').textContent='';
+
+  if(boss){
+    const[bName,bEmoji]=BOSSES[st.key];
+    bossTagWrap.innerHTML='<div class="boss-tag">⚠ BOSS BATTLE</div>';
+    sprite.textContent=bEmoji;sprite.className='enemy-sprite boss-sprite';
+    eName.textContent=bName;eName.className='enemy-name boss-name';
+    eHpLabel.textContent='BOSS HP';
+    eHpFill.className='hp-fill hp-boss';
+    const pct=Math.max(0,(gs.bossHP/gs.bossMaxHP)*100);
+    eHpFill.style.width=pct+'%';
+    eHpText.textContent=gs.bossHP+' / '+gs.bossMaxHP;
+  }else{
+    const mi=gs.currentQIndex%MONSTERS[st.key].length;
+    const[mName,mEmoji]=MONSTERS[st.key][mi];
+    bossTagWrap.innerHTML='';
+    sprite.textContent=mEmoji;sprite.className='enemy-sprite';
+    eName.textContent=mName;eName.className='enemy-name';
+    eHpLabel.textContent='ENEMY HP';
+    eHpFill.className='hp-fill hp-enemy';
+    eHpFill.style.width='100%';
+    eHpText.textContent='100 / 100';
+  }
+
+  document.getElementById('question-text').textContent=q.q;
+  document.getElementById('hint-text').textContent=gs.difficulty==='easy'?'💡 '+q.hint:'';
+  document.getElementById('explanation').style.display='none';
+
+  const idxArr=shuffle([0,1,2,3]);
+  const grid=document.getElementById('choices-grid');
+  grid.innerHTML='';
+  const nums=['①','②','③','④'];
+  idxArr.forEach((origIdx,i)=>{
+    const btn=document.createElement('button');
+    btn.className='choice-btn';
+    btn.textContent=nums[i]+' '+q.ch[origIdx];
+    btn.onclick=()=>handleChoice(origIdx===q.a,origIdx,q,idxArr);
+    grid.appendChild(btn);
+  });
+
+  gs.answered=false;
+
+  const timerBar=document.getElementById('timer-bar');
+  if(gs.difficulty==='hard'){
+    timerBar.classList.remove('hidden','timer-danger');
+    gs.timeLeft=10;
+    const fill=document.getElementById('timer-fill');
+    fill.style.width='100%';
+    clearInterval(gs.timerInterval);
+    gs.timerInterval=setInterval(()=>{
+      gs.timeLeft-=0.1;
+      fill.style.width=Math.max(0,(gs.timeLeft/10)*100)+'%';
+      if(gs.timeLeft<=3)timerBar.classList.add('timer-danger');
+      if(gs.timeLeft<=0){clearInterval(gs.timerInterval);handleChoice(false,-1,q,[]);}
+    },100);
+  }else{
+    timerBar.classList.add('hidden');clearInterval(gs.timerInterval);
+  }
+}
+
+function handleChoice(isCorrect,selectedOrigIdx,q,idxArr){
+  if(gs.answered)return;
+  gs.answered=true;
+  clearInterval(gs.timerInterval);
+
+  const buttons=document.querySelectorAll('.choice-btn');
+  buttons.forEach((btn,i)=>{
+    btn.disabled=true;
+    if(idxArr[i]===q.a)btn.classList.add('correct');
+  });
+
+  const exp=document.getElementById('explanation');
+
+  if(isCorrect){
+    flash('green');
+    gs.correctThisRun++;
+    const xp=isInBossPhase()?20:10;
+    gs.xpGained+=xp;
+    showDamage('-30',true);
+    const sprite=document.getElementById('enemy-sprite');
+    sprite.classList.add('shake');
+    setTimeout(()=>sprite.classList.remove('shake'),300);
+    if(isInBossPhase()){
+      gs.bossHP=Math.max(0,gs.bossHP-30);
+      const pct=(gs.bossHP/gs.bossMaxHP)*100;
+      document.getElementById('enemy-hp-fill').style.width=pct+'%';
+      document.getElementById('enemy-hp-text').textContent=gs.bossHP+' / '+gs.bossMaxHP;
+    }else{
+      document.getElementById('enemy-hp-fill').style.width='0%';
+      document.getElementById('enemy-hp-text').textContent='0 / 100';
+    }
+    document.getElementById('battle-msg').textContent='✅ 正解！';
+    exp.innerHTML='<span class="correct-ans">✅ 正解：'+q.ch[q.a]+'</span><br>'+q.exp;
+    exp.style.display='block';
+    updateBattleXP();
+  }else{
+    flash('red');
+    gs.wrongThisRun++;
+    const dmg=isInBossPhase()?30:20;
+    gs.playerHP=Math.max(0,gs.playerHP-dmg);
+    showDamage('-'+dmg,false);
+    shakePlayer();
+    document.getElementById('battle-msg').textContent='❌ 敵の攻撃！';
+    exp.innerHTML='<span style="color:#f87171">❌ 不正解</span>　正解は：<span class="correct-ans">'+q.ch[q.a]+'</span><br>'+q.exp;
+    exp.style.display='block';
+    updateHPBar();
+  }
+
+  if(gs.playerHP<=0){setTimeout(()=>endBattle(false),1800);return;}
+  const delay=gs.difficulty==='hard'?1400:1800;
+  setTimeout(()=>{
+    gs.currentQIndex++;
+    if(gs.currentQIndex>=gs.questionList.length){endBattle(true);}
+    else{showQuestion();}
+  },delay);
+}
+
+function updateHPBar(){
+  const pct=Math.max(0,(gs.playerHP/gs.playerMaxHP)*100);
+  const fill=document.getElementById('player-hp-fill');
+  fill.style.width=pct+'%';
+  fill.style.background=pct>50?'linear-gradient(90deg,#10b981,#34d399)':pct>25?'linear-gradient(90deg,#f59e0b,#fbbf24)':'linear-gradient(90deg,#ef4444,#f87171)';
+  document.getElementById('player-hp-text').textContent=gs.playerHP+' / '+gs.playerMaxHP;
+}
+function updateBattleXP(){
+  const xp=gs.totalXP+gs.xpGained;
+  document.getElementById('battle-xp').textContent=xp;
+  document.getElementById('battle-level').textContent=calcLevel(xp);
+}
+function showDamage(text,toEnemy){
+  const area=document.getElementById('enemy-area');
+  const el=document.createElement('div');
+  el.className='dmg-num '+(toEnemy?'enemy-dmg':'player-dmg');
+  el.textContent=text;
+  el.style.left=(40+Math.random()*40)+'%';
+  el.style.top=toEnemy?'25%':'75%';
+  area.appendChild(el);
+  setTimeout(()=>el.remove(),1200);
+}
+function shakePlayer(){
+  const pa=document.getElementById('player-area');
+  pa.classList.add('player-shake');
+  setTimeout(()=>pa.classList.remove('player-shake'),300);
+}
+function flash(color){
+  const el=document.getElementById('flash-'+color);
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),180);
+}
+
+/* =============================================
+   RESULT
+============================================= */
+function endBattle(cleared){
+  clearInterval(gs.timerInterval);
+  const stars=cleared?calcStars(gs.playerHP):0;
+  const xpBonus=cleared?50:0;
+  const totalGained=gs.xpGained+xpBonus;
+
+  if(cleared){
+    const prev=gs.stars[gs.currentStage]||0;
+    gs.stars[gs.currentStage]=Math.max(prev,stars);
+    gs.totalClears++;
+  }
+  gs.totalXP+=totalGained;
+  saveData();updateTitleUI();
+
+  const st=gs.currentStageData;
+  document.getElementById('result-icon').textContent=cleared?(stars===3?'🏆':stars===2?'⭐':'🎖️'):'💀';
+  document.getElementById('result-title').textContent=cleared?'ステージクリア！':'ゲームオーバー...';
+  document.getElementById('result-title').className='result-title '+(cleared?'clear':'gameover');
+  document.getElementById('result-stars').textContent=cleared?starStr(stars):'☆☆☆';
+
+  document.getElementById('result-stats').innerHTML=`
+    <div class="stat-row"><span>正解数</span><span class="stat-val">${gs.correctThisRun} / ${gs.questionList.length}</span></div>
+    <div class="stat-row"><span>残りHP</span><span class="stat-val">${gs.playerHP} / 100</span></div>
+    <div class="stat-row"><span>ステージ</span><span class="stat-val">${st.label}</span></div>
+    <div class="stat-row"><span>難易度</span><span class="stat-val">${gs.difficulty==='easy'?'かんたん':gs.difficulty==='hard'?'むずかしい':'ふつう'}</span></div>
+  `;
+  document.getElementById('result-xp').textContent='+'+totalGained+' XP';
+  document.getElementById('result-xp-label').textContent=xpBonus>0?`（問題 ${gs.xpGained}XP + クリアボーナス ${xpBonus}XP）`:'獲得XP';
+  document.getElementById('btn-retry').onclick=()=>retryStage();
+  showScreen('result');
+}
+function retryStage(){startBattle(gs.currentStage);}
+
+/* =============================================
+   INIT
+============================================= */
+loadData();updateTitleUI();
+</script>
+</body>
+</html>

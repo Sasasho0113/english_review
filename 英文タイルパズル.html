@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>🧩 英文タイルパズル — Sentence Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;background:#0d1117;overflow-x:hidden;}
+    body{font-family:'Noto Sans JP',sans-serif;color:#f0f6fc;display:flex;justify-content:center;}
+    .app{width:100%;max-width:480px;min-height:100vh;position:relative;background:#0d1117;}
+    .screen{display:none;flex-direction:column;min-height:100vh;width:100%;}
+    .screen.active{display:flex;}
+
+    /* ===== TITLE ===== */
+    #screen-title{
+      background:linear-gradient(160deg,#0d1117 0%,#0a1628 50%,#0d1117 100%);
+      align-items:center;justify-content:center;text-align:center;padding:40px 20px;
+    }
+    .title-logo{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:4px;color:#3b82f6;margin-bottom:8px;text-transform:uppercase;}
+    .title-h1{font-size:44px;font-weight:900;line-height:1.1;margin-bottom:6px;
+      background:linear-gradient(135deg,#f0f6fc,#60a5fa,#818cf8);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .title-sub{font-size:11px;color:#8b949e;letter-spacing:2px;margin-bottom:28px;}
+    .title-status{
+      display:flex;gap:20px;align-items:center;justify-content:center;
+      background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+      border-radius:12px;padding:10px 24px;margin-bottom:32px;
+    }
+    .st-item{font-size:13px;color:#8b949e;}
+    .st-item span{color:#60a5fa;font-weight:700;font-size:16px;}
+    .btn-primary{
+      background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:white;border:none;
+      border-radius:16px;padding:16px 48px;font-size:18px;font-weight:700;
+      font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all 0.2s;
+      box-shadow:0 4px 24px rgba(59,130,246,0.4);margin-bottom:12px;width:240px;
+    }
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(59,130,246,0.6);}
+    .btn-ghost{background:none;border:1px solid rgba(255,255,255,0.15);color:#8b949e;
+      border-radius:10px;padding:8px 20px;font-size:12px;font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all 0.2s;}
+    .btn-ghost:hover{border-color:rgba(255,255,255,0.3);color:#f0f6fc;}
+
+    /* ===== STAGE SELECT ===== */
+    #screen-stage{background:#0d1117;padding-bottom:40px;}
+    .screen-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08);
+      position:sticky;top:0;background:#0d1117;z-index:10;
+    }
+    .btn-back{background:none;border:none;color:#8b949e;font-size:20px;cursor:pointer;padding:4px;}
+    .btn-back:hover{color:#f0f6fc;}
+    .screen-header h2{font-size:16px;font-weight:700;}
+    .mini-xp{font-size:12px;color:#60a5fa;font-weight:700;}
+
+    .diff-bar{display:flex;gap:8px;padding:16px 20px 8px;}
+    .diff-btn{
+      flex:1;padding:8px 4px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.12);
+      background:rgba(255,255,255,0.04);color:#8b949e;font-size:12px;font-weight:500;
+      font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all 0.2s;
+    }
+    .diff-btn.active{border-color:#3b82f6;background:rgba(59,130,246,0.15);color:#60a5fa;}
+
+    .stage-list{padding:12px 20px;display:flex;flex-direction:column;gap:10px;}
+    .stage-card{
+      background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);
+      border-radius:16px;padding:16px;cursor:pointer;transition:all 0.2s;
+      display:flex;align-items:center;gap:14px;
+    }
+    .stage-card:hover{border-color:rgba(255,255,255,0.2);transform:translateX(4px);}
+    .stage-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+    .stage-info{flex:1;min-width:0;}
+    .stage-lbl{font-size:11px;font-weight:500;opacity:0.8;margin-bottom:2px;}
+    .stage-ttl{font-size:13px;font-weight:700;margin-bottom:3px;}
+    .stage-sub{font-size:11px;opacity:0.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .stage-stars-col{font-size:16px;flex-shrink:0;letter-spacing:2px;}
+
+    /* ===== GAME ===== */
+    #screen-game{background:#0d1117;}
+    .game-top{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.06);
+      position:sticky;top:0;background:#0d1117;z-index:10;
+    }
+    .g-stage-name{font-size:11px;color:#8b949e;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .g-q-count{font-size:12px;color:#60a5fa;font-weight:700;}
+    .g-score{font-size:12px;color:#fbbf24;font-weight:700;}
+
+    .timer-wrap{height:4px;background:rgba(255,255,255,0.1);}
+    .timer-wrap.hidden{display:none;}
+    .timer-fill{height:100%;background:linear-gradient(90deg,#3b82f6,#06b6d4);transition:width 0.1s linear;border-radius:2px;}
+    .timer-danger .timer-fill{background:#ef4444;animation:red-pulse 0.5s infinite alternate;}
+    @keyframes red-pulse{0%{opacity:1}100%{opacity:0.4}}
+
+    .prog-row{display:flex;gap:4px;padding:10px 16px 0;}
+    .prog-dot{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,0.1);transition:background 0.3s;}
+    .prog-dot.ok{background:#22c55e;}
+    .prog-dot.ng{background:#ef4444;}
+    .prog-dot.cur{background:#3b82f6;animation:blue-pulse 1s infinite alternate;}
+    @keyframes blue-pulse{0%{opacity:0.5}100%{opacity:1}}
+
+    .ja-card{
+      margin:14px 16px 10px;
+      background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);
+      border-radius:16px;padding:14px 16px;
+    }
+    .ja-lbl{font-size:10px;color:#60a5fa;font-weight:700;letter-spacing:2px;margin-bottom:6px;}
+    .ja-txt{font-size:18px;font-weight:700;line-height:1.6;color:#f0f6fc;text-align:center;}
+
+    .ans-wrap{margin:0 16px 8px;}
+    .area-lbl{font-size:10px;color:#8b949e;font-weight:700;letter-spacing:2px;margin-bottom:6px;}
+    .ans-area{
+      min-height:62px;border:2px dashed rgba(255,255,255,0.15);border-radius:14px;
+      padding:10px 10px 6px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;
+      background:rgba(255,255,255,0.02);transition:border-color 0.3s,background 0.3s;
+    }
+    .ans-area.correct{border-color:#22c55e;border-style:solid;background:rgba(34,197,94,0.06);}
+    .ans-area.wrong{border-color:#ef4444;border-style:solid;background:rgba(239,68,68,0.06);}
+    .ans-empty-hint{font-size:12px;color:#8b949e;align-self:center;margin:auto;}
+
+    .tile{
+      background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.2);
+      border-radius:10px;padding:8px 12px;font-size:15px;font-weight:700;
+      cursor:pointer;transition:all 0.15s;user-select:none;color:#f0f6fc;
+      font-family:'Noto Sans JP',sans-serif;line-height:1;white-space:nowrap;
+    }
+    .tile:active{transform:scale(0.91);}
+    .a-tile{background:rgba(59,130,246,0.2);border-color:rgba(59,130,246,0.5);color:#93c5fd;}
+    .a-tile:hover{background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.4);color:#fca5a5;}
+    .p-tile{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.14);}
+    .p-tile:hover{background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.4);color:#93c5fd;}
+
+    .correct-box{
+      display:none;margin:4px 16px 6px;background:rgba(34,197,94,0.1);
+      border:1px solid rgba(34,197,94,0.3);border-radius:12px;padding:10px 14px;
+    }
+    .correct-box.show{display:block;}
+    .cb-lbl{font-size:10px;color:#22c55e;font-weight:700;letter-spacing:1px;margin-bottom:5px;}
+    .cb-txt{font-size:14px;font-weight:700;color:#86efac;line-height:1.7;}
+
+    .hint-box{
+      display:none;margin:0 16px 6px;background:rgba(251,191,36,0.08);
+      border:1px solid rgba(251,191,36,0.2);border-radius:10px;padding:8px 12px;
+      font-size:12px;color:#fbbf24;
+    }
+    .hint-box.show{display:block;}
+
+    .feedback{
+      text-align:center;padding:6px 16px 2px;font-size:13px;font-weight:700;min-height:30px;
+      display:flex;align-items:center;justify-content:center;gap:6px;
+    }
+    .fb-ok{color:#22c55e;}
+    .fb-ng{color:#ef4444;}
+
+    .action-row{display:flex;gap:8px;margin:6px 16px 10px;}
+    .btn-clear{
+      background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);
+      color:#8b949e;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:700;
+      font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all 0.2s;flex-shrink:0;
+    }
+    .btn-clear:hover{border-color:rgba(255,255,255,0.25);color:#f0f6fc;}
+    .btn-check{
+      flex:1;background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:white;border:none;
+      border-radius:12px;padding:14px;font-size:15px;font-weight:700;
+      font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all 0.2s;
+      box-shadow:0 2px 12px rgba(59,130,246,0.3);
+    }
+    .btn-check:hover{transform:translateY(-1px);}
+    .btn-next{
+      flex:1;background:linear-gradient(135deg,#059669,#10b981);color:white;border:none;
+      border-radius:12px;padding:14px;font-size:15px;font-weight:700;
+      font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all 0.2s;
+      display:none;box-shadow:0 2px 12px rgba(16,185,129,0.3);
+    }
+    .btn-next:hover{transform:translateY(-1px);}
+
+    .pool-wrap{margin:0 16px 20px;}
+    .pool-area{display:flex;flex-wrap:wrap;gap:8px;min-height:48px;}
+
+    /* ===== RESULT ===== */
+    #screen-result{
+      background:linear-gradient(160deg,#0d1117 0%,#0a1628 60%,#0d1117 100%);
+      align-items:center;justify-content:center;text-align:center;padding:40px 20px;
+    }
+    .res-lbl{font-size:12px;color:#8b949e;letter-spacing:2px;margin-bottom:8px;}
+    .res-title{font-size:28px;font-weight:900;margin-bottom:4px;
+      background:linear-gradient(135deg,#f0f6fc,#60a5fa);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .res-stars{font-size:50px;margin:16px 0;letter-spacing:6px;}
+    .res-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:12px 0;width:100%;max-width:320px;}
+    .res-stat{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 8px;}
+    .res-val{font-size:22px;font-weight:900;color:#60a5fa;}
+    .res-lbl2{font-size:10px;color:#8b949e;margin-top:2px;}
+    .res-xp{font-size:14px;color:#fbbf24;font-weight:700;margin:12px 0;background:rgba(251,191,36,0.1);border-radius:10px;padding:8px 20px;}
+    .res-btns{display:flex;flex-direction:column;gap:10px;width:240px;margin-top:16px;}
+    .btn-retry{background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.15);color:#f0f6fc;border-radius:14px;padding:14px;font-size:15px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all 0.2s;}
+    .btn-retry:hover{background:rgba(255,255,255,0.13);}
+    .btn-home2{background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:white;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 16px rgba(59,130,246,0.4);}
+    .btn-home2:hover{transform:translateY(-2px);}
+
+    /* ===== XP TOAST ===== */
+    .xp-toast{position:fixed;top:58px;right:16px;background:rgba(251,191,36,0.92);color:#1a1a2e;font-size:13px;font-weight:900;padding:6px 14px;border-radius:20px;animation:toast 2.2s ease forwards;pointer-events:none;z-index:999;}
+    @keyframes toast{0%{opacity:0;transform:translateY(-10px)}15%{opacity:1;transform:translateY(0)}70%{opacity:1}100%{opacity:0;transform:translateY(-16px)}}
+
+    @keyframes flash-ok{0%,100%{background:#0d1117}50%{background:rgba(34,197,94,0.07)}}
+    .flash-ok{animation:flash-ok 0.5s ease;}
+    @keyframes flash-ng{0%,100%{background:#0d1117}50%{background:rgba(239,68,68,0.07)}}
+    .flash-ng{animation:flash-ng 0.5s ease;}
+  </style>
+</head>
+<body>
+<div class="app">
+
+<!-- ======= TITLE ======= -->
+<div class="screen active" id="screen-title">
+  <div class="title-logo">🧩 SENTENCE BUILDER</div>
+  <div class="title-h1">英文<br>タイルパズル</div>
+  <div class="title-sub">Tap tiles · Build sentences · Level up</div>
+  <div class="title-status">
+    <div class="st-item">Lv.<span id="t-lv">1</span></div>
+    <div class="st-item">XP <span id="t-xp">0</span></div>
+    <div class="st-item">⭐ <span id="t-stars">0</span></div>
+  </div>
+  <button class="btn-primary" onclick="showScreen('stage')">ステージ選択</button>
+  <button class="btn-ghost" onclick="showRules()">遊び方</button>
+</div>
+
+<!-- ======= STAGE SELECT ======= -->
+<div class="screen" id="screen-stage">
+  <div class="screen-header">
+    <button class="btn-back" onclick="showScreen('title')">←</button>
+    <h2>🧩 ステージ選択</h2>
+    <div class="mini-xp" id="mini-xp">XP 0</div>
+  </div>
+  <div class="diff-bar">
+    <button class="diff-btn active" data-d="normal" onclick="setDiff('normal',this)">ふつう</button>
+    <button class="diff-btn" data-d="easy" onclick="setDiff('easy',this)">かんたん</button>
+    <button class="diff-btn" data-d="hard" onclick="setDiff('hard',this)">むずかしい</button>
+  </div>
+  <div class="stage-list" id="stage-list"></div>
+</div>
+
+<!-- ======= GAME ======= -->
+<div class="screen" id="screen-game">
+  <div class="game-top">
+    <div class="g-stage-name" id="g-stage-name"></div>
+    <div class="g-q-count" id="g-q-count"></div>
+    <div class="g-score" id="g-score"></div>
+  </div>
+  <div class="timer-wrap hidden" id="timer-wrap"><div class="timer-fill" id="timer-fill"></div></div>
+  <div class="prog-row" id="prog-row"></div>
+
+  <div class="ja-card">
+    <div class="ja-lbl">🇯🇵 日本語</div>
+    <div class="ja-txt" id="ja-txt"></div>
+  </div>
+
+  <div class="ans-wrap">
+    <div class="area-lbl">📝 並べ替え（タップで追加 / 追加済みをタップで戻す）</div>
+    <div class="ans-area" id="ans-area"></div>
+  </div>
+
+  <div class="correct-box" id="correct-box">
+    <div class="cb-lbl">✅ 正しい答え</div>
+    <div class="cb-txt" id="cb-txt"></div>
+  </div>
+
+  <div class="hint-box" id="hint-box"></div>
+  <div class="feedback" id="feedback"></div>
+
+  <div class="action-row">
+    <button class="btn-clear" onclick="clearAns()">全消し</button>
+    <button class="btn-check" id="btn-check" onclick="checkAns()">答え合わせ ✔</button>
+    <button class="btn-next" id="btn-next" onclick="nextQ()">次へ →</button>
+  </div>
+
+  <div class="pool-wrap">
+    <div class="area-lbl">🔤 単語タイル（タップして選ぼう）</div>
+    <div class="pool-area" id="pool-area"></div>
+  </div>
+</div>
+
+<!-- ======= RESULT ======= -->
+<div class="screen" id="screen-result">
+  <div class="res-lbl" id="res-lbl"></div>
+  <div class="res-title" id="res-title">クリア！</div>
+  <div class="res-stars" id="res-stars">⭐⭐⭐</div>
+  <div class="res-grid">
+    <div class="res-stat"><div class="res-val" id="rv-ok">0</div><div class="res-lbl2">正解</div></div>
+    <div class="res-stat"><div class="res-val" id="rv-ng">0</div><div class="res-lbl2">ミス</div></div>
+    <div class="res-stat"><div class="res-val" id="rv-tot">0</div><div class="res-lbl2">問題数</div></div>
+  </div>
+  <div class="res-xp" id="res-xp">+0 XP</div>
+  <div class="res-btns">
+    <button class="btn-retry" onclick="retryStage()">🔄 もう一度</button>
+    <button class="btn-home2" onclick="showScreen('stage')">ステージ選択へ</button>
+  </div>
+</div>
+
+</div><!-- .app -->
+
+<script>
+// ============================================================
+// QUESTION DATA
+// ============================================================
+const STAGES = [
+  {
+    key:'s1', label:'Stage 1', title:'be動詞と一般動詞', sub:'中1 基礎', color:'#22c55e', icon:'📝',
+    qs:[
+      { ja:'私は中学生です。', en:['I','am','a','junior','high','school','student','.'], ex:['is','are','was'] },
+      { ja:'彼女は先生です。', en:['She','is','a','teacher','.'], ex:['am','are','He','was'] },
+      { ja:'彼らは友達です。', en:['They','are','friends','.'], ex:['is','am','We','were'] },
+      { ja:'私は毎日英語を勉強します。', en:['I','study','English','every','day','.'], ex:['studies','studied','am','does'] },
+      { ja:'彼はサッカーが好きです。', en:['He','likes','soccer','.'], ex:['like','is','play','loved'] },
+      { ja:'私たちは学校に行きます。', en:['We','go','to','school','.'], ex:['goes','went','am','is'] },
+      { ja:'彼女は音楽を聴きます。', en:['She','listens','to','music','.'], ex:['listen','listened','is','likes'] },
+      { ja:'これは私のペンです。', en:['This','is','my','pen','.'], ex:['am','are','was','your','That'] },
+    ]
+  },
+  {
+    key:'s2', label:'Stage 2', title:'疑問文と否定文', sub:'中1', color:'#06b6d4', icon:'❓',
+    qs:[
+      { ja:'あなたは学生ですか？', en:['Are','you','a','student','?'], ex:['Is','Am','Do','Does','Was'] },
+      { ja:'彼は野球が好きですか？', en:['Does','he','like','baseball','?'], ex:['Do','Is','likes','Did','Has'] },
+      { ja:'あなたは英語を話しますか？', en:['Do','you','speak','English','?'], ex:['Does','Are','speaks','Did','Can'] },
+      { ja:'彼女は数学の先生ではありません。', en:['She','is','not','a','math','teacher','.'], ex:['does','He','are','am','was'] },
+      { ja:'私は肉を食べません。', en:['I','do','not','eat','meat','.'], ex:['does','am','is','did','ate'] },
+      { ja:'彼はピアノを弾きません。', en:['He','does','not','play','the','piano','.'], ex:['do','is','did','plays','playing'] },
+      { ja:'あなたは何時に起きますか？', en:['What','time','do','you','get','up','?'], ex:['does','When','Where','is','did'] },
+      { ja:'彼女はどこに住んでいますか？', en:['Where','does','she','live','?'], ex:['do','What','When','lives','is'] },
+    ]
+  },
+  {
+    key:'s3', label:'Stage 3', title:'過去形と進行形', sub:'中1〜中2', color:'#f59e0b', icon:'⏰',
+    qs:[
+      { ja:'昨日、私は公園に行きました。', en:['I','went','to','the','park','yesterday','.'], ex:['go','goes','gone','did','was'] },
+      { ja:'彼女はそのとき本を読んでいました。', en:['She','was','reading','a','book','then','.'], ex:['is','were','read','reads','had'] },
+      { ja:'私は昨日テニスをしませんでした。', en:['I','did','not','play','tennis','yesterday','.'], ex:['do','does','played','was','am'] },
+      { ja:'あなたは先週の日曜日に何をしましたか？', en:['What','did','you','do','last','Sunday','?'], ex:['do','does','were','have','was'] },
+      { ja:'彼らは音楽を聴いていましたか？', en:['Were','they','listening','to','music','?'], ex:['Was','Are','listened','listen','Have'] },
+      { ja:'私の父は昨夜料理をしていました。', en:['My','father','was','cooking','last','night','.'], ex:['is','cooked','cook','were','had'] },
+      { ja:'彼は3年前に東京に住んでいました。', en:['He','lived','in','Tokyo','three','years','ago','.'], ex:['lives','live','has','lived','was','is'] },
+      { ja:'私は子供のころよく泳ぎました。', en:['I','often','swam','in','the','river','when','I','was','a','child','.'], ex:['swim','swum','swimed','were','had'] },
+    ]
+  },
+  {
+    key:'s4', label:'Stage 4', title:'不定詞と動名詞', sub:'中2 基礎', color:'#3b82f6', icon:'🎯',
+    qs:[
+      { ja:'私は英語を勉強するために図書館に行きます。', en:['I','go','to','the','library','to','study','English','.'], ex:['studying','for','studying','of','in'] },
+      { ja:'彼女の夢はプロの歌手になることです。', en:['Her','dream','is','to','become','a','professional','singer','.'], ex:['becoming','became','for','of','being'] },
+      { ja:'私は泳ぐことが好きです。', en:['I','like','swimming','.'], ex:['swim','to','to swim','swam','liked'] },
+      { ja:'彼は走ることを楽しみます。', en:['He','enjoys','running','.'], ex:['run','to run','enjoyed','runs','liked'] },
+      { ja:'私は何か食べるものが欲しいです。', en:['I','want','something','to','eat','.'], ex:['eating','for','want','ate','of'] },
+      { ja:'彼女は音楽を聴くことをやめました。', en:['She','stopped','listening','to','music','.'], ex:['listen','to listen','stop','stops','listened'] },
+      { ja:'彼らは英語を上手に話すことができます。', en:['They','can','speak','English','well','.'], ex:['to speak','speaking','spoke','could','talks'] },
+      { ja:'彼は医者になるために一生懸命勉強します。', en:['He','studies','hard','to','become','a','doctor','.'], ex:['becoming','for','of','studied','study'] },
+    ]
+  },
+  {
+    key:'s5', label:'Stage 5', title:'助動詞・will・have to', sub:'中2 発展', color:'#8b5cf6', icon:'⚡',
+    qs:[
+      { ja:'明日は雨が降るでしょう。', en:['It','will','rain','tomorrow','.'], ex:['rains','is','would','rained','going'] },
+      { ja:'あなたは部屋を掃除しなければなりません。', en:['You','have','to','clean','your','room','.'], ex:['must','had','has','should','need'] },
+      { ja:'彼女は明日学校に来ないでしょう。', en:['She','will','not','come','to','school','tomorrow','.'], ex:['is','comes','coming','would','going'] },
+      { ja:'ドアを開けましょうか？', en:['Shall','I','open','the','door','?'], ex:['Should','Will','Can','Shall','opening','opened'] },
+      { ja:'この薬を飲んでもよいですか？', en:['May','I','take','this','medicine','?'], ex:['Can','Should','Must','taking','took'] },
+      { ja:'あなたはもっと野菜を食べるべきです。', en:['You','should','eat','more','vegetables','.'], ex:['must','have to','eating','ate','can'] },
+      { ja:'私は今日残業しなければなりません。', en:['I','must','work','overtime','today','.'], ex:['have to','should','worked','working','may'] },
+      { ja:'彼女は明日東京を訪れる予定です。', en:['She','is','going','to','visit','Tokyo','tomorrow','.'], ex:['will','go','went','visiting','visited'] },
+    ]
+  },
+  {
+    key:'s6', label:'Stage 6', title:'比較・接続詞・SVOO', sub:'中2 完成', color:'#ec4899', icon:'⚖️',
+    qs:[
+      { ja:'富士山は日本で一番高い山です。', en:['Mt.','Fuji','is','the','highest','mountain','in','Japan','.'], ex:['higher','most high','tallest','more high','taller'] },
+      { ja:'英語は数学より難しいです。', en:['English','is','more','difficult','than','math','.'], ex:['most','the','difficultier','harder','as'] },
+      { ja:'彼は私と同じくらい速く走ります。', en:['He','runs','as','fast','as','I','do','.'], ex:['faster','more fast','so','like','than'] },
+      { ja:'私は彼女に手紙を書きました。', en:['I','wrote','her','a','letter','.'], ex:['write','written','to','for','have'] },
+      { ja:'彼女は私に英語を教えてくれました。', en:['She','taught','me','English','.'], ex:['teach','teached','for','to','has'] },
+      { ja:'私は疲れていたので早く寝ました。', en:['I','went','to','bed','early','because','I','was','tired','.'], ex:['so','but','when','if','though'] },
+      { ja:'もし明日晴れなら、私は公園に行くでしょう。', en:['If','it','is','sunny','tomorrow,','I','will','go','to','the','park','.'], ex:['When','Unless','would','went','going'] },
+      { ja:'彼女が東京に住んでいることを私は知っています。', en:['I','know','that','she','lives','in','Tokyo','.'], ex:['knew','which','who','live','living'] },
+    ]
+  },
+  {
+    key:'s7', label:'Stage 7', title:'受動態と現在完了形', sub:'中3 基礎', color:'#e63946', icon:'🔄',
+    qs:[
+      { ja:'この本は多くの人に読まれています。', en:['This','book','is','read','by','many','people','.'], ex:['reads','reading','was','written','are'] },
+      { ja:'あのケーキは私の母によって作られました。', en:['That','cake','was','made','by','my','mother','.'], ex:['is','make','makes','baked','were'] },
+      { ja:'この橋は100年前に建てられました。', en:['This','bridge','was','built','100','years','ago','.'], ex:['is','build','builds','builded','been'] },
+      { ja:'私はすでに宿題を終えました。', en:['I','have','already','finished','my','homework','.'], ex:['had','finish','yet','just','did'] },
+      { ja:'彼女はちょうど駅に着いたところです。', en:['She','has','just','arrived','at','the','station','.'], ex:['have','arrive','already','yet','been'] },
+      { ja:'あなたはもう夕食を食べましたか？', en:['Have','you','eaten','dinner','yet','?'], ex:['Did','Has','eat','ate','already','just'] },
+      { ja:'私は一度も外国に行ったことがありません。', en:['I','have','never','been','abroad','.'], ex:['had','went','gone','ever','just'] },
+      { ja:'彼は10年間ずっとここに住んでいます。', en:['He','has','lived','here','for','ten','years','.'], ex:['have','lives','live','since','been'] },
+    ]
+  },
+  {
+    key:'s8', label:'Stage 8', title:'分詞・関係代名詞・間接疑問', sub:'中3 応用', color:'#eab308', icon:'🌟',
+    qs:[
+      { ja:'私はギターを弾いている男の子を知っています。', en:['I','know','the','boy','playing','the','guitar','.'], ex:['played','plays','who','that','to play'] },
+      { ja:'これは日本で作られた車です。', en:['This','is','a','car','made','in','Japan','.'], ex:['making','which','that','make','making'] },
+      { ja:'私には東京に住んでいる友人がいます。', en:['I','have','a','friend','who','lives','in','Tokyo','.'], ex:['which','that','lived','live','living'] },
+      { ja:'これは彼が書いた本です。', en:['This','is','the','book','that','he','wrote','.'], ex:['which','who','writes','written','write'] },
+      { ja:'私は彼女がどこに住んでいるか知りません。', en:['I','don\'t','know','where','she','lives','.'], ex:['live','living','does','what','how'] },
+      { ja:'彼女がなぜ泣いているのか教えてください。', en:['Please','tell','me','why','she','is','crying','.'], ex:['what','how','cries','cry','has'] },
+      { ja:'もし私があなたなら、もっと一生懸命勉強するのに。', en:['If','I','were','you,','I','would','study','harder','.'], ex:['was','am','will','studied','have'] },
+      { ja:'私にはもっと友達がいればいいのに。', en:['I','wish','I','had','more','friends','.'], ex:['have','has','hope','would','want'] },
+    ]
+  },
+];
+
+// ============================================================
+// SAVE / LOAD
+// ============================================================
+const SAVE_KEY = 'sentenceBuilder_v1';
+let sv = {};
+function loadSv() {
+  try { sv = JSON.parse(localStorage.getItem(SAVE_KEY)) || {}; } catch(e) { sv = {}; }
+  sv.xp   = sv.xp   || 0;
+  sv.stars = sv.stars || {};
+  sv.diff = sv.diff  || 'normal';
+}
+function writeSv() { localStorage.setItem(SAVE_KEY, JSON.stringify(sv)); }
+function getLv(xp)  { return Math.floor(xp / 100) + 1; }
+function allStars() { return Object.values(sv.stars).reduce((a,b)=>a+b,0); }
+
+// ============================================================
+// SCREENS
+// ============================================================
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  if (name==='title') refreshTitle();
+  if (name==='stage') renderStages();
+}
+function refreshTitle() {
+  document.getElementById('t-lv').textContent    = getLv(sv.xp);
+  document.getElementById('t-xp').textContent    = sv.xp;
+  document.getElementById('t-stars').textContent = allStars();
+}
+
+// ============================================================
+// DIFFICULTY
+// ============================================================
+function setDiff(d, btn) {
+  sv.diff = d; writeSv();
+  document.querySelectorAll('.diff-btn').forEach(b=>b.classList.toggle('active', b.dataset.d===d));
+}
+
+// ============================================================
+// STAGE LIST
+// ============================================================
+function renderStages() {
+  document.getElementById('mini-xp').textContent = 'XP '+sv.xp+' / Lv.'+getLv(sv.xp);
+  document.querySelectorAll('.diff-btn').forEach(b=>b.classList.toggle('active', b.dataset.d===sv.diff));
+  document.getElementById('stage-list').innerHTML = STAGES.map(st=>{
+    const n = sv.stars[st.key]||0;
+    const star = '⭐'.repeat(n)+'☆'.repeat(3-n);
+    return `<div class="stage-card" onclick="startStage('${st.key}')">
+      <div class="stage-icon" style="background:${st.color}22">${st.icon}</div>
+      <div class="stage-info">
+        <div class="stage-lbl" style="color:${st.color}">${st.label} · ${st.sub}</div>
+        <div class="stage-ttl">${st.title}</div>
+      </div>
+      <div class="stage-stars-col">${n>0?star:'☆☆☆'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+// GAME STATE
+// ============================================================
+let gs = {};
+
+function startStage(key) {
+  const stage = STAGES.find(s=>s.key===key);
+  if (!stage) return;
+  const qs = [...stage.qs].sort(()=>Math.random()-0.5);
+  gs = {
+    stage, qs,
+    cur:0, correct:0, wrong:0,
+    pool:[], ans:[],
+    checked:false, xpGained:0,
+    timerInt:null,
+  };
+  showScreen('game');
+  loadQ();
+}
+
+function retryStage() { startStage(gs.stage.key); }
+
+// ============================================================
+// LOAD QUESTION
+// ============================================================
+function shuffle(arr) { return arr.sort(()=>Math.random()-0.5); }
+
+function loadQ() {
+  const q   = gs.qs[gs.cur];
+  const tot = gs.qs.length;
+
+  // header
+  document.getElementById('g-stage-name').textContent = gs.stage.label+' '+gs.stage.title;
+  document.getElementById('g-q-count').textContent = (gs.cur+1)+' / '+tot;
+  document.getElementById('g-score').textContent = '✅ '+gs.correct;
+
+  // progress dots
+  document.getElementById('prog-row').innerHTML = gs.qs.map((_,i)=>{
+    let c='prog-dot';
+    if (i<gs.cur) c+= gs.qs[i]._res==='ok' ? ' ok' : ' ng';
+    else if (i===gs.cur) c+=' cur';
+    return `<div class="${c}"></div>`;
+  }).join('');
+
+  // prompt
+  document.getElementById('ja-txt').textContent = q.ja;
+
+  // reset UI
+  gs.pool = [];
+  gs.ans  = [];
+  gs.checked = false;
+  document.getElementById('ans-area').className = 'ans-area';
+  document.getElementById('correct-box').classList.remove('show');
+  document.getElementById('hint-box').classList.remove('show');
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('btn-check').style.display = '';
+  document.getElementById('btn-next').style.display  = 'none';
+
+  // hint (easy mode)
+  if (sv.diff==='easy') {
+    document.getElementById('hint-box').textContent = '💡 ヒント：「'+q.en[0]+'」から始めよう！';
+    document.getElementById('hint-box').classList.add('show');
+  }
+
+  // pool tiles: correct words + distractors, shuffled
+  const allWords = shuffle([...q.en, ...(q.ex||[])]);
+  gs.pool = allWords.map((txt,i)=>({id:i, txt}));
+
+  renderPool();
+  renderAns();
+
+  // timer (hard mode)
+  clearInterval(gs.timerInt);
+  const tw = document.getElementById('timer-wrap');
+  if (sv.diff==='hard') {
+    tw.classList.remove('hidden');
+    startTimer(15);
+  } else {
+    tw.classList.add('hidden');
+  }
+}
+
+// ============================================================
+// TIMER
+// ============================================================
+function startTimer(sec) {
+  const fill = document.getElementById('timer-fill');
+  const wrap = document.getElementById('timer-wrap');
+  fill.style.width = '100%';
+  wrap.classList.remove('timer-danger');
+  const end = Date.now() + sec*1000;
+  gs.timerInt = setInterval(()=>{
+    if (gs.checked) { clearInterval(gs.timerInt); return; }
+    const left = Math.max(0, end - Date.now());
+    const pct  = left / (sec*1000) * 100;
+    fill.style.width = pct+'%';
+    if (pct<30) wrap.classList.add('timer-danger');
+    if (pct<=0) { clearInterval(gs.timerInt); checkAns(true); }
+  }, 50);
+}
+
+// ============================================================
+// RENDER TILES
+// ============================================================
+function renderPool() {
+  document.getElementById('pool-area').innerHTML =
+    gs.pool.map(t=>`<button class="tile p-tile" onclick="addTile(${t.id})">${t.txt}</button>`).join('');
+}
+
+function renderAns() {
+  const area = document.getElementById('ans-area');
+  if (gs.ans.length===0) {
+    area.innerHTML = '<span class="ans-empty-hint">ここに単語を並べよう</span>';
+  } else {
+    area.innerHTML = gs.ans.map(t=>`<button class="tile a-tile" onclick="removeTile(${t.id})">${t.txt}</button>`).join('');
+  }
+}
+
+function addTile(id) {
+  if (gs.checked) return;
+  const i = gs.pool.findIndex(t=>t.id===id);
+  if (i<0) return;
+  gs.ans.push(gs.pool.splice(i,1)[0]);
+  renderPool(); renderAns();
+}
+
+function removeTile(id) {
+  if (gs.checked) return;
+  const i = gs.ans.findIndex(t=>t.id===id);
+  if (i<0) return;
+  gs.pool.push(gs.ans.splice(i,1)[0]);
+  gs.pool.sort((a,b)=>a.id-b.id);
+  renderPool(); renderAns();
+}
+
+function clearAns() {
+  if (gs.checked) return;
+  gs.pool = [...gs.pool,...gs.ans].sort((a,b)=>a.id-b.id);
+  gs.ans  = [];
+  renderPool(); renderAns();
+}
+
+// ============================================================
+// CHECK ANSWER
+// ============================================================
+function checkAns(timedOut) {
+  if (gs.checked) return;
+  clearInterval(gs.timerInt);
+  gs.checked = true;
+
+  const q       = gs.qs[gs.cur];
+  const given   = gs.ans.map(t=>t.txt);
+  const correct = q.en;
+  const isOk    = JSON.stringify(given) === JSON.stringify(correct);
+
+  const area = document.getElementById('ans-area');
+  const fb   = document.getElementById('feedback');
+  const app  = document.querySelector('#screen-game');
+
+  // update progress dot
+  const dots = document.getElementById('prog-row').children;
+  if (dots[gs.cur]) dots[gs.cur].className = 'prog-dot '+(isOk?'ok':'ng');
+
+  if (isOk) {
+    area.className = 'ans-area correct';
+    fb.innerHTML   = '<span class="fb-ok">🎉 正解！すばらしい！</span>';
+    app.classList.add('flash-ok');
+    setTimeout(()=>app.classList.remove('flash-ok'),500);
+    const xp = 15;
+    gs.xpGained += xp;
+    gs.correct++;
+    q._res = 'ok';
+    showToast('+'+xp+' XP');
+  } else {
+    area.className = 'ans-area wrong';
+    fb.innerHTML   = timedOut
+      ? '<span class="fb-ng">⏰ 時間切れ！正しい答えを確認しよう</span>'
+      : '<span class="fb-ng">❌ 惜しい！正しい並び順を確認しよう</span>';
+    app.classList.add('flash-ng');
+    setTimeout(()=>app.classList.remove('flash-ng'),500);
+    gs.wrong++;
+    q._res = 'ng';
+    document.getElementById('cb-txt').textContent = correct.join(' ');
+    document.getElementById('correct-box').classList.add('show');
+  }
+
+  document.getElementById('btn-check').style.display = 'none';
+  document.getElementById('btn-next').style.display  = '';
+}
+
+// ============================================================
+// NEXT QUESTION / END STAGE
+// ============================================================
+function nextQ() {
+  gs.cur++;
+  if (gs.cur >= gs.qs.length) endStage();
+  else loadQ();
+}
+
+function endStage() {
+  clearInterval(gs.timerInt);
+  const tot  = gs.qs.length;
+  const ok   = gs.correct;
+  const ng   = gs.wrong;
+  const stars = ng===0 ? 3 : ng<=2 ? 2 : 1;
+
+  const prev = sv.stars[gs.stage.key]||0;
+  if (stars > prev) sv.stars[gs.stage.key] = stars;
+
+  const bonus = stars*20;
+  gs.xpGained += bonus;
+  sv.xp += gs.xpGained;
+  writeSv();
+
+  document.getElementById('res-lbl').textContent   = gs.stage.label+' · '+gs.stage.title;
+  document.getElementById('res-title').textContent = ng===0 ? '🎊 パーフェクト！' : ok>=tot/2 ? '✨ ステージクリア！' : '😅 もう一度挑戦！';
+  document.getElementById('res-stars').textContent = '⭐'.repeat(stars)+'☆'.repeat(3-stars);
+  document.getElementById('rv-ok').textContent  = ok;
+  document.getElementById('rv-ng').textContent  = ng;
+  document.getElementById('rv-tot').textContent = tot;
+  document.getElementById('res-xp').textContent = '+'+gs.xpGained+' XP 獲得！（クリアボーナス +'+bonus+'）';
+  showScreen('result');
+}
+
+// ============================================================
+// XP TOAST
+// ============================================================
+function showToast(msg) {
+  const el = document.createElement('div');
+  el.className = 'xp-toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 2300);
+}
+
+// ============================================================
+// RULES DIALOG
+// ============================================================
+function showRules() {
+  alert('【遊び方】\n\n① 日本語を見て、下の「単語タイル」をタップして英文を作ろう！\n② 答えエリアにあるタイルをタップすると元に戻せるよ。\n③「全消し」で最初からやり直せます。\n④「答え合わせ ✔」ボタンで正解チェック！\n\n⚠️ 単語の順番が完全に合っていないと正解にならないよ。\n\n【難易度】\nかんたん：最初の単語のヒントあり\nふつう  ：ヒントなし\nむずかしい：15秒タイマーあり！\n\n✅ 正解で +15 XP。ミスが0なら ⭐⭐⭐ 獲得！');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+loadSv();
+refreshTitle();
+</script>
+</body>
+</html>
