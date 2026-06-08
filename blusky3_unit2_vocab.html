@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Sky 3 Unit 2 Vocabulary</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --main: #52C97B;
+    --main-dark: #2E9B58;
+    --main-light: #D6F5E3;
+    --sun: #FFD93D;
+    --red: #FF6B6B;
+    --red-dark: #D94040;
+    --gold: #F5A623;
+    --gold-light: #FFF3D6;
+    --text: #1a2a1e;
+    --text-light: #567;
+    --shadow: 0 4px 20px rgba(46,155,88,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', 'Noto Sans JP', sans-serif;
+    background: linear-gradient(160deg, #b8f0cc 0%, #dffceb 40%, #f0fff6 100%);
+    min-height: 100vh; color: var(--text); padding-bottom: 60px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--main-dark), var(--main));
+    color: white; padding: 16px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 4px 16px rgba(46,155,88,0.3);
+    position: sticky; top: 0; z-index: 100;
+  }
+  header h1 { font-size: 1.2rem; font-weight: 900; }
+  header h1 span { font-size: 0.8rem; font-weight: 600; opacity: 0.85; display: block; }
+  .progress-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .progress-label { font-size: 0.72rem; opacity: 0.85; }
+  .progress-bar-outer { width: 110px; height: 9px; background: rgba(255,255,255,0.3); border-radius: 20px; overflow: hidden; }
+  .progress-bar-inner { height: 100%; background: var(--sun); border-radius: 20px; transition: width 0.5s ease; }
+  .trophy-header { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+  .trophy-chip {
+    background: rgba(255,255,255,0.2); border-radius: 20px;
+    padding: 3px 8px; font-size: 0.75rem; font-weight: 800;
+    display: flex; align-items: center; gap: 3px; transition: background 0.3s;
+  }
+  .trophy-chip.earned { background: rgba(245,166,35,0.5); }
+
+  /* MODE SELECT */
+  #modeSelect { max-width: 700px; margin: 28px auto 0; padding: 0 18px; text-align: center; }
+  #modeSelect h2 { font-size: 1.5rem; font-weight: 900; color: var(--main-dark); margin-bottom: 6px; }
+  #modeSelect > p { color: var(--text-light); margin-bottom: 20px; font-size: 0.9rem; }
+  .section-label {
+    font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-light);
+    margin: 16px 0 10px; text-align: left; padding-left: 4px;
+  }
+  .mode-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .mode-card {
+    background: white; border-radius: 18px; padding: 20px 14px;
+    cursor: pointer; box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 3px solid transparent; text-align: center;
+  }
+  .mode-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(46,155,88,0.2); }
+  .mode-card.selected { border-color: var(--main); background: var(--main-light); }
+  .mode-card .icon { font-size: 1.5rem; font-weight: 900; color: var(--main-dark); margin-bottom: 7px; }
+  .mode-card h3 { font-size: 0.92rem; font-weight: 800; color: var(--main-dark); margin-bottom: 4px; }
+  .mode-card p { font-size: 0.76rem; color: var(--text-light); line-height: 1.5; }
+  .start-btn {
+    background: linear-gradient(135deg, var(--main-dark), var(--main));
+    color: white; border: none; border-radius: 50px;
+    padding: 14px 40px; font-size: 1rem; font-weight: 800;
+    font-family: inherit; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(46,155,88,0.35);
+    transition: transform 0.2s; margin-top: 14px; width: 100%; max-width: 280px;
+  }
+  .start-btn:hover { transform: translateY(-2px); }
+
+  /* TEST CARDS */
+  .test-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .test-card {
+    background: white; border-radius: 18px; padding: 20px 14px;
+    cursor: pointer; box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 3px solid transparent; text-align: center; position: relative;
+  }
+  .test-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(245,166,35,0.25); }
+  .test-card .icon { font-size: 1.8rem; margin-bottom: 7px; }
+  .test-card h3 { font-size: 0.92rem; font-weight: 800; color: #a07010; margin-bottom: 4px; }
+  .test-card p { font-size: 0.76rem; color: var(--text-light); line-height: 1.5; }
+  .test-card.cleared { border-color: var(--gold); background: var(--gold-light); }
+  .trophy-badge-card {
+    position: absolute; top: -9px; right: -9px;
+    background: var(--gold); color: white; border-radius: 50%;
+    width: 28px; height: 28px;
+    display: none; align-items: center; justify-content: center;
+    font-size: 0.85rem; box-shadow: 0 2px 8px rgba(245,166,35,0.5);
+  }
+  .test-card.cleared .trophy-badge-card { display: flex; }
+
+  /* READING MODE CARDS */
+  .reading-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .reading-card {
+    background: white; border-radius: 18px; padding: 20px 14px;
+    cursor: pointer; box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 3px solid transparent; text-align: center; position: relative;
+  }
+  .reading-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(46,155,88,0.2); }
+  .reading-card .icon { font-size: 1.8rem; margin-bottom: 7px; }
+  .reading-card h3 { font-size: 0.92rem; font-weight: 800; color: var(--main-dark); margin-bottom: 4px; }
+  .reading-card p { font-size: 0.76rem; color: var(--text-light); line-height: 1.5; }
+  .reading-card.cleared { border-color: var(--gold); background: var(--gold-light); }
+  .reading-card.cleared h3 { color: #a07010; }
+  .reading-card .trophy-badge-card { display: none; }
+  .reading-card.cleared .trophy-badge-card { display: flex; }
+  .reading-progress-mini {
+    margin-top: 8px;
+    background: rgba(46,155,88,0.12); border-radius: 20px; height: 7px; overflow: hidden;
+  }
+  .reading-progress-mini-fill {
+    height: 100%; background: var(--main); border-radius: 20px; transition: width 0.5s;
+  }
+
+  /* doubleChampBanner */
+  #doubleChampBanner {
+    display: none; margin-top: 18px;
+    background: linear-gradient(135deg,#fff3c0,#ffe88a);
+    border: 3px solid var(--gold); border-radius: 18px; padding: 16px;
+  }
+  #doubleChampBanner .dc-icon { font-size: 1.8rem; margin-bottom: 4px; }
+  #doubleChampBanner .dc-title { font-weight: 900; color: #7a5000; font-size: 0.95rem; margin-bottom: 10px; }
+  .go-stamp-btn {
+    background: linear-gradient(135deg,#e6a800,var(--gold));
+    color: white; border: none; border-radius: 50px;
+    padding: 11px 26px; font-size: 0.88rem; font-weight: 800;
+    font-family: inherit; cursor: pointer; transition: transform 0.2s;
+  }
+  .go-stamp-btn:hover { transform: scale(1.03); }
+
+  /* QUIZ AREA */
+  #quizArea { display: none; max-width: 680px; margin: 26px auto 0; padding: 0 18px; }
+  .question-counter {
+    font-size: 0.82rem; font-weight: 700; color: var(--main-dark);
+    text-align: center; margin-bottom: 8px;
+  }
+  .test-warning {
+    background: linear-gradient(135deg,#fff3d6,#ffe8a0);
+    border: 2px solid var(--gold); border-radius: 13px;
+    padding: 9px 14px; font-size: 0.8rem; font-weight: 700; color: #7a5000;
+    text-align: center; margin-bottom: 10px; display: none;
+  }
+  .test-warning.visible { display: block; }
+  .question-card {
+    background: white; border-radius: 24px; padding: 30px 22px 22px;
+    box-shadow: var(--shadow); margin-bottom: 18px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .question-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, var(--main), var(--sun));
+    border-radius: 24px 24px 0 0;
+  }
+  .question-card.test-mode::before { background: linear-gradient(90deg, var(--gold), #ffb347); }
+  .mode-badge {
+    display: inline-block; background: var(--main-light); color: var(--main-dark);
+    font-size: 0.7rem; font-weight: 700; padding: 4px 12px;
+    border-radius: 20px; margin-bottom: 14px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .mode-badge.test { background: var(--gold-light); color: #7a5000; }
+  .question-text { font-size: 1.75rem; font-weight: 900; color: var(--text); margin-bottom: 7px; line-height: 1.3; }
+  .question-hint { font-size: 0.8rem; color: var(--text-light); margin-bottom: 4px; }
+  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .choice-btn {
+    background: var(--main-light); border: 2.5px solid #b0e8c8;
+    border-radius: 13px; padding: 13px 10px;
+    font-size: 0.92rem; font-weight: 700; font-family: inherit;
+    color: var(--text); cursor: pointer; transition: all 0.18s;
+    text-align: center; min-height: 58px;
+    display: flex; align-items: center; justify-content: center; line-height: 1.3;
+  }
+  .choice-btn:hover:not(:disabled) { background: #9ddeb8; border-color: var(--main); transform: scale(1.02); }
+  .choice-btn.correct { background: #c6f4d8; border-color: var(--main); color: var(--main-dark); }
+  .choice-btn.wrong { background: #ffd6d6; border-color: var(--red); color: var(--red-dark); }
+  .choice-btn:disabled { cursor: default; }
+  .typing-wrap { margin-top: 13px; }
+  .type-input {
+    width: 100%; border: 2.5px solid #b0e8c8; border-radius: 13px;
+    padding: 13px 16px; font-size: 1.2rem; font-family: 'Nunito', sans-serif;
+    font-weight: 700; color: var(--text); background: var(--main-light);
+    outline: none; transition: border-color 0.2s; text-align: center;
+  }
+  .type-input:focus { border-color: var(--main); background: white; }
+  .type-input.correct { background: #c6f4d8; border-color: var(--main); }
+  .type-input.wrong { background: #ffd6d6; border-color: var(--red); }
+  /* ===== 入力ヒント（フレーム表示） ===== */
+  .hint-template {
+    font-size: 0.93rem; color: #444;
+    background: #f0f7ff; border: 1.5px dashed #aec8e8;
+    border-radius: 10px; padding: 8px 14px; margin-bottom: 10px;
+    text-align: center; line-height: 1.8; letter-spacing: 0.03em;
+  }
+  .hint-sym {
+    display: inline-block; color: #b45309; font-weight: 800;
+    background: #fef3cd; border-radius: 4px; padding: 1px 5px; margin: 0 2px;
+  }
+  .hint-blank {
+    display: inline-block; color: #1e40af; font-weight: 700;
+    background: #dbeafe; border-radius: 4px; padding: 1px 8px; margin: 0 2px;
+    min-width: 2em; border-bottom: 2px solid #93c5fd;
+  }
+  .hint-opt {
+    color: #888; font-style: italic; font-size: 0.85em;
+  }
+  .hint-note {
+    display: block; font-size: 0.70rem; color: #888; margin-top: 3px;
+  }
+  .submit-btn {
+    margin-top: 10px; background: var(--main); color: white; border: none;
+    border-radius: 12px; padding: 12px; font-size: 0.95rem; font-weight: 800;
+    font-family: inherit; cursor: pointer; width: 100%; transition: background 0.2s;
+  }
+  .submit-btn:hover { background: var(--main-dark); }
+  .flashcard-wrap { margin-top: 4px; }
+  .flashcard {
+    background: linear-gradient(135deg, var(--main-light), white);
+    border: 2.5px solid #b0e8c8; border-radius: 18px; padding: 26px 16px;
+    min-height: 88px; cursor: pointer; font-size: 1.3rem; font-weight: 800;
+    color: var(--main-dark); position: relative;
+  }
+  .flashcard .tap-hint { font-size: 0.72rem; color: var(--text-light); font-weight: 600; margin-top: 10px; }
+  .flashcard-btns { display: flex; gap: 10px; margin-top: 11px; }
+  .fc-btn {
+    flex: 1; padding: 12px; border: none; border-radius: 12px;
+    font-size: 0.88rem; font-weight: 800; font-family: inherit; cursor: pointer; transition: transform 0.15s;
+  }
+  .fc-btn:hover { transform: scale(1.03); }
+  .fc-btn.good { background: linear-gradient(135deg, var(--main), #3dba6b); color: white; }
+  .fc-btn.bad { background: linear-gradient(135deg, var(--red), #e05555); color: white; }
+  .feedback {
+    margin-top: 10px; padding: 11px 14px; border-radius: 11px;
+    font-size: 0.9rem; font-weight: 700; display: none; text-align: center; line-height: 1.5;
+  }
+  .feedback.correct { background: #c6f4d8; color: var(--main-dark); display: block; }
+  .feedback.wrong { background: #ffd6d6; color: var(--red-dark); display: block; }
+  .next-btn {
+    margin-top: 11px; background: linear-gradient(135deg, var(--main-dark), var(--main));
+    color: white; border: none; border-radius: 50px; padding: 12px;
+    font-size: 0.92rem; font-weight: 800; font-family: inherit;
+    cursor: pointer; width: 100%; display: none; transition: transform 0.15s;
+  }
+  .next-btn:hover { transform: scale(1.02); }
+  .next-btn.visible { display: block; }
+
+  /* READING AREA */
+  #readingArea { display: none; max-width: 680px; margin: 26px auto 0; padding: 0 18px; }
+  .reading-info-bar {
+    background: var(--main-light); border: 2px solid var(--main);
+    border-radius: 13px; padding: 8px 14px; font-size: 0.82rem;
+    font-weight: 700; color: var(--main-dark); text-align: center; margin-bottom: 10px;
+  }
+  .reading-card-box {
+    background: white; border-radius: 24px; padding: 32px 22px 24px;
+    box-shadow: var(--shadow); text-align: center; position: relative; overflow: hidden;
+  }
+  .reading-card-box::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, var(--main), #a8edca);
+    border-radius: 24px 24px 0 0;
+  }
+  .reading-kana {
+    font-size: 1.05rem; font-weight: 700; color: var(--text-light);
+    letter-spacing: 0.05em; margin-bottom: 6px; min-height: 1.6em;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .stress { color: #e63946; font-weight: 900; }
+  .reading-en {
+    font-size: 1.9rem; font-weight: 900; color: var(--text);
+    line-height: 1.3; margin-bottom: 10px;
+  }
+  .reading-ja {
+    font-size: 0.95rem; color: var(--text-light);
+    font-family: 'Noto Sans JP', sans-serif; margin-bottom: 22px;
+  }
+  .mic-btn {
+    background: var(--main-light); border: 2.5px solid var(--main);
+    border-radius: 50px; padding: 11px 20px; font-size: 0.9rem;
+    font-weight: 800; font-family: inherit; cursor: pointer;
+    width: 100%; transition: all 0.2s; color: var(--main-dark); margin-bottom: 6px;
+  }
+  .mic-btn.speaking {
+    background: #c6f4d8; border-color: var(--main-dark);
+    animation: micPulse 0.6s ease infinite alternate;
+  }
+  .mic-btn.mic-error { background: #fff0f0; border-color: #ccc; color: #999; cursor: default; }
+  @keyframes micPulse {
+    from { box-shadow: 0 0 0 0 rgba(46,155,88,0.5); }
+    to   { box-shadow: 0 0 0 14px rgba(46,155,88,0); }
+  }
+  .mic-hint { font-size: 0.7rem; color: var(--text-light); margin-bottom: 14px; }
+  .reading-next-btn {
+    background: linear-gradient(135deg, var(--main-dark), var(--main));
+    color: white; border: none; border-radius: 50px; padding: 14px;
+    font-size: 0.95rem; font-weight: 800; font-family: inherit;
+    cursor: pointer; width: 100%; transition: transform 0.15s;
+  }
+  .reading-next-btn:hover { transform: scale(1.02); }
+
+  /* RESULT */
+  #resultArea { display: none; max-width: 500px; margin: 32px auto; padding: 0 18px; text-align: center; }
+  .result-card { background: white; border-radius: 26px; padding: 34px 22px; box-shadow: var(--shadow); }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 12px; }
+  .result-card h2 { font-size: 1.45rem; font-weight: 900; color: var(--main-dark); margin-bottom: 7px; }
+  .score-display { font-size: 2.6rem; font-weight: 900; color: var(--main-dark); margin: 12px 0; }
+  .score-display span { font-size: 1rem; color: var(--text-light); }
+  .result-msg { font-size: 0.9rem; color: var(--text-light); margin-bottom: 22px; line-height: 1.6; }
+  .result-btns { display: flex; flex-direction: column; gap: 9px; }
+  .result-btn {
+    padding: 12px; border: none; border-radius: 12px; font-size: 0.92rem;
+    font-weight: 800; font-family: inherit; cursor: pointer; transition: transform 0.15s;
+  }
+  .result-btn:hover { transform: scale(1.02); }
+  .result-btn.primary { background: linear-gradient(135deg, var(--main-dark), var(--main)); color: white; }
+  .result-btn.secondary { background: var(--main-light); color: var(--main-dark); border: 2px solid #b0e8c8; }
+  .result-btn.gold { background: linear-gradient(135deg, #e6a800, var(--gold)); color: white; }
+
+  /* READING RESULT */
+  #readingResultArea { display: none; max-width: 500px; margin: 32px auto; padding: 0 18px; text-align: center; }
+
+  /* TROPHY SCREENS */
+  #trophyScreen, #readingTrophyScreen {
+    display: none; max-width: 520px; margin: 32px auto; padding: 0 18px; text-align: center;
+  }
+  .trophy-card {
+    background: linear-gradient(160deg,#fffbe6,#fff3c0);
+    border: 3px solid var(--gold); border-radius: 28px; padding: 38px 22px;
+    box-shadow: 0 8px 40px rgba(245,166,35,0.3);
+  }
+  .trophy-card .congrats { font-size: 0.92rem; font-weight: 800; color: #a07000; margin-bottom: 6px; }
+  .trophy-card h2 { font-size: 1.5rem; font-weight: 900; color: #7a5000; margin-bottom: 8px; }
+  .trophy-card > p { font-size: 0.88rem; color: #9a6800; line-height: 1.7; margin-bottom: 6px; }
+  .trophy-row { display: flex; gap: 14px; justify-content: center; margin: 22px 0; }
+  .trophy-item {
+    background: white; border-radius: 16px; padding: 18px 14px;
+    box-shadow: 0 4px 14px rgba(245,166,35,0.2);
+    border: 2px solid #f0d080; flex: 1; text-align: center;
+  }
+  .trophy-item .t-icon { font-size: 2.4rem; margin-bottom: 7px; display: block; }
+  .trophy-item .t-label { font-size: 0.75rem; font-weight: 800; color: #7a5000; line-height: 1.5; }
+  .stamp-box {
+    background: white; border-radius: 14px; padding: 18px;
+    border: 2.5px dashed var(--gold); margin: 18px 0;
+  }
+  .stamp-box .stamp-icon { font-size: 2.2rem; display: block; margin-bottom: 8px; }
+  .stamp-box p { font-size: 0.88rem; font-weight: 700; color: #7a5000; line-height: 1.7; }
+  .stamp-box .note { font-size: 0.76rem; color: #a08030; margin-top: 4px; }
+  .trophy-back-btn {
+    background: linear-gradient(135deg,#e6a800,var(--gold));
+    color: white; border: none; border-radius: 50px;
+    padding: 13px 38px; font-size: 0.95rem; font-weight: 800;
+    font-family: inherit; cursor: pointer;
+    box-shadow: 0 6px 18px rgba(245,166,35,0.4); transition: transform 0.2s;
+  }
+  .trophy-back-btn:hover { transform: scale(1.03); }
+
+  /* ANIMATIONS */
+  @keyframes popIn {
+    0% { transform: scale(0.85); opacity: 0; }
+    70% { transform: scale(1.04); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .pop { animation: popIn 0.35s ease forwards; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+  .shake { animation: shake 0.3s ease; }
+  @keyframes trophyDrop {
+    0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+    65% { transform: scale(1.25) rotate(6deg); }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+
+  @media (max-width: 480px) {
+    .mode-cards, .test-cards, .reading-cards { grid-template-columns: 1fr; }
+    .question-text, .reading-en { font-size: 1.35rem; }
+    .choices { grid-template-columns: 1fr; }
+    .trophy-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🕊️ Blue Sky 3 <span>Unit 2 Vocabulary</span></h1>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="trophy-header" id="trophyHeader">
+      <div class="trophy-chip" id="chipSpelling">✍️ <span id="statusSpelling">－</span></div>
+      <div class="trophy-chip" id="chipMeaning">📖 <span id="statusMeaning">－</span></div>
+      <div class="trophy-chip" id="chipReading">🎤 <span id="statusReading">0/75</span></div>
+    </div>
+    <div class="progress-wrap" id="headerProgress" style="display:none">
+      <div class="progress-label" id="progressLabel">0 / 75</div>
+      <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- MODE SELECT -->
+<div id="modeSelect">
+  <h2>モードを選ぼう！</h2>
+  <p>今日はどんな練習をする？</p>
+
+  <div class="section-label">📝 練習モード（10問ランダム）</div>
+  <div class="mode-cards">
+    <div class="mode-card selected" data-mode="en2ja" onclick="selectMode(this)">
+      <div class="icon">EN→JP</div>
+      <h3>英語→日本語</h3>
+      <p>英単語を見て正しい意味を選ぼう（4択）</p>
+    </div>
+    <div class="mode-card" data-mode="ja2en" onclick="selectMode(this)">
+      <div class="icon">JP→EN</div>
+      <h3>日本語→英語</h3>
+      <p>日本語を見て正しい英単語を選ぼう（4択）</p>
+    </div>
+    <div class="mode-card" data-mode="typing" onclick="selectMode(this)">
+      <div class="icon">✍️</div>
+      <h3>スペリング練習</h3>
+      <p>日本語を見て英単語をタイプして答えよう</p>
+    </div>
+    <div class="mode-card" data-mode="flash" onclick="selectMode(this)">
+      <div class="icon">⚡</div>
+      <h3>フラッシュカード</h3>
+      <p>カードをタップして意味を確認しよう</p>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:8px">
+    <p style="font-size:0.8rem;color:var(--text-light)">📝 毎回ランダムな10問が出題されます</p>
+    <button class="start-btn" onclick="startQuiz()">スタート！ 🚀</button>
+  </div>
+
+  <div class="section-label" style="margin-top:26px">🏆 テストモード（全75問・全問正解でトロフィー！）</div>
+  <div class="test-cards">
+    <div class="test-card" id="testCardSpelling" onclick="startTest('spelling')">
+      <div class="trophy-badge-card">🏆</div>
+      <div class="icon">✍️</div>
+      <h3>スペリングテスト</h3>
+      <p>全75問に答えよう。<br>全問正解でトロフィーGET！</p>
+    </div>
+    <div class="test-card" id="testCardMeaning" onclick="startTest('meaning')">
+      <div class="trophy-badge-card">🏆</div>
+      <div class="icon">📖</div>
+      <h3>意味テスト</h3>
+      <p>全75問を4択で答えよう。<br>全問正解でトロフィーGET！</p>
+    </div>
+  </div>
+  <p style="font-size:0.76rem;color:var(--text-light);margin-top:8px;text-align:center">
+    ⚠️ テストモードは1問でも間違えるとやり直し！まず練習モードで準備しよう。
+  </p>
+
+  <div class="section-label" style="margin-top:26px">🎤 音読モード</div>
+  <div class="reading-cards">
+    <div class="reading-card" onclick="startReadingPractice()">
+      <div class="icon">📖</div>
+      <h3>音読練習</h3>
+      <p>カタカナ付き・10語ランダム。<br>発音を確認しながら読もう！</p>
+    </div>
+    <div class="reading-card" id="readingTestCard" onclick="startReadingTest()">
+      <div class="trophy-badge-card">🏆</div>
+      <div class="icon">🎤</div>
+      <h3>音読テスト</h3>
+      <p>全75語読了でトロフィーGET！<br>読了: <span id="readCountDisplay">0</span>/75語</p>
+      <div class="reading-progress-mini">
+        <div class="reading-progress-mini-fill" id="readProgressFill" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:0.76rem;color:var(--text-light);margin-top:8px;text-align:center">
+    🎤 音読テストの進捗はこの端末に保存されます
+  </p>
+
+  <div id="doubleChampBanner">
+    <div class="dc-icon">🏆🏆</div>
+    <div class="dc-title">2つのトロフィーをゲット中！</div>
+    <button class="go-stamp-btn" onclick="showTrophyScreen()">先生にスタンプをもらいに行く 👨‍🏫</button>
+  </div>
+</div>
+
+<!-- QUIZ AREA -->
+<div id="quizArea">
+  <div class="question-counter" id="questionCounter">問題 1 / 10</div>
+  <div class="test-warning" id="testWarning">⚠️ テストモード中！間違えると最初からやり直しです</div>
+  <div class="question-card" id="questionCard">
+    <div class="mode-badge" id="modeBadge"></div>
+    <div class="question-text" id="questionText"></div>
+    <div class="question-hint" id="questionHint"></div>
+    <div id="choicesWrap"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">次の問題 →</button>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="resultArea">
+  <div class="result-card pop">
+    <div class="result-emoji" id="resultEmoji"></div>
+    <h2 id="resultTitle"></h2>
+    <div class="score-display" id="scoreDisplay"></div>
+    <div class="result-msg" id="resultMsg"></div>
+    <div class="result-btns" id="resultBtns"></div>
+  </div>
+</div>
+
+<!-- QUIZ TROPHY SCREEN -->
+<div id="trophyScreen">
+  <div class="trophy-card pop">
+    <div class="congrats">🎉 CONGRATULATIONS! 🎉</div>
+    <h2>2つのトロフィーGET！</h2>
+    <p>スペリングも意味も全問正解！<br>本物の実力を証明したね！</p>
+    <div class="trophy-row">
+      <div class="trophy-item">
+        <span class="t-icon" id="tIcon1">🏆</span>
+        <div class="t-label">スペリング<br>マスター</div>
+      </div>
+      <div class="trophy-item">
+        <span class="t-icon" id="tIcon2">🏆</span>
+        <div class="t-label">意味<br>マスター</div>
+      </div>
+    </div>
+    <div class="stamp-box">
+      <span class="stamp-icon">📋</span>
+      <p>このページを<strong>先生に見せて</strong>、<br>スタンプカードに<strong>スタンプ</strong>を押してもらおう！</p>
+      <div class="note">（先生がタブレットの画面を確認してスタンプを押します）</div>
+    </div>
+    <button class="trophy-back-btn" onclick="backToMenuFromTrophy()">🏠 メニューに戻る</button>
+  </div>
+</div>
+
+<!-- READING AREA -->
+<div id="readingArea">
+  <div class="question-counter" id="readingCounter">1 / 10</div>
+  <div class="reading-info-bar" id="readingInfoBar"></div>
+  <div class="reading-card-box">
+    <div class="reading-kana" id="readingKana"></div>
+    <div class="reading-en" id="readingEn"></div>
+    <div class="reading-ja" id="readingJa"></div>
+    <button class="mic-btn" id="micBtn" onclick="toggleMic()">🎤 タップしてマイクON</button>
+    <div class="mic-hint" id="micHint">声を出すと光ります（任意）</div>
+    <button class="reading-next-btn" onclick="nextReading()">読んだ！→ 次へ</button>
+  </div>
+</div>
+
+<!-- READING RESULT -->
+<div id="readingResultArea">
+  <div class="result-card pop">
+    <div class="result-emoji" id="readingResultEmoji"></div>
+    <h2 id="readingResultTitle"></h2>
+    <div class="score-display" id="readingScoreDisplay"></div>
+    <div class="result-msg" id="readingResultMsg"></div>
+    <div class="result-btns" id="readingResultBtns"></div>
+  </div>
+</div>
+
+<!-- READING TROPHY SCREEN -->
+<div id="readingTrophyScreen">
+  <div class="trophy-card pop">
+    <div class="congrats">🎉 CONGRATULATIONS! 🎉</div>
+    <h2>🎤 音読コンプリート！</h2>
+    <p>Unit 2 の全75語を音読した！<br>読む力を証明したね！</p>
+    <div class="trophy-row">
+      <div class="trophy-item">
+        <span class="t-icon" id="tIconReading">🏆</span>
+        <div class="t-label">音読<br>コンプリート</div>
+      </div>
+    </div>
+    <div class="stamp-box">
+      <span class="stamp-icon">📋</span>
+      <p>このページを<strong>先生に見せて</strong>、<br>スタンプカードに<strong>スタンプ</strong>を押してもらおう！</p>
+      <div class="note">（先生がタブレットの画面を確認してスタンプを押します）</div>
+    </div>
+    <button class="trophy-back-btn" onclick="backToMenuFromReadingTrophy()">🏠 メニューに戻る</button>
+  </div>
+</div>
+
+<script>
+// ========== VOCAB DATA ==========
+const VOCAB = [
+  {en:"～ meter(s) away from ...", ja:"…から～メートル離れた"},
+  {en:"～ or so", ja:"～かそこら"},
+  {en:"affect", ja:"～に影響する"},
+  {en:"apparent", ja:"明白な，見た目でわかる"},
+  {en:"ask question(s) of ～", ja:"～に質問する"},
+  {en:"at that time", ja:"当時，そのとき"},
+  {en:"Atomic Bomb Dome", ja:"原爆ドーム"},
+  {en:"be affected by ～", ja:"～の影響を受ける"},
+  {en:"be into ～", ja:"～に熱中する"},
+  {en:"be on fire", ja:"燃えている"},
+  {en:"before ～ing", ja:"～する前に"},
+  {en:"blow", ja:"～を吹き動かす，吹き飛ばす"},
+  {en:"blow down ～", ja:"～を吹き倒す"},
+  {en:"blown", ja:"〔blow の過去分詞形〕"},
+  {en:"bombing", ja:"爆撃"},
+  {en:"bud", ja:"（葉・枝の）芽"},
+  {en:"burn", ja:"①～を焼く，やけどさせる ②燃える"},
+  {en:"carry out ～", ja:"〔計画など〕～を進める，実行する"},
+  {en:"collect", ja:"～を集める，収集する"},
+  {en:"come to an end", ja:"終わる"},
+  {en:"complete", ja:"完全な"},
+  {en:"continue", ja:"～を続ける"},
+  {en:"continue ～ing", ja:"～し続ける"},
+  {en:"curator", ja:"〔博物館・美術館などの〕学芸員"},
+  {en:"current", ja:"現在の，最新の"},
+  {en:"decrease", ja:"減少する"},
+  {en:"destroy", ja:"～を破壊する"},
+  {en:"destruction", ja:"破壊"},
+  {en:"destructive", ja:"破壊的な"},
+  {en:"die from ～", ja:"～（が原因）で死ぬ"},
+  {en:"drop", ja:"～を投下する，落とす"},
+  {en:"enormously", ja:"非常に，ものすごく"},
+  {en:"exaggerated", ja:"大げさな，誇張された"},
+  {en:"explode", ja:"爆発する"},
+  {en:"figure", ja:"①人物の像 ②図表，挿絵"},
+  {en:"Good luck.", ja:"幸運を。がんばってね。"},
+  {en:"ground", ja:"地面"},
+  {en:"half", ja:"① 30分 ②半分，2分の1"},
+  {en:"hang down", ja:"垂れ下がる"},
+  {en:"hypocenter", ja:"爆心地"},
+  {en:"in order to ～", ja:"～するために"},
+  {en:"injury", ja:"けが"},
+  {en:"instantly", ja:"一瞬にして，たちまち"},
+  {en:"itself", ja:"それ自身（に／を）"},
+  {en:"known", ja:"〔know の過去分詞形〕"},
+  {en:"lately", ja:"最近，この頃"},
+  {en:"luck", ja:"運"},
+  {en:"miraculously", ja:"奇跡的に（も）"},
+  {en:"mission", ja:"使命，任務"},
+  {en:"model ～ after ...", ja:"…をモデルとして～をつくる"},
+  {en:"move to ～", ja:"～へ引っ越す"},
+  {en:"one after another", ja:"次から次へと，相次いで"},
+  {en:"one's way of life", ja:"〔人の〕生活様式"},
+  {en:"peacefully", ja:"平和に"},
+  {en:"permanent", ja:"永久の，恒久的な"},
+  {en:"postwar", ja:"戦後の"},
+  {en:"power", ja:"力"},
+  {en:"repeat", ja:"～をくり返す"},
+  {en:"silent", ja:"無言の"},
+  {en:"since", ja:"～からずっと，～以来"},
+  {en:"skin", ja:"肌"},
+  {en:"slow down", ja:"速度を落とす"},
+  {en:"sprout", ja:"発芽する，芽吹く"},
+  {en:"successor", ja:"後継者，継承者"},
+  {en:"survive", ja:"（～を）切り抜けて生き残る"},
+  {en:"the first step of ～", ja:"～の第一歩"},
+  {en:"the following ～", ja:"次の～"},
+  {en:"thousands of ～", ja:"何千もの～，数千の～"},
+  {en:"throw", ja:"～を投げる"},
+  {en:"thrown", ja:"〔throw の過去分詞形〕"},
+  {en:"tragedy", ja:"悲劇"},
+  {en:"transplant", ja:"～を植え替える"},
+  {en:"truth", ja:"真実，事実"},
+  {en:"unfortunately", ja:"不運にも，残念ながら"},
+  {en:"will", ja:"意志，決意"},
+];
+
+// ========== KATAKANA (編集可能・赤=強勢) ==========
+const KATAKANA = [
+  "〜<span class='stress'>ミー</span>ター(ズ) アウェイ フロム",
+  "〜 オア <span class='stress'>ソー</span>",
+  "ア<span class='stress'>フェ</span>クト",
+  "ア<span class='stress'>ペ</span>アレント",
+  "<span class='stress'>ア</span>スク <span class='stress'>クウェ</span>スチョン(ズ) オブ",
+  "アット ザット <span class='stress'>タイ</span>ム",
+  "ア<span class='stress'>ト</span>ミック <span class='stress'>ボ</span>ム <span class='stress'>ドー</span>ム",
+  "ビー ア<span class='stress'>フェ</span>クティッド バイ",
+  "ビー <span class='stress'>イン</span>トゥ",
+  "ビー オン <span class='stress'>ファイ</span>アー",
+  "ビ<span class='stress'>フォー</span> 〜イング",
+  "<span class='stress'>ブロウ</span>",
+  "ブロウ <span class='stress'>ダウ</span>ン",
+  "<span class='stress'>ブロウ</span>ン",
+  "<span class='stress'>ボ</span>ミング",
+  "<span class='stress'>バッ</span>ド",
+  "<span class='stress'>バー</span>ン",
+  "<span class='stress'>キャ</span>リー ア<span class='stress'>ウ</span>ト",
+  "コ<span class='stress'>レ</span>クト",
+  "カム トゥ アン <span class='stress'>エン</span>ド",
+  "コン<span class='stress'>プリー</span>ト",
+  "コン<span class='stress'>ティ</span>ニュー",
+  "コン<span class='stress'>ティ</span>ニュー 〜イング",
+  "キュ<span class='stress'>レー</span>ター",
+  "<span class='stress'>カ</span>レント",
+  "ディ<span class='stress'>クリー</span>ス",
+  "ディ<span class='stress'>スト</span>ロイ",
+  "ディ<span class='stress'>スト</span>ラクション",
+  "ディ<span class='stress'>スト</span>ラクティブ",
+  "<span class='stress'>ダイ</span> フロム",
+  "<span class='stress'>ド</span>ロップ",
+  "イ<span class='stress'>ノー</span>マスリー",
+  "イグ<span class='stress'>ザ</span>ジェレイテッド",
+  "エクス<span class='stress'>プロー</span>ド",
+  "<span class='stress'>フィ</span>ギュア",
+  "グッド <span class='stress'>ラッ</span>ク",
+  "<span class='stress'>グラウ</span>ンド",
+  "<span class='stress'>ハー</span>フ",
+  "ハング <span class='stress'>ダウ</span>ン",
+  "<span class='stress'>ハイ</span>ポ<span class='stress'>セン</span>ター",
+  "イン <span class='stress'>オー</span>ダー トゥ",
+  "<span class='stress'>イン</span>ジャリー",
+  "<span class='stress'>イン</span>スタントリー",
+  "イット<span class='stress'>セル</span>フ",
+  "<span class='stress'>ノウ</span>ン",
+  "<span class='stress'>レイ</span>トリー",
+  "<span class='stress'>ラッ</span>ク",
+  "ミ<span class='stress'>ラ</span>キュラスリー",
+  "<span class='stress'>ミッ</span>ション",
+  "<span class='stress'>モ</span>デル 〜 <span class='stress'>ア</span>フター",
+  "<span class='stress'>ムー</span>ブ トゥ",
+  "ワン アフター ア<span class='stress'>ナ</span>ザー",
+  "ワンズ <span class='stress'>ウェ</span>イ オブ <span class='stress'>ライ</span>フ",
+  "<span class='stress'>ピー</span>スフリー",
+  "<span class='stress'>パー</span>マネント",
+  "<span class='stress'>ポスト</span>ウォー",
+  "<span class='stress'>パ</span>ワー",
+  "リ<span class='stress'>ピー</span>ト",
+  "<span class='stress'>サイ</span>レント",
+  "<span class='stress'>シン</span>ス",
+  "<span class='stress'>ス</span>キン",
+  "スロウ <span class='stress'>ダウ</span>ン",
+  "<span class='stress'>スプラウ</span>ト",
+  "サク<span class='stress'>セ</span>サー",
+  "サ<span class='stress'>バイ</span>ブ",
+  "ザ <span class='stress'>ファー</span>スト <span class='stress'>ステッ</span>プ オブ",
+  "ザ <span class='stress'>フォ</span>ローイング",
+  "<span class='stress'>サウ</span>ザンズ オブ",
+  "<span class='stress'>スロウ</span>",
+  "<span class='stress'>スロウ</span>ン",
+  "<span class='stress'>トラ</span>ジェディ",
+  "<span class='stress'>トラン</span>スプラント",
+  "<span class='stress'>トゥルー</span>ス",
+  "アン<span class='stress'>フォー</span>チュネイトリー",
+  "<span class='stress'>ウィ</span>ル",
+];
+
+// ========== TROPHY STATE ==========
+const trophies = { spelling: false, meaning: false, reading: false };
+
+// ========== QUIZ STATE ==========
+let currentMode = 'en2ja';
+let isTestMode = false;
+let testType = '';
+let questions = [];
+let currentIdx = 0;
+let score = 0;
+let wrongIdxs = [];
+let answered = false;
+let flashRevealed = false;
+let testFailed = false;
+
+// ========== READING STATE ==========
+let readingQuestions = [];
+let readingIdx = 0;
+let isReadingTestMode = false;
+
+// ========== MIC STATE ==========
+let micContext = null;
+let micAnalyser = null;
+let micSource = null;
+let micStream = null;
+let micLoop = null;
+let micActive = false;
+
+// ========== LOCAL STORAGE ==========
+const LS_READ = 'bs3_unit2_read';
+const LS_READ_TROPHY = 'bs3_unit2_read_trophy';
+
+function getReadWords() {
+  try { return JSON.parse(localStorage.getItem(LS_READ) || '[]'); } catch(e) { return []; }
+}
+function markWordRead(idx) {
+  const read = getReadWords();
+  if (!read.includes(idx)) { read.push(idx); localStorage.setItem(LS_READ, JSON.stringify(read)); }
+}
+function getReadCount() { return getReadWords().length; }
+function hasReadTrophy() { return localStorage.getItem(LS_READ_TROPHY) === 'true'; }
+function saveReadTrophy() { localStorage.setItem(LS_READ_TROPHY, 'true'); }
+
+// ========== UI HELPERS ==========
+function $(id) { return document.getElementById(id); }
+
+function hideAll() {
+  ['modeSelect','quizArea','resultArea','trophyScreen',
+   'readingArea','readingResultArea','readingTrophyScreen'].forEach(id => {
+    $(id).style.display = 'none';
+  });
+  stopMic();
+}
+
+function updateTrophyUI() {
+  $('chipSpelling').classList.toggle('earned', trophies.spelling);
+  $('statusSpelling').textContent = trophies.spelling ? '🏆' : '－';
+  $('chipMeaning').classList.toggle('earned', trophies.meaning);
+  $('statusMeaning').textContent = trophies.meaning ? '🏆' : '－';
+  $('chipReading').classList.toggle('earned', trophies.reading);
+  const rc = getReadCount();
+  $('statusReading').textContent = trophies.reading ? '🏆' : `${rc}/75`;
+  $('testCardSpelling').classList.toggle('cleared', trophies.spelling);
+  $('testCardMeaning').classList.toggle('cleared', trophies.meaning);
+  $('doubleChampBanner').style.display = (trophies.spelling && trophies.meaning) ? 'block' : 'none';
+  $('readingTestCard').classList.toggle('cleared', trophies.reading);
+  $('readCountDisplay').textContent = rc;
+  $('readProgressFill').style.width = `${Math.min(100, (rc/75)*100)}%`;
+}
+
+// ========== QUIZ MODE SELECT ==========
+function selectMode(el) {
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  currentMode = el.dataset.mode;
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for(let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+// ========== START QUIZ ==========
+function startQuiz(items=null) {
+  isTestMode = false; testType = '';
+  questions = items ? shuffle(items) : shuffle(VOCAB).slice(0,10);
+  currentIdx = 0; score = 0; wrongIdxs = []; testFailed = false;
+  launchQuiz();
+}
+function startTest(type) {
+  isTestMode = true; testType = type;
+  currentMode = type === 'spelling' ? 'typing' : 'en2ja';
+  questions = shuffle(VOCAB);
+  currentIdx = 0; score = 0; wrongIdxs = []; testFailed = false;
+  launchQuiz();
+}
+function launchQuiz() {
+  hideAll();
+  $('quizArea').style.display = 'block';
+  $('headerProgress').style.display = 'flex';
+  $('testWarning').classList.toggle('visible', isTestMode);
+  $('questionCard').classList.toggle('test-mode', isTestMode);
+  $('nextBtn').textContent = '次の問題 →';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  if(currentIdx >= questions.length) { showResult(); return; }
+  answered = false; flashRevealed = false;
+  const item = questions[currentIdx];
+  const total = questions.length;
+  $('questionCounter').textContent = `問題 ${currentIdx+1} / ${total}`;
+  $('progressLabel').textContent = `${currentIdx} / ${total}`;
+  $('progressBar').style.width = `${(currentIdx/total)*100}%`;
+  const fb = $('feedback');
+  fb.className = 'feedback'; fb.textContent = '';
+  $('nextBtn').classList.remove('visible');
+  const qc = $('questionCard');
+  qc.style.animation = 'none'; qc.offsetHeight;
+  qc.style.animation = 'popIn 0.3s ease forwards';
+  const badge = $('modeBadge');
+  badge.classList.toggle('test', isTestMode);
+  $('choicesWrap').innerHTML = '';
+  if(currentMode === 'en2ja') {
+    badge.textContent = isTestMode ? '📖 意味テスト' : '英語 → 日本語';
+    $('questionText').textContent = item.en;
+    $('questionHint').textContent = '正しい意味を選ぼう';
+    renderChoices(item,'ja');
+  } else if(currentMode === 'ja2en') {
+    badge.textContent = '日本語 → 英語';
+    $('questionText').textContent = item.ja;
+    $('questionHint').textContent = '正しい英語を選ぼう';
+    renderChoices(item,'en');
+  } else if(currentMode === 'typing') {
+    badge.textContent = isTestMode ? '✍️ スペリングテスト' : 'スペリング練習';
+    $('questionText').textContent = item.ja;
+    $('questionHint').textContent = '英単語を入力してね';
+    renderTyping(item);
+  } else if(currentMode === 'flash') {
+    badge.textContent = 'フラッシュカード';
+    $('questionText').textContent = item.en;
+    $('questionHint').textContent = 'カードをタップして意味を確認！';
+    renderFlash(item);
+  }
+}
+
+function getDistractors(item, key, count) {
+  return shuffle(VOCAB.filter(v => v !== item)).slice(0,count).map(v => v[key]);
+}
+function renderChoices(item, answerKey) {
+  const correct = item[answerKey];
+  const all = shuffle([correct, ...getDistractors(item, answerKey, 3)]);
+  const grid = document.createElement('div');
+  grid.className = 'choices';
+  all.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn'; btn.textContent = opt;
+    btn.onclick = () => checkChoice(btn, opt, correct);
+    grid.appendChild(btn);
+  });
+  $('choicesWrap').appendChild(grid);
+}
+function checkChoice(btn, selected, correct) {
+  if(answered) return;
+  answered = true;
+  document.querySelectorAll('.choice-btn').forEach(b => {
+    b.disabled = true;
+    if(b.textContent === correct) b.classList.add('correct');
+  });
+  const fb = $('feedback');
+  if(selected === correct) {
+    btn.classList.add('correct');
+    fb.textContent = '✅ 正解！Great job!';
+    fb.className = 'feedback correct';
+    score++;
+    $('nextBtn').classList.add('visible');
+  } else {
+    btn.classList.add('wrong'); btn.classList.add('shake');
+    if(isTestMode) {
+      testFailed = true;
+      fb.innerHTML = `❌ 不正解！正解は「${correct}」<br>テスト失敗…最初からやり直し！`;
+      fb.className = 'feedback wrong';
+      $('nextBtn').textContent = '結果を見る →';
+    } else {
+      fb.textContent = `❌ 不正解。正解は「${correct}」だよ！`;
+      fb.className = 'feedback wrong';
+      wrongIdxs.push(currentIdx);
+    }
+    $('nextBtn').classList.add('visible');
+  }
+}
+function makeHintTemplate(en) {
+  if (!/[〜～~]|\.\.\./.test(en)) return '';
+  // ① 記号を一時プレースホルダーに退避
+  let s = en
+    .replace(/[〜～~]/g, '\x01')
+    .replace(/\.\.\./g, '\x02');
+  // ② カッコ内の文字をオプション表示（___に置換してからspan）
+  s = s.replace(/\(([^)]*)\)/g, (_, inner) => {
+    const b = inner.replace(/[A-Za-z0-9]+/g, '___');
+    return `\x03${b}\x04`;
+  });
+  // ③ 残りの英単語を（　）ブランクに
+  s = s.replace(/[A-Za-z0-9]+/g, '<span class="hint-blank">（　）</span>');
+  // ④ プレースホルダーをスタイル付きに復元
+  s = s
+    .replace(/\x01/g, '<span class="hint-sym">～</span>')
+    .replace(/\x02/g, '<span class="hint-sym">...</span>')
+    .replace(/\x03([^]*?)\x04/g, (_, inner) =>
+      `<span class="hint-opt">(${inner.replace(/___/g, '<span class="hint-blank">（　）</span>')})</span>`);
+  return `<div class="hint-template">${s}<span class="hint-note">※ <span class="hint-sym" style="font-size:0.8em">～</span> と <span class="hint-sym" style="font-size:0.8em">...</span> は入力不要・<span class="hint-opt">( )</span> 内は省略可</span></div>`;
+}
+
+function renderTyping(item) {
+  const hint = makeHintTemplate(item.en);
+  $('choicesWrap').innerHTML = `
+    ${hint}
+    <div class="typing-wrap">
+      <input class="type-input" id="typeInput" type="text"
+        placeholder="英語を入力…" autocapitalize="none" autocorrect="off" spellcheck="false">
+      <button class="submit-btn" onclick="checkTyping()">確認する ✓</button>
+    </div>`;
+  setTimeout(() => $('typeInput').focus(), 80);
+  $('typeInput').addEventListener('keydown', e => { if(e.key==='Enter') checkTyping(); });
+}
+function normalizeStr(s) {
+  // ~(ASCII) 〜(波ダッシュ) ～(全角チルダ) 〔〕(全角亀甲括弧) スペース・丸括弧・山括弧・丸数字 を除外して比較
+  return s.toLowerCase().replace(/[~〜～\s\(\)（）＜＞<>〔〕①②③④⑤⑥⑦⑧⑨⑩]/g,'').trim();
+}
+function checkTyping() {
+  if(answered) return;
+  const input = $('typeInput');
+  const val = input.value.trim();
+  if(!val) return;
+  answered = true; input.disabled = true;
+  const correct = questions[currentIdx].en;
+  const ok = normalizeStr(val) === normalizeStr(correct);
+  const fb = $('feedback');
+  if(ok) {
+    input.classList.add('correct');
+    fb.textContent = '✅ 正解！Excellent spelling!';
+    fb.className = 'feedback correct';
+    score++;
+    $('nextBtn').classList.add('visible');
+  } else {
+    input.classList.add('wrong');
+    if(isTestMode) {
+      testFailed = true;
+      fb.innerHTML = `❌ 不正解！正解は「${correct}」<br>テスト失敗…最初からやり直し！`;
+      fb.className = 'feedback wrong';
+      $('nextBtn').textContent = '結果を見る →';
+    } else {
+      fb.textContent = `❌ 惜しい！正解は「${correct}」`;
+      fb.className = 'feedback wrong';
+      wrongIdxs.push(currentIdx);
+    }
+    $('nextBtn').classList.add('visible');
+  }
+}
+function renderFlash(item) {
+  $('choicesWrap').innerHTML = `
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="revealFlash()">
+        <div id="flashContent">？？？</div>
+        <div class="tap-hint">タップして見る 👆</div>
+      </div>
+      <div class="flashcard-btns" id="fcBtns" style="display:none">
+        <button class="fc-btn bad" onclick="fcAnswer(false)">❌ もう一度</button>
+        <button class="fc-btn good" onclick="fcAnswer(true)">✅ 覚えた！</button>
+      </div>
+    </div>`;
+}
+function revealFlash() {
+  if(flashRevealed) return;
+  flashRevealed = true;
+  $('flashContent').textContent = questions[currentIdx].ja;
+  document.querySelector('.tap-hint').style.display = 'none';
+  $('fcBtns').style.display = 'flex';
+}
+function fcAnswer(good) {
+  if(answered) return;
+  answered = true;
+  if(good) score++; else wrongIdxs.push(currentIdx);
+  nextQuestion();
+}
+function nextQuestion() {
+  if(isTestMode && testFailed) { showResult(); return; }
+  currentIdx++;
+  renderQuestion();
+}
+
+// ========== QUIZ RESULT ==========
+function showResult() {
+  hideAll();
+  $('resultArea').style.display = 'block';
+  $('progressBar').style.width = '100%';
+  $('progressLabel').textContent = `${questions.length} / ${questions.length}`;
+  const total = questions.length;
+  const pct = Math.round((score/total)*100);
+  const btns = $('resultBtns');
+  btns.innerHTML = '';
+  if(isTestMode) {
+    if(!testFailed && score === total) {
+      trophies[testType] = true;
+      updateTrophyUI();
+      $('resultEmoji').textContent = '🏆';
+      $('resultTitle').textContent = testType==='spelling' ? 'スペリング全問正解！' : '意味全問正解！';
+      $('scoreDisplay').innerHTML = `${score} <span>/ ${total}問</span>`;
+      $('resultMsg').textContent = testType==='spelling'
+        ? '75問全部スペルが書けた！スペリングマスターだ！'
+        : '75問全部の意味がわかった！意味マスターだ！';
+      if(trophies.spelling && trophies.meaning) {
+        addBtn(btns,'gold','👨‍🏫 先生にスタンプをもらいに行く！', showTrophyScreen);
+      } else {
+        const next = trophies.spelling ? '📖 意味テストに挑戦！' : '✍️ スペリングテストに挑戦！';
+        addBtn(btns,'gold', next, backToMenu);
+      }
+      addBtn(btns,'secondary','🏠 メニューに戻る', backToMenu);
+    } else {
+      $('resultEmoji').textContent = '😣';
+      $('resultTitle').textContent = 'テスト失敗…';
+      $('scoreDisplay').innerHTML = `${currentIdx+1} <span>問目でミス</span>`;
+      $('resultMsg').textContent = 'テストモードは全問正解が必要！練習モードで復習してから再挑戦しよう！';
+      addBtn(btns,'primary','🔄 もう一度テストに挑戦', () => startTest(testType));
+      addBtn(btns,'secondary','📝 練習モードで復習する', backToMenu);
+    }
+    return;
+  }
+  let emoji, title, msg;
+  if(pct===100){emoji='🌟';title='パーフェクト！';msg='全問正解！テストモードにも挑戦してみよう！';}
+  else if(pct>=80){emoji='😊';title='すばらしい！';msg=`${total-score}問惜しかったね。あと少し！`;}
+  else if(pct>=60){emoji='📚';title='よくできました！';msg=`正解率${pct}%！間違えた問題を復習しよう！`;}
+  else{emoji='💪';title='ファイト！';msg='フラッシュカードで復習してから再挑戦しよう！';}
+  $('resultEmoji').textContent = emoji;
+  $('resultTitle').textContent = title;
+  $('scoreDisplay').innerHTML = `${score} <span>/ ${total}問</span>`;
+  $('resultMsg').textContent = msg;
+  if(wrongIdxs.length>0) addBtn(btns,'primary','❌ 間違えた問題をもう一度', retryWrong);
+  addBtn(btns,'primary','🔄 もう一度（同じモード）', ()=>startQuiz());
+  addBtn(btns,'secondary','🏠 モード選択に戻る', backToMenu);
+}
+function addBtn(container, cls, label, fn) {
+  const b = document.createElement('button');
+  b.className = `result-btn ${cls}`; b.textContent = label; b.onclick = fn;
+  container.appendChild(b);
+}
+function retryWrong() { startQuiz(wrongIdxs.map(i=>questions[i])); }
+
+// ========== QUIZ TROPHY ==========
+function showTrophyScreen() {
+  hideAll();
+  $('trophyScreen').style.display = 'block';
+  $('headerProgress').style.display = 'none';
+  [$('tIcon1'),$('tIcon2')].forEach((el,i) => {
+    el.style.animation = 'none';
+    setTimeout(() => {
+      el.style.animation = `trophyDrop 0.6s cubic-bezier(0.34,1.56,0.64,1) ${i*0.25}s forwards`;
+    }, 50);
+  });
+}
+function backToMenu() {
+  hideAll();
+  $('modeSelect').style.display = 'block';
+  $('headerProgress').style.display = 'none';
+  $('nextBtn').textContent = '次の問題 →';
+  updateTrophyUI();
+}
+function backToMenuFromTrophy() {
+  hideAll();
+  $('modeSelect').style.display = 'block';
+  updateTrophyUI();
+}
+
+// ========== READING MODE ==========
+function startReadingPractice() {
+  isReadingTestMode = false;
+  const items = shuffle(VOCAB.map((v,i) => ({...v, idx:i})));
+  readingQuestions = items.slice(0, 10);
+  readingIdx = 0;
+  launchReading();
+}
+
+function startReadingTest() {
+  isReadingTestMode = true;
+  const read = getReadWords();
+  const all = VOCAB.map((v,i) => ({...v, idx:i}));
+  const unread = shuffle(all.filter(w => !read.includes(w.idx)));
+  const alreadyRead = shuffle(all.filter(w => read.includes(w.idx)));
+  // 未読語を優先して10語
+  readingQuestions = [...unread, ...alreadyRead].slice(0, 10);
+  readingIdx = 0;
+  launchReading();
+}
+
+function launchReading() {
+  hideAll();
+  $('readingArea').style.display = 'block';
+  $('headerProgress').style.display = 'none';
+  renderReading();
+}
+
+function renderReading() {
+  const item = readingQuestions[readingIdx];
+  const total = readingQuestions.length;
+  $('readingCounter').textContent = `問題 ${readingIdx+1} / ${total}`;
+
+  // info bar
+  if(isReadingTestMode) {
+    const rc = getReadCount();
+    $('readingInfoBar').textContent = `🎤 音読テスト　読了: ${rc} / 75語`;
+    $('readingInfoBar').style.display = 'block';
+  } else {
+    $('readingInfoBar').textContent = '📖 音読練習（カタカナを見て読もう）';
+    $('readingInfoBar').style.display = 'block';
+  }
+
+  // katakana（練習のみ）
+  const kanaEl = $('readingKana');
+  if(!isReadingTestMode) {
+    kanaEl.innerHTML = KATAKANA[item.idx];
+    kanaEl.style.display = 'block';
+  } else {
+    kanaEl.innerHTML = '';
+    kanaEl.style.display = 'none';
+  }
+
+  $('readingEn').textContent = item.en;
+  $('readingJa').textContent = item.ja;
+
+  // reset mic button state
+  const btn = $('micBtn');
+  btn.textContent = '🎤 タップしてマイクON';
+  btn.className = 'mic-btn';
+}
+
+function nextReading() {
+  if(isReadingTestMode) {
+    markWordRead(readingQuestions[readingIdx].idx);
+  }
+  readingIdx++;
+  if(readingIdx >= readingQuestions.length) {
+    showReadingResult();
+  } else {
+    renderReading();
+    updateTrophyUI();
+  }
+}
+
+function showReadingResult() {
+  stopMic();
+  const rc = getReadCount();
+  const allDone = rc >= VOCAB.length;
+
+  if(isReadingTestMode && allDone && !trophies.reading) {
+    trophies.reading = true;
+    saveReadTrophy();
+    updateTrophyUI();
+    showReadingTrophyScreen();
+    return;
+  }
+
+  hideAll();
+  $('readingResultArea').style.display = 'block';
+  const btns = $('readingResultBtns');
+  btns.innerHTML = '';
+
+  if(isReadingTestMode) {
+    $('readingResultEmoji').textContent = rc >= 75 ? '🏆' : '🎤';
+    $('readingResultTitle').textContent = rc >= 75 ? '音読コンプリート！' : '10語読了！';
+    $('readingScoreDisplay').innerHTML = `${rc} <span>/ 75語</span>`;
+    $('readingResultMsg').textContent = rc >= 75
+      ? '全75語を読んだ！先生にスタンプをもらいに行こう！'
+      : `残り${75-rc}語！続けて読もう！`;
+    if(rc >= 75) {
+      addReadingBtn(btns,'gold','👨‍🏫 先生にスタンプをもらいに行く', showReadingTrophyScreen);
+    } else {
+      addReadingBtn(btns,'primary','🎤 続けて読む（次の10語）', startReadingTest);
+    }
+    addReadingBtn(btns,'secondary','🏠 メニューに戻る', backToMenu);
+  } else {
+    $('readingResultEmoji').textContent = '📖';
+    $('readingResultTitle').textContent = '練習完了！';
+    $('readingScoreDisplay').innerHTML = `10 <span>/ 10語</span>`;
+    $('readingResultMsg').textContent = 'お疲れさま！音読テストにも挑戦してみよう。';
+    addReadingBtn(btns,'primary','🔄 もう一度練習する', startReadingPractice);
+    addReadingBtn(btns,'gold','🎤 音読テストに挑戦！', startReadingTest);
+    addReadingBtn(btns,'secondary','🏠 メニューに戻る', backToMenu);
+  }
+  updateTrophyUI();
+}
+
+function addReadingBtn(container, cls, label, fn) {
+  const b = document.createElement('button');
+  b.className = `result-btn ${cls}`; b.textContent = label; b.onclick = fn;
+  container.appendChild(b);
+}
+
+function showReadingTrophyScreen() {
+  hideAll();
+  $('readingTrophyScreen').style.display = 'block';
+  const el = $('tIconReading');
+  el.style.animation = 'none';
+  setTimeout(() => {
+    el.style.animation = 'trophyDrop 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards';
+  }, 50);
+}
+
+function backToMenuFromReadingTrophy() {
+  hideAll();
+  $('modeSelect').style.display = 'block';
+  updateTrophyUI();
+}
+
+// ========== MIC ==========
+async function toggleMic() {
+  if(micActive) {
+    stopMic();
+    const btn = $('micBtn');
+    btn.textContent = '🎤 タップしてマイクON';
+    btn.className = 'mic-btn';
+    return;
+  }
+  try {
+    micStream = await navigator.mediaDevices.getUserMedia({audio:true, video:false});
+    micContext = new (window.AudioContext || window.webkitAudioContext)();
+    micSource = micContext.createMediaStreamSource(micStream);
+    micAnalyser = micContext.createAnalyser();
+    micAnalyser.fftSize = 512;
+    micSource.connect(micAnalyser);
+    micActive = true;
+    const btn = $('micBtn');
+    btn.textContent = '🎤 マイクON（タップでOFF）';
+    btn.className = 'mic-btn';
+    $('micHint').textContent = '声を出すと光ります ✨';
+    checkVolume();
+  } catch(e) {
+    const btn = $('micBtn');
+    btn.textContent = '🚫 マイクを許可してください';
+    btn.className = 'mic-btn mic-error';
+  }
+}
+
+function checkVolume() {
+  if(!micAnalyser || !micActive) return;
+  const data = new Uint8Array(micAnalyser.frequencyBinCount);
+  micAnalyser.getByteFrequencyData(data);
+  const avg = data.slice(0,40).reduce((a,b)=>a+b,0)/40;
+  const btn = $('micBtn');
+  if(btn) {
+    if(avg > 12) {
+      btn.classList.add('speaking');
+    } else {
+      btn.classList.remove('speaking');
+    }
+  }
+  micLoop = requestAnimationFrame(checkVolume);
+}
+
+function stopMic() {
+  micActive = false;
+  if(micLoop) { cancelAnimationFrame(micLoop); micLoop = null; }
+  if(micSource) { try { micSource.disconnect(); } catch(e){} micSource = null; }
+  if(micStream) { micStream.getTracks().forEach(t => t.stop()); micStream = null; }
+  if(micContext) { try { micContext.close(); } catch(e){} micContext = null; }
+  micAnalyser = null;
+}
+
+// ========== INIT ==========
+trophies.reading = hasReadTrophy();
+updateTrophyUI();
+</script>
+</body>
+</html>

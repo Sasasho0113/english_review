@@ -864,7 +864,7 @@
     <div class="hero-stats">
       <div class="stat"><div class="stat-num">1</div><div class="stat-label">Unit 数</div></div>
       <div class="stat"><div class="stat-num">6</div><div class="stat-label">公開資料</div></div>
-      <div class="stat"><div class="stat-num">2</div><div class="stat-label">アプリ</div></div>
+      <div class="stat"><div class="stat-num">5</div><div class="stat-label">アプリ</div></div>
     </div>
   </div>
 
@@ -911,7 +911,7 @@
         <div class="exam-cat-icon">🎮</div>
         <h3>学習アプリ</h3>
         <p>クイズ・単語練習</p>
-        <div class="exam-cat-count">2</div>
+        <div class="exam-cat-count">5</div>
       </div>
       <div class="exam-cat-card" onclick="showPage('units'); setTimeout(()=>document.getElementById('section-past').scrollIntoView({behavior:'smooth'}),300)">
         <div class="exam-cat-icon">📝</div>
@@ -931,6 +931,7 @@
       <div class="info-box">
         <h3>🕐 更新情報</h3>
         <ul class="update-list">
+          <li><span class="update-date">5/11</span><span>🔤 英文並び替えドリル（全16ステージ＋入試）を追加しました</span></li>
           <li><span class="update-date">5/6</span><span>🧩 英文タイルパズル（全8ステージ）を追加しました</span></li>
           <li><span class="update-date">5/5</span><span>⚔️ 文法バトルRPG（全8ステージ）を追加しました</span></li>
           <li><span class="update-date">5/4</span><span>🎮 宝箱クイズ・単語練習アプリを追加しました</span></li>
@@ -1112,6 +1113,23 @@
         </div>
       </a>
 
+      <!-- 英文並び替えドリル -->
+      <a href="英文並び替えドリル.html" target="_blank" class="card">
+        <div class="card-top c-blue"></div>
+        <div class="card-body">
+          <span class="card-tag t-blue">並び替え</span>
+          <h3>🔤 英文並び替えドリル</h3>
+          <p>中1〜中3の全文法を16ステージ・各30問で完全網羅。毎回10問をランダム出題。全ステージ制覇で千葉県入試ステージが解放！</p>
+          <div class="card-footer">
+            <div class="badges">
+              <span class="badge b-game">⭐ レベルアップ</span>
+              <span class="badge b-new">NEW</span>
+            </div>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
       <!-- 英文タイルパズル -->
       <a href="英文タイルパズル.html" target="_blank" class="card">
         <div class="card-top c-blue"></div>
@@ -1156,6 +1174,40 @@
           <div class="card-footer">
             <div class="badges">
               <span class="badge b-slide">📝 Unit 1</span>
+              <span class="badge b-new">NEW</span>
+            </div>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Unit 2 単語練習 -->
+      <a href="blusky3_unit2_vocab.html" target="_blank" class="card">
+        <div class="card-top c-green"></div>
+        <div class="card-body">
+          <span class="card-tag t-green">Unit 2 単語</span>
+          <h3>🕊️ Unit 2 単語練習</h3>
+          <p>Blue Sky 3 Unit 2「From the Other Side」の全75語を練習しよう。4択・スペリング・フラッシュカード対応！</p>
+          <div class="card-footer">
+            <div class="badges">
+              <span class="badge b-slide">📝 Unit 2</span>
+              <span class="badge b-new">NEW</span>
+            </div>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Unit 3 単語練習 -->
+      <a href="blusky3_unit3_vocab.html" target="_blank" class="card">
+        <div class="card-top c-orange"></div>
+        <div class="card-body">
+          <span class="card-tag t-orange">Unit 3 単語</span>
+          <h3>🌊 Unit 3 単語練習</h3>
+          <p>Blue Sky 3 Unit 3「Living Side by Side」の全74語を練習しよう。4択・スペリング・音読・フラッシュカード対応！</p>
+          <div class="card-footer">
+            <div class="badges">
+              <span class="badge b-slide">📝 Unit 3</span>
               <span class="badge b-new">NEW</span>
             </div>
             <span class="card-arrow">→</span>
@@ -1459,11 +1511,14 @@
     { title:'3年生の文法ポイント総整理', tag:'文法まとめ', page:'units' },
     { title:'前期中間テスト対策スライド', tag:'テスト対策', page:'units' },
     { title:'千葉県公立高校入試 英語 過去問（2025・2026年度）', tag:'入試対策', page:'units' },
+    { title:'英文並び替えドリル', tag:'アプリ', page:'apps' },
     { title:'英文タイルパズル', tag:'アプリ', page:'apps' },
     { title:'文法バトル', tag:'アプリ', page:'apps' },
     { title:'宝箱クイズ', tag:'アプリ', page:'apps' },
     { title:'単語練習①', tag:'アプリ', page:'apps' },
     { title:'単語練習②', tag:'アプリ', page:'apps' },
+    { title:'Unit 2 単語練習', tag:'アプリ', page:'apps' },
+    { title:'Unit 3 単語練習', tag:'アプリ', page:'apps' },
   ];
 
   const input = document.getElementById('searchInput');
