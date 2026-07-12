@@ -1307,15 +1307,16 @@
 
         <button class="form-submit" onclick="submitContactForm()">送信する →</button>
         <p class="form-note">
-          ※ 連絡先が未設定のため、現在は送信内容を確認用に表示します。<br>
-          連絡先が確定次第、実際に送信できるようになります。
+          ※ このフォームはメールを送信しません。「送信する」を押すと内容がまとまって表示されます。<br>
+          表示された内容を、授業中・放課後に先生へ直接見せてください（スクリーンショットでもOK）。
         </p>
       </div>
 
       <div class="form-success" id="formSuccess">
-        <div class="success-icon">✅</div>
-        <h3>送信できました！</h3>
-        <p>内容を確認して対応します。少し待ってね。<br>急ぎの場合は授業中・放課後に直接声をかけてください。</p>
+        <div class="success-icon">📝</div>
+        <h3>内容をまとめました！</h3>
+        <p>下の内容をスクリーンショットするか、そのまま先生に見せてね。<br>急ぎの場合は授業中・放課後に直接声をかけてください。</p>
+        <div id="formSummary" style="text-align:left; white-space:pre-wrap; background:#f3f4f6; border-radius:8px; padding:12px 16px; margin-top:12px; font-size:14px;"></div>
       </div>
 
     </div>
@@ -1370,15 +1371,14 @@
       'request':  '資料のリクエスト',
       'other':    'その他'
     };
-    var subject = encodeURIComponent('[英語復習サイト] ' + (typeLabels[type] || type));
-    var body = encodeURIComponent(
+    var summary =
+      '【英語復習サイト お問い合わせ】\n' +
       'お名前：' + name + '\n' +
       'クラス・出席番号：' + (cls || '未記入') + '\n' +
       '連絡先：' + (email || '未記入') + '\n' +
       '種類：' + (typeLabels[type] || type) + '\n\n' +
-      '内容：\n' + message
-    );
-    window.location.href = 'mailto:r162@yachiyo.ed.jp?subject=' + subject + '&body=' + body;
+      '内容：\n' + message;
+    document.getElementById('formSummary').textContent = summary;
 
     document.getElementById('contactFormArea').style.display = 'none';
     document.getElementById('formSuccess').style.display = 'block';
