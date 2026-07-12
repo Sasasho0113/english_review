@@ -1,5 +1,16 @@
 # サイトに必要なファイル以外は git に入れない（個人情報の誤公開防止・2026-07-12）
+# 新しいサイト用ファイルを追加するときは、ここに !/ファイル名 を1行追加する
 /*
 !/.gitignore
 !/index.html
 !/.github/
+!/README.md
+!/SECURITY.md
+!/manifest.json
+!/pdfs/
+!/blusky3_unit1_vocab_2.html
+!/blusky3_unit2_vocab.html
+!/blusky3_unit3_vocab.html
+!/宝箱クイズ.html
+!/文法バトル.html
+!/英文タイルパズル.html
